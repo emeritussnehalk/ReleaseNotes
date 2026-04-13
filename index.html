@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Release Notes Data Explorer</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #163126;
+      background: #f7fbf8;
+      --emeritus-green: #0b8f4d;
+      --emeritus-green-dark: #086c3a;
+      --emeritus-green-soft: #e8f5ed;
+      --ink: #173127;
+      --muted: #4d6358;
+      --line: #d8e7dd;
+      --panel: #ffffff;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, rgba(11, 143, 77, 0.09), transparent 30%),
+        linear-gradient(180deg, #f9fcfa 0%, #eff7f2 100%);
+    }
+    .page-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 18px 24px 40px;
+    }
+    header {
+      padding: 8px 4px 0;
+    }
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1 1 520px;
+      min-width: 0;
+    }
+    .brand-logo {
+      width: 170px;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      flex: 0 0 auto;
+    }
+    .brand-copy {
+      min-width: 0;
+    }
+    .brand-title {
+      margin: 0;
+      font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--emeritus-green-dark);
+      white-space: nowrap;
+    }
+    .brand-subtitle {
+      margin: 4px 0 0;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      color: var(--ink);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: none;
+    }
+    .filter-row,
+    .table-container {
+      margin-top: 24px;
+    }
+    .header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .controls {
+      display: grid;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(249, 252, 250, 0.94);
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 12px 30px rgba(8, 108, 58, 0.08);
+      backdrop-filter: blur(10px);
+    }
+    .header-search {
+      width: min(320px, 100%);
+      min-height: 42px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+      flex: 0 1 320px;
+      margin-left: auto;
+    }
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      padding: 14px 16px;
+      font-size: 0.96rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.96);
+      resize: vertical;
+      font-family: inherit;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: rgba(11, 143, 77, 0.6);
+      box-shadow: 0 0 0 4px rgba(11, 143, 77, 0.12);
+    }
+    .filter-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+    .filter-group {
+      display: grid;
+      gap: 8px;
+    }
+    .filter-group .filter-trigger.filter-active,
+    .filter-group input.filter-active {
+      border-color: rgba(11, 143, 77, 0.75);
+      background: #eef9f1;
+      box-shadow: 0 0 0 4px rgba(11, 143, 77, 0.14);
+    }
+    .filter-dropdown {
+      position: relative;
+    }
+    .filter-native {
+      display: none;
+    }
+    .filter-trigger {
+      position: relative;
+      border-color: var(--line);
+      padding-right: 42px;
+      text-align: left;
+      font-weight: 500;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: none;
+      transform: none;
+    }
+    .filter-trigger:hover {
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--ink);
+      border-color: rgba(11, 143, 77, 0.22);
+      box-shadow: none;
+      transform: none;
+    }
+    .filter-trigger::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(23, 49, 39, 0.55);
+      border-bottom: 2px solid rgba(23, 49, 39, 0.55);
+      transform: translateY(-65%) rotate(45deg);
+      transition: transform 0.15s ease;
+    }
+    .filter-dropdown.open .filter-trigger::after {
+      transform: translateY(-35%) rotate(-135deg);
+    }
+    .filter-trigger-text {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .filter-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 60;
+      display: grid;
+      gap: 6px;
+      max-height: 260px;
+      overflow: auto;
+      padding: 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 143, 77, 0.16);
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 18px 40px rgba(8, 108, 58, 0.12);
+    }
+    .filter-menu.hidden {
+      display: none;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .filter-option:hover {
+      background: #f1f8f4;
+    }
+    .filter-option.select-all {
+      border-bottom: 1px solid rgba(11, 143, 77, 0.1);
+      padding-bottom: 10px;
+      margin-bottom: 2px;
+    }
+    .filter-option input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: var(--emeritus-green);
+      flex: 0 0 auto;
+    }
+    .filter-option span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    label {
+      font-size: 0.9rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    select,
+    input[type="search"],
+    button {
+      width: 100%;
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      padding: 12px 16px;
+      font-size: 0.96rem;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.96);
+    }
+    select:focus,
+    input[type="search"]:focus {
+      outline: none;
+      border-color: rgba(11, 143, 77, 0.6);
+      box-shadow: 0 0 0 4px rgba(11, 143, 77, 0.12);
+    }
+    button {
+      cursor: pointer;
+      background: var(--emeritus-green);
+      color: #ffffff;
+      border-color: transparent;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+      font-weight: 700;
+    }
+    button:hover {
+      background: var(--emeritus-green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.2);
+    }
+    .table-container {
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 16px;
+      padding-bottom: 64px;
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 24px 60px rgba(8, 108, 58, 0.08);
+      overflow: hidden;
+    }
+    .table-shell {
+      width: 100%;
+      padding-bottom: 8px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: inset 0 0 0 1px rgba(11, 143, 77, 0.06);
+      overflow: hidden;
+    }
+    .dataTables_wrapper {
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      position: relative;
+      width: 100% !important;
+    }
+    .dataTables_wrapper .dataTables_scroll {
+      min-width: 0;
+      width: 100%;
+    }
+    .dataTables_wrapper .dataTables_scrollHead {
+      overflow: hidden !important;
+      max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      background: #f4faf6;
+    }
+    .dataTables_wrapper .dataTables_scrollBody {
+      max-height: 62vh;
+      overflow: auto !important;
+      max-width: 100%;
+      border-top: 0 !important;
+      border-radius: 0 0 20px 20px;
+      background: #ffffff;
+    }
+    .dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar {
+      height: 10px;
+      width: 10px;
+    }
+    .dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-track {
+      background: rgba(249, 252, 250, 0.95);
+      border-radius: 999px;
+    }
+    .dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb {
+      background: rgba(11, 143, 77, 0.55);
+      border-radius: 999px;
+      border: 2px solid rgba(249, 252, 250, 0.95);
+    }
+    .dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+      background: rgba(11, 143, 77, 0.7);
+    }
+    .dataTables_wrapper .dataTables_scrollBody {
+      scrollbar-color: rgba(11, 143, 77, 0.55) rgba(249, 252, 250, 0.95);
+      scrollbar-width: thin;
+    }
+    .dataTables_scrollHeadInner {
+      width: max-content !important;
+      min-width: 100% !important;
+      max-width: none !important;
+    }
+    .dataTables_scrollHeadInner table,
+    .dataTables_scrollBody table,
+    table.dataTable {
+      border-collapse: separate !important;
+      border-spacing: 0;
+      min-width: max-content !important;
+      width: max-content !important;
+      table-layout: auto !important;
+    }
+    .dataTables_wrapper .dataTables_scrollBody {
+      overflow-x: auto !important;
+      overflow-y: auto !important;
+    }
+    table.dataTable th,
+    table.dataTable td {
+      box-sizing: border-box;
+      min-width: 150px;
+    }
+    table.dataTable th {
+      padding: 14px 12px;
+      white-space: nowrap;
+      border-bottom: 1px solid #e6f0ea;
+      vertical-align: top;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    table.dataTable td {
+      padding: 14px 12px;
+      white-space: normal;
+      border-bottom: 1px solid #e6f0ea;
+      vertical-align: top;
+      text-align: left;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    table.dataTable thead th {
+      white-space: nowrap;
+      background: #f4faf6;
+      color: var(--ink);
+      border-bottom: 2px solid #cfe3d5;
+      box-shadow: 0 2px 0 #cfe3d5;
+    }
+    table.dataTable td:nth-child(15),
+    table.dataTable th:nth-child(15) {
+      min-width: 160px;
+    }
+    .cell-wrap {
+      display: block;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+    .cell-wrap.summary-cell,
+    .cell-wrap.description-cell {
+      width: 280px;
+      min-width: 280px;
+    }
+    .cell-wrap.link-cell {
+      width: 260px;
+      min-width: 260px;
+      max-width: 320px;
+    }
+    .table-link {
+      color: var(--emeritus-green-dark);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .table-link:hover {
+      color: var(--emeritus-green);
+    }
+    .issue-key-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--emeritus-green-dark);
+      padding: 0;
+      min-height: auto;
+      width: auto;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      box-shadow: none;
+      transform: none;
+    }
+    .issue-key-button:hover {
+      background: transparent;
+      color: var(--emeritus-green);
+      box-shadow: none;
+      transform: none;
+    }
+    .detail-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(9, 34, 21, 0.38);
+      backdrop-filter: blur(6px);
+    }
+    .detail-modal-panel {
+      width: min(720px, 100%);
+      max-height: min(88vh, 980px);
+      overflow: auto;
+      padding: 28px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #f7fbf8 0%, #eff7f2 100%);
+      border: 1px solid #cfe3d5;
+      box-shadow: 0 28px 70px rgba(8, 48, 28, 0.2);
+    }
+    .detail-card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .detail-card-title {
+      margin: 0 0 6px;
+      font-size: clamp(1.8rem, 2.4vw, 2.8rem);
+      line-height: 1;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .detail-card-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 840px;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .detail-item {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid #e0ece4;
+      min-height: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .detail-label {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .detail-value {
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      font-size: 1rem;
+    }
+    .detail-close {
+      width: auto;
+      min-width: 96px;
+      padding: 10px 18px;
+      min-height: 44px;
+      background: #ffffff;
+      color: var(--emeritus-green-dark);
+      border: 1px solid #bfe0cb;
+      flex: 0 0 auto;
+    }
+    .detail-close:hover {
+      background: var(--emeritus-green-soft);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.12);
+    }
+    .pagination-bar {
+      position: sticky;
+      bottom: 12px;
+      z-index: 25;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(11, 143, 77, 0.16);
+      box-shadow: 0 18px 40px rgba(8, 108, 58, 0.12);
+      backdrop-filter: blur(10px);
+    }
+    .pagination-bar .dataTables_length,
+    .pagination-bar .dataTables_info,
+    .pagination-bar .dataTables_paginate {
+      margin: 0;
+    }
+    .pagination-bar .dataTables_length {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .pagination-bar .dataTables_length label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .pagination-bar .dataTables_length select {
+      min-height: 40px;
+      width: auto;
+      min-width: 88px;
+      padding: 8px 36px 8px 12px;
+    }
+    .pagination-bar .dataTables_info {
+      flex: 1 1 auto;
+      min-width: 0;
+      color: var(--muted);
+      padding-top: 0;
+    }
+    .pagination-bar .dataTables_paginate {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-left: auto;
+    }
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_paginate {
+      color: var(--muted);
+    }
+    .pagination-bar .dataTables_paginate .ellipsis {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 38px;
+      color: var(--muted);
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      min-width: 42px;
+      height: 38px;
+      padding: 0 14px;
+      margin: 0 !important;
+      border-radius: 14px;
+      border: 1px solid rgba(11, 143, 77, 0.12) !important;
+      background: rgba(249, 252, 250, 0.98) !important;
+      color: var(--ink) !important;
+      text-decoration: none !important;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      font-weight: 700;
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: rgba(11, 143, 77, 0.1) !important;
+      color: var(--emeritus-green-dark) !important;
+      border-color: rgba(11, 143, 77, 0.2) !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+      opacity: 0.45;
+      cursor: default;
+      color: var(--muted) !important;
+      background: rgba(249, 252, 250, 0.85) !important;
+      border-color: rgba(220, 236, 227, 0.8) !important;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+      background: var(--emeritus-green) !important;
+      border-color: var(--emeritus-green) !important;
+      color: #ffffff !important;
+    }
+    .dataTables_wrapper .dataTables_length select {
+      max-width: 100px;
+    }
+    .loading-panel,
+    .error-panel {
+      margin-top: 24px;
+      padding: 22px;
+      border-radius: 18px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .loading-panel {
+      background: var(--emeritus-green-soft);
+      border: 1px solid #bfe0cb;
+      color: var(--emeritus-green-dark);
+    }
+    .loading-panel strong {
+      color: var(--emeritus-green-dark);
+    }
+    .loading-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .loading-help {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+    .error-panel {
+      background: #fff4e8;
+      border: 1px solid #f2d0a6;
+      color: #8a4b08;
+    }
+    .hidden {
+      display: none !important;
+    }
+    @media (max-width: 820px) {
+      .page-shell {
+        padding: 20px 16px 32px;
+      }
+      header {
+        padding: 4px 0 0;
+      }
+      .detail-modal {
+        padding: 12px;
+      }
+      .detail-modal-panel {
+        padding: 18px;
+        border-radius: 22px;
+      }
+      .detail-card-head {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .filter-row {
+        grid-template-columns: 1fr;
+      }
+      .header-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .brand-block {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .brand-logo {
+        width: min(220px, 100%);
+      }
+      .pagination-bar {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .dataTables_wrapper .dataTables_paginate {
+        justify-content: flex-start;
+      }
+      .pagination-bar .dataTables_info {
+        padding-top: 0;
+      }
+      .pagination-bar .dataTables_paginate {
+        flex: 1 1 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+      }
+      .pagination-bar {
+        bottom: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header>
+      <div class="header-bar">
+        <div class="brand-block">
+          <img src="./assets/emeritus-logo.webp" alt="Emeritus" class="brand-logo" />
+          <div class="brand-copy">
+            <h1 class="brand-title">India Degrees Business</h1>
+            <p class="brand-subtitle">Release Notes</p>
+          </div>
+        </div>
+        <input type="search" id="globalSearch" class="header-search" placeholder="Search all columns" aria-label="Global Search" />
+      </div>
+    </header>
+
+    <div id="loading" class="loading-panel">Loading release notes from <strong>/data/master.csv</strong>...</div>
+    <div id="error" class="error-panel hidden"></div>
+
+    <div id="appContent" class="hidden">
+      <div class="controls">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="filterUniversityTrigger">University Name</label>
+            <div class="filter-dropdown" data-filter-id="filterUniversity">
+              <button id="filterUniversityTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterUniversity" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label for="filterProgramTrigger">Program Name</label>
+            <div class="filter-dropdown" data-filter-id="filterProgram">
+              <button id="filterProgramTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterProgram" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label for="filterBusinessUnitTrigger">Business Unit</label>
+            <div class="filter-dropdown" data-filter-id="filterBusinessUnit">
+              <button id="filterBusinessUnitTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterBusinessUnit" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label for="filterReleaseDateTrigger">Release Month</label>
+            <div class="filter-dropdown" data-filter-id="filterReleaseDate">
+              <button id="filterReleaseDateTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterReleaseDate" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="resetFilters" type="button">Reset Filters</button>
+          </div>
+          <div class="filter-group">
+            <label>&nbsp;</label>
+            <button id="downloadExcel" type="button">Download Excel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-shell">
+          <table id="masterTable" class="display stripe hover" style="width:100%">
+            <thead>
+              <tr>
+                <th>Sr. No.</th>
+                <th>Issue Type</th>
+                <th>Card Details</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>University Name</th>
+                <th>Program Name</th>
+                <th>Business Unit</th>
+                <th>Business Docs</th>
+                <th>Tutorial Doc</th>
+                <th>Skill Set</th>
+                <th>Product Manager</th>
+                <th>Business Impact</th>
+                <th>Tech Team</th>
+                <th>Release Date</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="detailModal" class="detail-modal hidden" role="dialog" aria-modal="true" aria-labelledby="detailCardTitle">
+    <div class="detail-modal-panel">
+      <div class="detail-card-head">
+        <div>
+          <h3 id="detailCardTitle" class="detail-card-title">Issue details</h3>
+          <p id="detailCardSubtitle" class="detail-card-subtitle">Click any issue key to inspect the full row in card view.</p>
+        </div>
+        <button id="closeDetailCard" class="detail-close" type="button">Close</button>
+      </div>
+      <div id="detailGrid" class="detail-grid"></div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script>
+    const csvUrl = './data/master.csv';
+    const exactHeaders = [
+      'Issue Type',
+      'Key',
+      'Summary',
+      'Description for RN',
+      'University Name',
+      'Program Name',
+      'Business Unit',
+      'Business Docs',
+      'Tutorial Doc',
+      'Skill Set',
+      'Product Manager',
+      'Business Impact',
+      'Project',
+      'Release Date'
+    ];
+    const filterFields = {
+      'University Name': 'filterUniversity',
+      'Program Name': 'filterProgram',
+      'Business Unit': 'filterBusinessUnit',
+      'Release Date': 'filterReleaseDate'
+    };
+    const displayLabels = {
+      'Issue Type': 'Issue Type',
+      'Key': 'Card Details',
+      'Summary': 'Title',
+      'Description for RN': 'Description',
+      'University Name': 'University Name',
+      'Program Name': 'Program Name',
+      'Business Unit': 'Business Unit',
+      'Business Docs': 'Business Docs',
+      'Tutorial Doc': 'Tutorial Doc',
+      'Skill Set': 'Skill Set',
+      'Product Manager': 'Product Manager',
+      'Business Impact': 'Business Impact',
+      'Project': 'Tech Team',
+      'Release Date': 'Release Date'
+    };
+    const displayFieldSources = {
+      'Issue Type': ['Issue Type'],
+      'Key': ['Issue key'],
+      'Summary': ['Summary'],
+      'Description for RN': ['Custom field (Description for RN)'],
+      'University Name': ['Custom field (University Name)'],
+      'Program Name': ['Custom field (Program Name)'],
+      'Business Unit': ['Custom field (Business Unit)'],
+      'Business Docs': ['Custom field (Business Docs)'],
+      'Tutorial Doc': ['Custom field (Tutorial Doc)'],
+      'Skill Set': ['Custom field (Skill Set)'],
+      'Product Manager': ['Custom field (Product Manager)'],
+      'Business Impact': ['Custom field (Business Impact)'],
+      'Project': ['Project name', 'Project key'],
+      'Release Date': ['Custom field (Release Date)']
+    };
+    const multiSelectDisplayFields = new Set(['University Name', 'Program Name']);
+    let dataTable;
+    let tableFilterRegistered = false;
+
+    const domElements = {
+      loading: document.getElementById('loading'),
+      error: document.getElementById('error'),
+      appContent: document.getElementById('appContent'),
+      filterUniversity: document.getElementById('filterUniversity'),
+      filterProgram: document.getElementById('filterProgram'),
+      filterBusinessUnit: document.getElementById('filterBusinessUnit'),
+      filterReleaseDate: document.getElementById('filterReleaseDate'),
+      globalSearch: document.getElementById('globalSearch'),
+      resetFilters: document.getElementById('resetFilters'),
+      downloadExcel: document.getElementById('downloadExcel'),
+      detailModal: document.getElementById('detailModal'),
+      detailCardTitle: document.getElementById('detailCardTitle'),
+      detailCardSubtitle: document.getElementById('detailCardSubtitle'),
+      detailGrid: document.getElementById('detailGrid'),
+      closeDetailCard: document.getElementById('closeDetailCard')
+    };
+    const filterSelectElements = Object.fromEntries(
+      Object.entries(filterFields).map(([field, id]) => [field, domElements[id]])
+    );
+    const filterDropdownElements = Object.fromEntries(
+      Object.entries(filterFields).map(([field, id]) => {
+        const container = document.querySelector(`[data-filter-id="${id}"]`);
+        return [field, {
+          container,
+          trigger: container?.querySelector('.filter-trigger'),
+          triggerText: container?.querySelector('.filter-trigger-text'),
+          menu: container?.querySelector('.filter-menu')
+        }];
+      })
+    );
+
+    let pendingLocalCsvResolver = null;
+
+    function showError(message) {
+      domElements.loading.classList.add('hidden');
+      domElements.appContent.classList.add('hidden');
+      domElements.error.textContent = message;
+      domElements.error.classList.remove('hidden');
+    }
+
+    function buildLengthMenu(totalRecords) {
+      const maxMultiple = Math.max(1, Math.ceil(totalRecords / 100));
+      const lengths = [];
+      const labels = [];
+      for (let i = 1; i <= maxMultiple; i += 1) {
+        lengths.push(i * 100);
+        labels.push(`${i * 100}`);
+      }
+      if (lengths[lengths.length - 1] !== totalRecords) {
+        lengths.push(-1);
+        labels.push('All');
+      }
+      return [lengths, labels];
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let current = '';
+      let row = [];
+      let inQuotes = false;
+      let i = 0;
+      while (i < text.length) {
+        const char = text[i];
+        const next = text[i + 1];
+        if (inQuotes) {
+          if (char === '"') {
+            if (next === '"') {
+              current += '"';
+              i += 1;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            current += char;
+          }
+        } else {
+          if (char === '"') {
+            inQuotes = true;
+          } else if (char === ',') {
+            row.push(current);
+            current = '';
+          } else if (char === '\r') {
+            // ignore CR, wait for LF
+          } else if (char === '\n') {
+            row.push(current);
+            rows.push(row);
+            row = [];
+            current = '';
+          } else {
+            current += char;
+          }
+        }
+        i += 1;
+      }
+      if (current !== '' || row.length > 0) {
+        row.push(current);
+        rows.push(row);
+      }
+      return rows;
+    }
+
+    function normalizeHeader(header) {
+      return header.trim();
+    }
+
+    function normalizeDisplayText(value) {
+      const input = String(value ?? '');
+      if (!input.includes('�')) {
+        return input;
+      }
+
+      let normalized = input.replace(/(\d)\uFFFD(\d)/g, '$1–$2');
+      let useOpeningQuote = true;
+      normalized = normalized.replace(/\uFFFD/g, () => {
+        const quote = useOpeningQuote ? '“' : '”';
+        useOpeningQuote = !useOpeningQuote;
+        return quote;
+      });
+      return normalized;
+    }
+
+    function normalizeProjectName(value) {
+      const normalized = normalizeDisplayText(value).trim();
+      if (normalized === 'salesforce-emeritus-jforce') {
+        return 'SFDC';
+      }
+      if (normalized === 'portal_em_jforce') {
+        return 'Portal';
+      }
+      return normalized;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function looksLikeUrl(value) {
+      return /^https?:\/\//i.test(String(value || '').trim());
+    }
+
+    function renderLinkedValue(value) {
+      const safeValue = normalizeDisplayText(String(value || '').trim());
+      if (!safeValue) {
+        return '-';
+      }
+      if (!looksLikeUrl(safeValue)) {
+        return escapeHtml(safeValue);
+      }
+      const escaped = escapeHtml(safeValue);
+      return `<a class="table-link" href="${escaped}" target="_blank" rel="noopener noreferrer">${escaped}</a>`;
+    }
+
+    function renderWrappedValue(value, className = '') {
+      const safeValue = normalizeDisplayText(String(value || '').trim());
+      const content = safeValue ? escapeHtml(safeValue) : '-';
+      const extraClass = className ? ` ${className}` : '';
+      return `<div class="cell-wrap${extraClass}">${content}</div>`;
+    }
+
+    function renderWrappedLinkedValue(value) {
+      const safeValue = normalizeDisplayText(String(value || '').trim());
+      const content = safeValue ? renderLinkedValue(safeValue) : '-';
+      return `<div class="cell-wrap link-cell">${content}</div>`;
+    }
+
+    function parseReleaseDate(rawValue) {
+      if (!rawValue || !rawValue.trim()) {
+        return { display: '', monthYear: '', sortValue: 0 };
+      }
+      const value = rawValue.trim();
+      const normalized = value.replace(/\s+/g, ' ');
+      const dateCandidates = [];
+      const isoMatch = normalized.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (isoMatch) {
+        dateCandidates.push(new Date(`${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}-${isoMatch[3].padStart(2, '0')}`));
+      }
+      const slashMatch = normalized.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+      if (slashMatch) {
+        let year = slashMatch[3];
+        if (year.length === 2) {
+          year = parseInt(year, 10) < 70 ? `20${year}` : `19${year}`;
+        }
+        dateCandidates.push(new Date(`${year}-${slashMatch[1].padStart(2, '0')}-${slashMatch[2].padStart(2, '0')}`));
+      }
+      const monthYearMatch = normalized.match(/^(?:([A-Za-z]{3,})|(\d{1,2}))[-\s\/](\d{4})$/);
+      if (monthYearMatch) {
+        const monthPart = monthYearMatch[1] || monthYearMatch[2];
+        const year = monthYearMatch[3];
+        const month = isNaN(monthPart) ? monthPart : String(monthPart).padStart(2, '0');
+        dateCandidates.push(new Date(`${year}-${month}-01`));
+      }
+      const spaceMatch = normalized.match(/^(\d{1,2})[\s/-](\w+)[\s/-](\d{2,4})$/);
+      if (spaceMatch) {
+        const month = isNaN(spaceMatch[2]) ? spaceMatch[2] : String(spaceMatch[2]).padStart(2, '0');
+        let year = spaceMatch[3];
+        if (year.length === 2) {
+          year = parseInt(year, 10) < 70 ? `20${year}` : `19${year}`;
+        }
+        dateCandidates.push(new Date(`${year}-${month}-${spaceMatch[1].padStart(2, '0')}`));
+      }
+      const genericDate = new Date(value);
+      if (!Number.isNaN(genericDate.getTime())) {
+        dateCandidates.push(genericDate);
+      }
+      const validDate = dateCandidates.find(d => !Number.isNaN(d.getTime()));
+      if (!validDate) {
+        return { display: value, monthYear: '', sortValue: 0 };
+      }
+      const monthName = validDate.toLocaleString('en-US', { month: 'short' });
+      const day = String(validDate.getDate()).padStart(2, '0');
+      const year = validDate.getFullYear();
+      return {
+        display: `${monthName} ${day}, ${year}`,
+        monthYear: `${monthName}-${year}`,
+        sortValue: validDate.getTime()
+      };
+    }
+
+    function createSelectOptions(selectElement, values) {
+      selectElement.innerHTML = '';
+      values.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        selectElement.appendChild(option);
+      });
+      syncFilterDropdown(selectElement);
+    }
+
+    function getCurrentMonthYearLabel() {
+      const today = new Date();
+      const monthName = today.toLocaleString('en-US', { month: 'short' });
+      return `${monthName}-${today.getFullYear()}`;
+    }
+
+    function parseMonthYearLabel(value) {
+      const match = String(value || '').match(/^([A-Za-z]{3})-(\d{4})$/);
+      if (!match) {
+        return Number.MAX_SAFE_INTEGER;
+      }
+      const date = new Date(`${match[1]} 01, ${match[2]}`);
+      return Number.isNaN(date.getTime()) ? Number.MAX_SAFE_INTEGER : date.getTime();
+    }
+
+    function getBusinessImpactSortValue(value) {
+      const normalized = String(value || '').trim().toLowerCase();
+      if (normalized === 'high') return 1;
+      if (normalized === 'medium') return 2;
+      if (normalized === 'low') return 3;
+      return 99;
+    }
+
+    function compareRecords(a, b) {
+      const releaseDiff = (b.__releaseSort || 0) - (a.__releaseSort || 0);
+      if (releaseDiff !== 0) {
+        return releaseDiff;
+      }
+
+      const businessUnitDiff = String(a['Business Unit'] || '').localeCompare(
+        String(b['Business Unit'] || ''),
+        undefined,
+        { numeric: true, sensitivity: 'base' }
+      );
+      if (businessUnitDiff !== 0) {
+        return businessUnitDiff;
+      }
+
+      const impactDiff = getBusinessImpactSortValue(a['Business Impact']) - getBusinessImpactSortValue(b['Business Impact']);
+      if (impactDiff !== 0) {
+        return impactDiff;
+      }
+
+      return String(a.Key || '').localeCompare(String(b.Key || ''), undefined, { numeric: true, sensitivity: 'base' });
+    }
+
+    function buildFilterOptions(data) {
+      const uniqueSets = {
+        'University Name': new Set(),
+        'Program Name': new Set(),
+        'Business Unit': new Set(),
+        'Release Date': new Set()
+      };
+      data.forEach(row => {
+        Object.keys(uniqueSets).forEach(field => {
+          if (field === 'Release Date') {
+            const monthYear = row.__monthYear || '';
+            if (monthYear) uniqueSets[field].add(monthYear);
+          } else {
+            const value = row[field] || '';
+            if (!value.trim()) {
+              return;
+            }
+            if (multiSelectDisplayFields.has(field)) {
+              value.split(',').map(item => item.trim()).filter(Boolean).forEach(item => uniqueSets[field].add(item));
+            } else {
+              uniqueSets[field].add(value.trim());
+            }
+          }
+        });
+      });
+      Object.entries(uniqueSets).forEach(([field, values]) => {
+        const targetSelect = filterSelectElements[field];
+        const sorted = Array.from(values).sort((a, b) => {
+          if (field === 'Release Date') {
+            return parseMonthYearLabel(b) - parseMonthYearLabel(a);
+          }
+          return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+        });
+        createSelectOptions(targetSelect, sorted);
+      });
+      applyDefaultReleaseDateFilter();
+    }
+
+    function getSelectedFilters() {
+      return {
+        'University Name': getSelectedValues(domElements.filterUniversity),
+        'Program Name': getSelectedValues(domElements.filterProgram),
+        'Business Unit': getSelectedValues(domElements.filterBusinessUnit),
+        'Release Date': getSelectedValues(domElements.filterReleaseDate)
+      };
+    }
+
+    function getSelectedValues(selectElement) {
+      return Array.from(selectElement?.selectedOptions || []).map(option => option.value).filter(Boolean);
+    }
+
+    function setSelectedValues(selectElement, values) {
+      const selectedValues = new Set(values);
+      Array.from(selectElement?.options || []).forEach(option => {
+        option.selected = selectedValues.has(option.value);
+      });
+      syncFilterDropdown(selectElement);
+    }
+
+    function getDropdownParts(selectElement) {
+      const field = Object.keys(filterFields).find(key => filterFields[key] === selectElement?.id);
+      return field ? filterDropdownElements[field] : null;
+    }
+
+    function getFilterTriggerLabel(values) {
+      if (!values.length) {
+        return 'All';
+      }
+      if (values.length <= 2) {
+        return values.join(', ');
+      }
+      return `${values.length} selected`;
+    }
+
+    function syncFilterDropdown(selectElement) {
+      const dropdown = getDropdownParts(selectElement);
+      if (!dropdown?.menu || !dropdown.triggerText) {
+        return;
+      }
+      const optionValues = Array.from(selectElement.options).map(option => option.value);
+      const selectedValues = new Set(getSelectedValues(selectElement));
+      dropdown.triggerText.textContent = getFilterTriggerLabel(Array.from(selectedValues));
+      dropdown.menu.innerHTML = '';
+
+      const selectAllLabel = document.createElement('label');
+      selectAllLabel.className = 'filter-option select-all';
+
+      const selectAllCheckbox = document.createElement('input');
+      selectAllCheckbox.type = 'checkbox';
+      selectAllCheckbox.value = '__all__';
+      selectAllCheckbox.checked = optionValues.length > 0 && optionValues.every(value => selectedValues.has(value));
+
+      const selectAllText = document.createElement('span');
+      selectAllText.textContent = 'Select All';
+
+      selectAllLabel.appendChild(selectAllCheckbox);
+      selectAllLabel.appendChild(selectAllText);
+      dropdown.menu.appendChild(selectAllLabel);
+
+      Array.from(selectElement.options).forEach(option => {
+        const optionLabel = document.createElement('label');
+        optionLabel.className = 'filter-option';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = option.value;
+        checkbox.checked = selectedValues.has(option.value);
+
+        const text = document.createElement('span');
+        text.textContent = option.textContent;
+
+        optionLabel.appendChild(checkbox);
+        optionLabel.appendChild(text);
+        dropdown.menu.appendChild(optionLabel);
+      });
+    }
+
+    function closeFilterDropdowns() {
+      Object.values(filterDropdownElements).forEach(dropdown => {
+        dropdown?.container?.classList.remove('open');
+        dropdown?.menu?.classList.add('hidden');
+        if (dropdown?.trigger) {
+          dropdown.trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    function initializeFilterDropdowns() {
+      Object.values(filterDropdownElements).forEach(dropdown => {
+        if (!dropdown?.container || !dropdown.trigger || !dropdown.menu) {
+          return;
+        }
+        dropdown.trigger.addEventListener('click', () => {
+          const isOpen = dropdown.container.classList.contains('open');
+          closeFilterDropdowns();
+          if (!isOpen) {
+            dropdown.container.classList.add('open');
+            dropdown.menu.classList.remove('hidden');
+            dropdown.trigger.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }
+
+    function getRowFieldValues(rowData, field) {
+      if (field === 'Release Date') {
+        return rowData.__monthYear ? [rowData.__monthYear] : [];
+      }
+      const rawValue = String(rowData[field] || '').trim();
+      if (!rawValue) {
+        return [];
+      }
+      if (multiSelectDisplayFields.has(field)) {
+        return rawValue.split(',').map(value => value.trim()).filter(Boolean);
+      }
+      return [rawValue];
+    }
+
+    function updateFilterHighlights() {
+      [
+        domElements.filterUniversity,
+        domElements.filterProgram,
+        domElements.filterBusinessUnit,
+        domElements.filterReleaseDate,
+        domElements.globalSearch
+      ].forEach(element => {
+        if (!element) {
+          return;
+        }
+        const isActive = element === domElements.globalSearch
+          ? Boolean(element.value.trim())
+          : getSelectedValues(element).length > 0;
+        if (element === domElements.globalSearch) {
+          element.classList.toggle('filter-active', isActive);
+        } else {
+          getDropdownParts(element)?.trigger?.classList.toggle('filter-active', isActive);
+        }
+      });
+    }
+
+    function applyDefaultReleaseDateFilter() {
+      const currentMonthYear = getCurrentMonthYearLabel();
+      const hasCurrentMonth = Array.from(domElements.filterReleaseDate.options).some(option => option.value === currentMonthYear);
+      setSelectedValues(domElements.filterReleaseDate, hasCurrentMonth ? [currentMonthYear] : []);
+      updateFilterHighlights();
+    }
+
+    function applyCustomFilters() {
+      if (!dataTable) {
+        return;
+      }
+      dataTable.draw();
+      updateFilterHighlights();
+    }
+
+    function resetFilters() {
+      Object.values(filterSelectElements).forEach(select => {
+        if (select) {
+          setSelectedValues(select, []);
+        }
+      });
+      closeFilterDropdowns();
+      domElements.globalSearch.value = '';
+      if (dataTable) {
+        dataTable.search('').draw();
+      }
+      updateFilterHighlights();
+    }
+
+    function closeDetailCard() {
+      domElements.detailModal.classList.add('hidden');
+      domElements.detailGrid.innerHTML = '';
+      domElements.detailCardTitle.textContent = 'Issue details';
+      domElements.detailCardSubtitle.textContent = 'Click any issue key to inspect the full row in card view.';
+    }
+
+    function renderDetailCard(rowData) {
+      domElements.detailCardTitle.textContent = rowData.Key || 'Issue details';
+      domElements.detailCardSubtitle.textContent = rowData.Summary || 'Full row details';
+      domElements.detailGrid.innerHTML = exactHeaders.map(header => `
+        <article class="detail-item">
+          <p class="detail-label">${escapeHtml(displayLabels[header] || header)}:</p>
+          <p class="detail-value">${renderLinkedValue(rowData[header])}</p>
+        </article>
+      `).join('');
+      domElements.detailModal.classList.remove('hidden');
+    }
+
+    function downloadFilteredRowsAsExcel() {
+      if (!dataTable || typeof XLSX === 'undefined') {
+        showError('Excel export is not available right now.');
+        return;
+      }
+
+      const exportHeaders = exactHeaders.filter(header => header !== 'Issue Type');
+      const filteredRows = dataTable.rows({ search: 'applied' }).data().toArray();
+
+      if (!filteredRows.length) {
+        showError('No filtered rows are available to export.');
+        return;
+      }
+
+      const exportRows = filteredRows.map(row => {
+        const item = {};
+        exportHeaders.forEach(header => {
+          item[displayLabels[header] || header] = row[header] || '';
+        });
+        return item;
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(exportRows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Release Notes');
+
+      const selectedReleaseDates = getSelectedValues(domElements.filterReleaseDate);
+      const fileSuffix = (selectedReleaseDates.length ? selectedReleaseDates.join('-') : 'All')
+        .replace(/[^A-Za-z0-9-]+/g, '_');
+      XLSX.writeFile(workbook, `release-notes-${fileSuffix}.xlsx`);
+    }
+
+    function initializeDataTable(data) {
+      $.fn.DataTable.ext.pager.numbers_length = 7;
+      const columns = [{
+        title: 'Sr. No.',
+        data: null,
+        defaultContent: '',
+        width: '88px',
+        orderable: false,
+        searchable: false,
+        render: (data, type, row, meta) => {
+          const rowNumber = meta.row + meta.settings._iDisplayStart + 1;
+          return type === 'display' ? String(rowNumber) : rowNumber;
+        }
+      }, ...exactHeaders.map(header => {
+        if (header === 'Key') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '160px',
+            render: (data, type) => {
+              if (type !== 'display') {
+                return data || '';
+              }
+              const safeValue = data || '';
+              return `<button type="button" class="issue-key-button" data-issue-key="${escapeHtml(safeValue)}">${escapeHtml(safeValue)}</button>`;
+            }
+          };
+        }
+        if (header === 'Business Docs' || header === 'Tutorial Doc') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '260px',
+            render: (data, type) => {
+              if (type !== 'display') {
+                return data || '';
+              }
+              return renderWrappedLinkedValue(data);
+            }
+          };
+        }
+        if (header === 'Summary') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '300px',
+            render: (data, type) => type === 'display' ? renderWrappedValue(data, 'summary-cell') : (data || '')
+          };
+        }
+        if (header === 'Description for RN') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '300px',
+            render: (data, type) => type === 'display' ? renderWrappedValue(data, 'description-cell') : (data || '')
+          };
+        }
+        if (header === 'Release Date') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '160px',
+            render: (data, type, row) => {
+              if (type === 'sort' || type === 'type') {
+                return row.__releaseSort || 0;
+              }
+              return data || '';
+            }
+          };
+        }
+        if (header === 'Business Impact') {
+          return {
+            title: displayLabels[header] || header,
+            data: header,
+            defaultContent: '',
+            width: '170px',
+            render: (data, type) => {
+              if (type === 'sort' || type === 'type') {
+                return getBusinessImpactSortValue(data);
+              }
+              return data || '';
+            }
+          };
+        }
+        return {
+          title: displayLabels[header] || header,
+          data: header,
+          defaultContent: '',
+          width: '180px'
+        };
+      })];
+      dataTable = $('#masterTable').DataTable({
+        data,
+        columns,
+        autoWidth: false,
+        deferRender: true,
+        dom: 'rt<"pagination-bar"lip>',
+        pageLength: 100,
+        lengthMenu: buildLengthMenu(data.length),
+        order: [],
+        pagingType: 'full_numbers',
+        scrollY: '62vh',
+        scrollX: true,
+        scrollCollapse: true,
+        language: {
+          lengthMenu: 'Rows per page _MENU_',
+          emptyTable: 'No records found for the current filter selection.',
+          zeroRecords: 'No matching records found.',
+          paginate: {
+            first: 'First',
+            previous: 'Prev',
+            next: 'Next',
+            last: 'Last'
+          }
+        },
+        columnDefs: [
+          { targets: exactHeaders.indexOf('Release Date') + 1, searchable: true },
+          { targets: exactHeaders.indexOf('Issue Type') + 1, visible: false }
+        ],
+        initComplete: function() {
+          this.api().columns.adjust();
+        },
+        drawCallback: function() {
+          this.api().columns.adjust();
+        }
+      });
+
+      if (!tableFilterRegistered) {
+        $.fn.dataTable.ext.search.push((settings, searchData, index, rowData) => {
+          if (settings.nTable.id !== 'masterTable') {
+            return true;
+          }
+          const filters = getSelectedFilters();
+          for (const [field, selectedValues] of Object.entries(filters)) {
+            if (!selectedValues.length) {
+              continue;
+            }
+            const rowValues = getRowFieldValues(rowData, field);
+            if (!selectedValues.some(value => rowValues.includes(value))) {
+              return false;
+            }
+          }
+          return true;
+        });
+        tableFilterRegistered = true;
+      }
+
+      domElements.globalSearch.addEventListener('input', event => {
+        dataTable.search(event.target.value).draw();
+      });
+
+      Object.values(filterSelectElements).forEach(select => {
+        if (select) {
+          select.addEventListener('change', () => applyCustomFilters());
+        }
+      });
+      $('#masterTable tbody').on('click', '.issue-key-button', function () {
+        const row = dataTable.row($(this).closest('tr')).data();
+        if (row) {
+          renderDetailCard(row);
+        }
+      });
+      domElements.resetFilters.addEventListener('click', resetFilters);
+      domElements.downloadExcel.addEventListener('click', downloadFilteredRowsAsExcel);
+      applyCustomFilters();
+    }
+
+    function renderLocalUploadPrompt() {
+      domElements.loading.innerHTML = `
+        <div>Direct local-file mode blocks <strong>fetch()</strong> in many browsers.</div>
+        <div class="loading-actions">
+          <button id="uploadCsvButton" type="button">Upload CSV File</button>
+          <p class="loading-help">Use this only for local <strong>file://</strong> mode. On GitHub Pages or <strong>http://localhost</strong>, the CSV will be fetched directly.</p>
+        </div>
+      `;
+      const uploadCsvButton = document.getElementById('uploadCsvButton');
+      if (uploadCsvButton) {
+        uploadCsvButton.addEventListener('click', () => {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = '.csv,text/csv';
+          input.addEventListener('change', () => {
+            const file = input.files && input.files[0];
+            if (!file) {
+              if (pendingLocalCsvResolver) {
+                pendingLocalCsvResolver.reject(new Error('Local file access was cancelled.'));
+                pendingLocalCsvResolver = null;
+              }
+              return;
+            }
+            const reader = new FileReader();
+            reader.onload = () => {
+              if (pendingLocalCsvResolver) {
+                pendingLocalCsvResolver.resolve(String(reader.result || ''));
+                pendingLocalCsvResolver = null;
+              }
+            };
+            reader.onerror = () => {
+              if (pendingLocalCsvResolver) {
+                pendingLocalCsvResolver.reject(new Error('Unable to read the selected CSV file.'));
+                pendingLocalCsvResolver = null;
+              }
+            };
+            reader.readAsText(file);
+          }, { once: true });
+          input.click();
+        });
+      }
+    }
+
+    async function readLocalCsvFromFileSystem() {
+      return new Promise((resolve, reject) => {
+        pendingLocalCsvResolver = { resolve, reject };
+        renderLocalUploadPrompt();
+      });
+    }
+
+    async function getCsvText() {
+      try {
+        const response = await fetch(csvUrl, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`Unable to fetch CSV: ${response.status} ${response.statusText}`);
+        }
+        return await response.text();
+      } catch (error) {
+        if (window.location.protocol === 'file:') {
+          domElements.loading.innerHTML = 'Direct local-file mode blocks <strong>fetch()</strong> in many browsers. Select <strong>data/master.csv</strong> to continue.';
+          return readLocalCsvFromFileSystem();
+        }
+        throw error;
+      }
+    }
+
+    async function loadCsv() {
+      try {
+        const csvText = await getCsvText();
+        const rows = parseCsv(csvText);
+        if (!rows.length) {
+          throw new Error('CSV file is empty or malformed.');
+        }
+        const headers = rows[0].map(normalizeHeader);
+        const headerIndex = headers.reduce((map, header, index) => {
+          if (!map[header]) {
+            map[header] = [];
+          }
+          map[header].push(index);
+          return map;
+        }, {});
+
+        const missingFields = exactHeaders.filter(displayField => {
+          const sourceNames = displayFieldSources[displayField] || [displayField];
+          return !sourceNames.some(sourceName => headerIndex[sourceName]?.length);
+        });
+        if (missingFields.length) {
+          throw new Error(`CSV header mismatch. Missing source columns for: ${missingFields.join(', ')}`);
+        }
+
+        const records = rows.slice(1).map(row => {
+          const item = {};
+          exactHeaders.forEach(header => {
+            const sourceNames = displayFieldSources[header] || [header];
+            const allIndices = sourceNames.flatMap(sourceName => headerIndex[sourceName] || []);
+            if (!allIndices.length) {
+              item[header] = '';
+              return;
+            }
+            if (multiSelectDisplayFields.has(header)) {
+              const values = allIndices
+                .map(index => row[index] || '')
+                .map(value => normalizeDisplayText(value.toString().trim()))
+                .filter(Boolean);
+              item[header] = values.join(', ');
+            } else {
+              const rawValue = row[allIndices[0]] !== undefined ? row[allIndices[0]] : '';
+              item[header] = header === 'Project'
+                ? normalizeProjectName(rawValue)
+                : normalizeDisplayText(rawValue);
+            }
+          });
+          const parsedRelease = parseReleaseDate(item['Release Date']);
+          item['Release Date'] = parsedRelease.display;
+          item.__monthYear = parsedRelease.monthYear;
+          item.__releaseSort = parsedRelease.sortValue;
+          return item;
+        });
+
+        records.sort(compareRecords);
+        buildFilterOptions(records);
+        initializeDataTable(records);
+        domElements.loading.classList.add('hidden');
+        domElements.error.classList.add('hidden');
+        domElements.appContent.classList.remove('hidden');
+      } catch (error) {
+        console.error(error);
+        if (window.location.protocol === 'file:' && error.message === 'Failed to fetch') {
+          showError('Error loading data: this page is being opened as a local file, and the browser is blocking fetch access to ./data/master.csv. Open it through a local web server, or reload and choose the CSV file when prompted.');
+          return;
+        }
+        showError(`Error loading data: ${error.message}`);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeFilterDropdowns();
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.filter-dropdown')) {
+          closeFilterDropdowns();
+        }
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeFilterDropdowns();
+        }
+      });
+      Object.values(filterSelectElements).forEach(select => syncFilterDropdown(select));
+      Object.values(filterDropdownElements).forEach(dropdown => {
+        dropdown?.menu?.addEventListener('change', event => {
+          const checkbox = event.target;
+          if (!(checkbox instanceof HTMLInputElement) || checkbox.type !== 'checkbox') {
+            return;
+          }
+          const selectId = dropdown.container?.dataset.filterId;
+          const selectElement = selectId ? document.getElementById(selectId) : null;
+          if (!selectElement) {
+            return;
+          }
+          const allOptionValues = Array.from(selectElement.options).map(option => option.value);
+          let nextValues;
+          if (checkbox.value === '__all__') {
+            nextValues = checkbox.checked ? allOptionValues : [];
+          } else {
+            const selectedValues = new Set(getSelectedValues(selectElement));
+            if (checkbox.checked) {
+              selectedValues.add(checkbox.value);
+            } else {
+              selectedValues.delete(checkbox.value);
+            }
+            nextValues = Array.from(selectedValues);
+          }
+          setSelectedValues(selectElement, nextValues);
+          applyCustomFilters();
+        });
+      });
+      domElements.closeDetailCard.addEventListener('click', closeDetailCard);
+      domElements.detailModal.addEventListener('click', event => {
+        if (event.target === domElements.detailModal) {
+          closeDetailCard();
+        }
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !domElements.detailModal.classList.contains('hidden')) {
+          closeDetailCard();
+        }
+      });
+      loadCsv();
+    });
+  </script>
+</body>
+</html>
