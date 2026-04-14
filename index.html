@@ -138,6 +138,15 @@
       display: grid;
       gap: 8px;
     }
+    .filter-group.action-group {
+      min-width: 0;
+    }
+    .filter-group.action-group button {
+      min-height: 46px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      white-space: nowrap;
+    }
     .filter-group .filter-trigger.filter-active,
     .filter-group input.filter-active {
       border-color: rgba(11, 143, 77, 0.75);
@@ -724,6 +733,23 @@
         bottom: 8px;
       }
     }
+    @media (min-width: 1280px) {
+      .filter-row {
+        grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(130px, 0.8fr) minmax(130px, 0.8fr);
+        gap: 12px;
+      }
+      .filter-group {
+        min-width: 0;
+      }
+      .filter-group label {
+        font-size: 0.86rem;
+      }
+      .filter-trigger,
+      button {
+        min-height: 48px;
+        padding: 10px 14px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -778,6 +804,16 @@
             </div>
           </div>
           <div class="filter-group">
+            <label for="filterTechTeamTrigger">Tech Team</label>
+            <div class="filter-dropdown" data-filter-id="filterTechTeam">
+              <button id="filterTechTeamTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterTechTeam" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
             <label for="filterReleaseDateTrigger">Release Month</label>
             <div class="filter-dropdown" data-filter-id="filterReleaseDate">
               <button id="filterReleaseDateTrigger" class="filter-trigger" type="button" aria-expanded="false">
@@ -787,11 +823,11 @@
               <select id="filterReleaseDate" class="filter-native" multiple></select>
             </div>
           </div>
-          <div class="filter-group">
+          <div class="filter-group action-group">
             <label>&nbsp;</label>
             <button id="resetFilters" type="button">Reset Filters</button>
           </div>
-          <div class="filter-group">
+          <div class="filter-group action-group">
             <label>&nbsp;</label>
             <button id="downloadExcel" type="button">Download Excel</button>
           </div>
@@ -865,6 +901,7 @@
       'University Name': 'filterUniversity',
       'Program Name': 'filterProgram',
       'Business Unit': 'filterBusinessUnit',
+      'Project': 'filterTechTeam',
       'Release Date': 'filterReleaseDate'
     };
     const displayLabels = {
@@ -910,6 +947,7 @@
       filterUniversity: document.getElementById('filterUniversity'),
       filterProgram: document.getElementById('filterProgram'),
       filterBusinessUnit: document.getElementById('filterBusinessUnit'),
+      filterTechTeam: document.getElementById('filterTechTeam'),
       filterReleaseDate: document.getElementById('filterReleaseDate'),
       globalSearch: document.getElementById('globalSearch'),
       resetFilters: document.getElementById('resetFilters'),
@@ -1138,10 +1176,11 @@
       syncFilterDropdown(selectElement);
     }
 
-    function getCurrentMonthYearLabel() {
+    function getPreviousMonthYearLabel() {
       const today = new Date();
-      const monthName = today.toLocaleString('en-US', { month: 'short' });
-      return `${monthName}-${today.getFullYear()}`;
+      const previousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const monthName = previousMonth.toLocaleString('en-US', { month: 'short' });
+      return `${monthName}-${previousMonth.getFullYear()}`;
     }
 
     function parseMonthYearLabel(value) {
@@ -1189,6 +1228,7 @@
         'University Name': new Set(),
         'Program Name': new Set(),
         'Business Unit': new Set(),
+        'Project': new Set(),
         'Release Date': new Set()
       };
       data.forEach(row => {
@@ -1227,6 +1267,7 @@
         'University Name': getSelectedValues(domElements.filterUniversity),
         'Program Name': getSelectedValues(domElements.filterProgram),
         'Business Unit': getSelectedValues(domElements.filterBusinessUnit),
+        'Project': getSelectedValues(domElements.filterTechTeam),
         'Release Date': getSelectedValues(domElements.filterReleaseDate)
       };
     }
@@ -1347,6 +1388,7 @@
         domElements.filterUniversity,
         domElements.filterProgram,
         domElements.filterBusinessUnit,
+        domElements.filterTechTeam,
         domElements.filterReleaseDate,
         domElements.globalSearch
       ].forEach(element => {
@@ -1365,9 +1407,9 @@
     }
 
     function applyDefaultReleaseDateFilter() {
-      const currentMonthYear = getCurrentMonthYearLabel();
-      const hasCurrentMonth = Array.from(domElements.filterReleaseDate.options).some(option => option.value === currentMonthYear);
-      setSelectedValues(domElements.filterReleaseDate, hasCurrentMonth ? [currentMonthYear] : []);
+      const previousMonthYear = getPreviousMonthYearLabel();
+      const hasPreviousMonth = Array.from(domElements.filterReleaseDate.options).some(option => option.value === previousMonthYear);
+      setSelectedValues(domElements.filterReleaseDate, hasPreviousMonth ? [previousMonthYear] : []);
       updateFilterHighlights();
     }
 
@@ -1388,6 +1430,7 @@
       closeFilterDropdowns();
       domElements.globalSearch.value = '';
       if (dataTable) {
+        applyDefaultReleaseDateFilter();
         dataTable.search('').draw();
       }
       updateFilterHighlights();
