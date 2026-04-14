@@ -310,7 +310,7 @@
       background: var(--panel);
       border-radius: 24px;
       padding: 16px;
-      padding-bottom: 64px;
+      padding-bottom: 16px;
       border: 1px solid rgba(11, 143, 77, 0.1);
       box-shadow: 0 24px 60px rgba(8, 108, 58, 0.08);
       overflow: hidden;
@@ -416,8 +416,8 @@
       border-bottom: 2px solid #cfe3d5;
       box-shadow: 0 2px 0 #cfe3d5;
     }
-    table.dataTable td:nth-child(15),
-    table.dataTable th:nth-child(15) {
+    table.dataTable td:nth-child(14),
+    table.dataTable th:nth-child(14) {
       min-width: 160px;
     }
     .cell-wrap {
@@ -551,7 +551,7 @@
     }
     .detail-card-title {
       margin: 0 0 6px;
-      font-size: clamp(1.8rem, 2.4vw, 2.8rem);
+      font-size: clamp(1.55rem, 2vw, 2.35rem);
       line-height: 1;
       color: var(--ink);
       white-space: nowrap;
@@ -610,8 +610,8 @@
       box-shadow: 0 12px 24px rgba(8, 108, 58, 0.12);
     }
     .pagination-bar {
-      position: sticky;
-      bottom: 12px;
+      position: relative;
+      bottom: auto;
       z-index: 25;
       display: flex;
       flex-wrap: nowrap;
@@ -619,12 +619,13 @@
       align-items: center;
       gap: 16px;
       width: 100%;
-      padding: 14px 18px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.98);
-      border: 1px solid rgba(11, 143, 77, 0.16);
-      box-shadow: 0 18px 40px rgba(8, 108, 58, 0.12);
-      backdrop-filter: blur(10px);
+      margin-top: 12px;
+      padding: 14px 6px 4px;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
     }
     .pagination-bar .dataTables_length,
     .pagination-bar .dataTables_info,
@@ -651,6 +652,89 @@
       width: auto;
       min-width: 88px;
       padding: 8px 36px 8px 12px;
+    }
+    .pagination-bar .dataTables_length .length-select-native {
+      display: none;
+    }
+    .pagination-length-dropdown {
+      position: relative;
+      min-width: 116px;
+    }
+    .pagination-length-trigger {
+      position: relative;
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 40px 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(11, 143, 77, 0.18);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 250, 246, 0.98) 100%);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+      font-weight: 600;
+      text-align: left;
+    }
+    .pagination-length-trigger:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #eef8f2 100%);
+      border-color: rgba(11, 143, 77, 0.28);
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+      transform: none;
+    }
+    .pagination-length-trigger::after {
+      content: "";
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid rgba(23, 49, 39, 0.58);
+      border-bottom: 2px solid rgba(23, 49, 39, 0.58);
+      transform: translateY(-60%) rotate(45deg);
+      transition: transform 0.15s ease;
+    }
+    .pagination-length-dropdown.open .pagination-length-trigger::after {
+      transform: translateY(-20%) rotate(-135deg);
+    }
+    .pagination-length-menu {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(100% + 8px);
+      z-index: 40;
+      display: grid;
+      gap: 4px;
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 143, 77, 0.16);
+      background: rgba(255, 255, 255, 0.99);
+      box-shadow: 0 16px 36px rgba(8, 108, 58, 0.12);
+    }
+    .pagination-length-menu.hidden {
+      display: none;
+    }
+    .pagination-length-option {
+      width: 100%;
+      min-height: 40px;
+      padding: 9px 12px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--ink);
+      font-weight: 600;
+      text-align: left;
+      box-shadow: none;
+      transform: none;
+    }
+    .pagination-length-option:hover {
+      background: #eef8f2;
+      color: var(--emeritus-green-dark);
+      box-shadow: none;
+      transform: none;
+    }
+    .pagination-length-option.active,
+    .pagination-length-option.active:hover {
+      background: rgba(11, 143, 77, 0.12);
+      color: var(--emeritus-green-dark);
     }
     .pagination-bar .dataTables_info {
       flex: 1 1 auto;
@@ -840,6 +924,15 @@
       border-radius: 18px;
       box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.96), 0 0 0 10px rgba(11, 143, 77, 0.3);
     }
+    .pagination-bar.walkthrough-highlight {
+      border-radius: 24px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(11, 143, 77, 0.14);
+      box-shadow:
+        0 0 0 8px rgba(11, 143, 77, 0.28),
+        0 18px 36px rgba(8, 108, 58, 0.1);
+    }
     .issue-key-button.walkthrough-highlight {
       padding: 8px 14px;
       border-radius: 999px;
@@ -927,7 +1020,8 @@
         justify-content: flex-start;
       }
       .pagination-bar {
-        bottom: 8px;
+        margin-top: 10px;
+        padding: 12px 0 2px;
       }
       .walkthrough-card {
         width: calc(100vw - 24px);
@@ -1061,7 +1155,6 @@
                 <th>Program Name</th>
                 <th>Business Unit</th>
                 <th>Business Docs</th>
-                <th>Tutorial Doc</th>
                 <th>Skill Set</th>
                 <th>Product Manager</th>
                 <th>Business Impact</th>
@@ -1166,6 +1259,8 @@
       'Release Date': ['Custom field (Release Date)']
     };
     const multiSelectDisplayFields = new Set(['University Name', 'Program Name']);
+    const tableHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
+    const detailCardHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
     let dataTable;
     let tableFilterRegistered = false;
     let activeWalkthroughTarget = null;
@@ -1206,7 +1301,7 @@
       },
       {
         selector: '#masterTable tbody .issue-key-button',
-        title: 'Issue Detail View',
+        title: 'Card Detail View',
         body: 'Click any issue key in Card Details to open the full row inside a modal card view. This is useful when a row contains longer content.'
       },
       {
@@ -1741,7 +1836,7 @@
     function renderDetailCard(rowData) {
       domElements.detailCardTitle.textContent = rowData.Key || 'Issue details';
       domElements.detailCardSubtitle.textContent = rowData.Summary || 'Full row details';
-      domElements.detailGrid.innerHTML = exactHeaders.map(header => `
+      domElements.detailGrid.innerHTML = detailCardHeaders.map(header => `
         <article class="detail-item">
           <p class="detail-label">${escapeHtml(displayLabels[header] || header)}:</p>
           <p class="detail-value">${renderLinkedValue(rowData[header])}</p>
@@ -1784,6 +1879,109 @@
       const fileSuffix = (selectedReleaseDates.length ? selectedReleaseDates.join('-') : 'All')
         .replace(/[^A-Za-z0-9-]+/g, '_');
       XLSX.writeFile(workbook, `release-notes-${fileSuffix}.xlsx`);
+    }
+
+    function syncTableScrollWidth(apiInstance) {
+      const api = apiInstance || dataTable;
+      if (!api) {
+        return;
+      }
+
+      const container = api.table().container();
+      const scrollBody = container.querySelector('.dataTables_scrollBody');
+      const scrollHeadInner = container.querySelector('.dataTables_scrollHeadInner');
+      const scrollHeadTable = scrollHeadInner?.querySelector('table');
+      const scrollBodyTable = scrollBody?.querySelector('table');
+      const visibleHeaders = api.columns(':visible').header().toArray();
+
+      if (!scrollBody || !scrollHeadInner || !scrollHeadTable || !scrollBodyTable || !visibleHeaders.length) {
+        return;
+      }
+
+      const totalVisibleWidth = visibleHeaders.reduce(
+        (sum, header) => sum + Math.ceil(header.getBoundingClientRect().width),
+        0
+      );
+      const targetWidth = Math.max(totalVisibleWidth, scrollBody.clientWidth);
+      const widthValue = `${targetWidth}px`;
+
+      scrollHeadInner.style.width = widthValue;
+      scrollHeadTable.style.width = widthValue;
+      scrollBodyTable.style.width = widthValue;
+    }
+
+    function closePaginationLengthMenus() {
+      document.querySelectorAll('.pagination-length-dropdown').forEach(dropdown => {
+        dropdown.classList.remove('open');
+        dropdown.querySelector('.pagination-length-menu')?.classList.add('hidden');
+      });
+    }
+
+    function enhancePaginationLengthControl(apiInstance) {
+      const api = apiInstance || dataTable;
+      if (!api) {
+        return;
+      }
+
+      const container = api.table().container();
+      const lengthWrapper = container.querySelector('.pagination-bar .dataTables_length');
+      const nativeSelect = lengthWrapper?.querySelector('select');
+
+      if (!lengthWrapper || !nativeSelect || lengthWrapper.querySelector('.pagination-length-dropdown')) {
+        return;
+      }
+
+      nativeSelect.classList.add('length-select-native');
+
+      const dropdown = document.createElement('div');
+      dropdown.className = 'pagination-length-dropdown';
+
+      const trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'pagination-length-trigger';
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.textContent = nativeSelect.options[nativeSelect.selectedIndex]?.textContent || nativeSelect.value;
+
+      const menu = document.createElement('div');
+      menu.className = 'pagination-length-menu hidden';
+
+      Array.from(nativeSelect.options).forEach(option => {
+        const optionButton = document.createElement('button');
+        optionButton.type = 'button';
+        optionButton.className = 'pagination-length-option';
+        optionButton.textContent = option.textContent;
+        optionButton.dataset.value = option.value;
+        if (option.selected) {
+          optionButton.classList.add('active');
+        }
+        optionButton.addEventListener('click', () => {
+          nativeSelect.value = option.value;
+          nativeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+          trigger.textContent = option.textContent;
+          menu.querySelectorAll('.pagination-length-option').forEach(button => {
+            button.classList.toggle('active', button.dataset.value === option.value);
+          });
+          closePaginationLengthMenus();
+        });
+        menu.appendChild(optionButton);
+      });
+
+      trigger.addEventListener('click', event => {
+        event.stopPropagation();
+        const isOpen = dropdown.classList.contains('open');
+        closePaginationLengthMenus();
+        if (!isOpen) {
+          dropdown.classList.add('open');
+          menu.classList.remove('hidden');
+          trigger.setAttribute('aria-expanded', 'true');
+        } else {
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      dropdown.appendChild(trigger);
+      dropdown.appendChild(menu);
+      lengthWrapper.appendChild(dropdown);
     }
 
     function getWalkthroughTarget(step) {
@@ -2116,7 +2314,7 @@
           const rowNumber = meta.row + meta.settings._iDisplayStart + 1;
           return type === 'display' ? String(rowNumber) : rowNumber;
         }
-      }, ...exactHeaders.map(header => {
+      }, ...tableHeaders.map(header => {
         if (header === 'Key') {
           return {
             title: displayLabels[header] || header,
@@ -2224,14 +2422,20 @@
           }
         },
         columnDefs: [
-          { targets: exactHeaders.indexOf('Release Date') + 1, searchable: true },
-          { targets: exactHeaders.indexOf('Issue Type') + 1, visible: false }
+          { targets: tableHeaders.indexOf('Release Date') + 1, searchable: true },
+          { targets: tableHeaders.indexOf('Issue Type') + 1, visible: false }
         ],
         initComplete: function() {
-          this.api().columns.adjust();
+          const api = this.api();
+          api.columns.adjust();
+          syncTableScrollWidth(api);
+          enhancePaginationLengthControl(api);
         },
         drawCallback: function() {
-          this.api().columns.adjust();
+          const api = this.api();
+          api.columns.adjust();
+          syncTableScrollWidth(api);
+          enhancePaginationLengthControl(api);
         }
       });
 
@@ -2423,6 +2627,12 @@
       document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && walkthroughIndex === -1) {
           closeFilterDropdowns();
+          closePaginationLengthMenus();
+        }
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('.pagination-length-dropdown')) {
+          closePaginationLengthMenus();
         }
       });
       Object.values(filterSelectElements).forEach(select => syncFilterDropdown(select));
@@ -2460,6 +2670,10 @@
       domElements.walkthroughNext.addEventListener('click', () => moveWalkthrough(1));
       domElements.walkthroughSkip.addEventListener('click', stopWalkthrough);
       window.addEventListener('resize', () => {
+        if (dataTable) {
+          dataTable.columns.adjust();
+          syncTableScrollWidth(dataTable);
+        }
         if (walkthroughIndex >= 0) {
           positionWalkthroughCard(activeWalkthroughTarget);
         }
