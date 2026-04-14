@@ -111,6 +111,30 @@
       flex: 0 1 320px;
       margin-left: auto;
     }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+      flex: 0 1 auto;
+      width: min(520px, 100%);
+    }
+    .walkthrough-trigger {
+      width: auto;
+      min-width: 170px;
+      min-height: 42px;
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--emeritus-green-dark);
+      border: 1px solid rgba(11, 143, 77, 0.24);
+      box-shadow: none;
+      flex: 0 0 auto;
+    }
+    .walkthrough-trigger:hover {
+      background: var(--emeritus-green-soft);
+      color: var(--emeritus-green-dark);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.12);
+    }
     textarea {
       width: 100%;
       min-height: 120px;
@@ -463,19 +487,66 @@
     .detail-modal-panel {
       width: min(720px, 100%);
       max-height: min(88vh, 980px);
-      overflow: auto;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       padding: 28px;
       border-radius: 30px;
       background: linear-gradient(180deg, #f7fbf8 0%, #eff7f2 100%);
       border: 1px solid #cfe3d5;
       box-shadow: 0 28px 70px rgba(8, 48, 28, 0.2);
     }
+    .detail-modal-scroll {
+      min-height: 0;
+      overflow: auto;
+      padding-right: 10px;
+      margin-right: -10px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(118, 194, 151, 0.95) rgba(231, 244, 236, 0.9);
+    }
+    .detail-modal-scroll::-webkit-scrollbar {
+      width: 14px;
+    }
+    .detail-modal-scroll::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, rgba(238, 247, 241, 0.9) 0%, rgba(230, 243, 235, 0.96) 100%);
+      border-radius: 999px;
+      border: 2px solid rgba(245, 250, 247, 0.92);
+    }
+    .detail-modal-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #86d3a7 0%, #6ec392 100%);
+      border-radius: 999px;
+      border: 2px solid rgba(245, 250, 247, 0.96);
+      box-shadow:
+        inset 0 0 0 1px rgba(11, 143, 77, 0.08),
+        0 0 0 1px rgba(191, 224, 203, 0.7);
+    }
+    .detail-modal-scroll::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #74ca99 0%, #5db786 100%);
+    }
+    .detail-modal-scroll::-webkit-scrollbar-button:single-button {
+      display: block;
+      height: 14px;
+      background-color: rgba(240, 248, 243, 0.96);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 10px 10px;
+    }
+    .detail-modal-scroll::-webkit-scrollbar-button:single-button:vertical:decrement {
+      background-image: linear-gradient(135deg, transparent 50%, #8acaa5 50%), linear-gradient(225deg, transparent 50%, #8acaa5 50%);
+      background-position: calc(50% - 3px) 9px, calc(50% + 3px) 9px;
+      background-size: 6px 6px;
+    }
+    .detail-modal-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
+      background-image: linear-gradient(315deg, transparent 50%, #8acaa5 50%), linear-gradient(45deg, transparent 50%, #8acaa5 50%);
+      background-position: calc(50% - 3px) 6px, calc(50% + 3px) 6px;
+      background-size: 6px 6px;
+    }
     .detail-card-head {
       display: flex;
       justify-content: space-between;
       gap: 16px;
       align-items: flex-start;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       margin-bottom: 22px;
     }
     .detail-card-title {
@@ -531,6 +602,8 @@
       color: var(--emeritus-green-dark);
       border: 1px solid #bfe0cb;
       flex: 0 0 auto;
+      margin-left: auto;
+      align-self: flex-start;
     }
     .detail-close:hover {
       background: var(--emeritus-green-soft);
@@ -682,6 +755,117 @@
     .hidden {
       display: none !important;
     }
+    .walkthrough-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1100;
+      background: rgba(9, 24, 17, 0.56);
+      backdrop-filter: blur(3px);
+    }
+    .walkthrough-card {
+      position: fixed;
+      z-index: 1106 !important;
+      width: min(380px, calc(100vw - 32px));
+      padding: 20px 20px 18px;
+      border-radius: 22px;
+      background: #ffffff;
+      border: 1px solid rgba(11, 143, 77, 0.14);
+      box-shadow: 0 24px 60px rgba(8, 48, 28, 0.24);
+    }
+    .walkthrough-card.walkthrough-card-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .walkthrough-step {
+      margin: 0 0 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--emeritus-green);
+    }
+    .walkthrough-title {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    .walkthrough-body {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.96rem;
+    }
+    .walkthrough-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .walkthrough-action-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .walkthrough-button {
+      width: auto;
+      min-height: 42px;
+      min-width: 88px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+    }
+    .walkthrough-button.secondary {
+      background: #ffffff;
+      color: var(--emeritus-green-dark);
+      border: 1px solid rgba(11, 143, 77, 0.18);
+      box-shadow: none;
+    }
+    .walkthrough-button.secondary:hover {
+      background: var(--emeritus-green-soft);
+      color: var(--emeritus-green-dark);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.12);
+    }
+    .walkthrough-button:disabled,
+    .walkthrough-button:disabled:hover {
+      opacity: 0.45;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+    .walkthrough-highlight {
+      position: relative;
+      z-index: 1101 !important;
+      border-radius: 18px;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.96), 0 0 0 10px rgba(11, 143, 77, 0.3);
+    }
+    .issue-key-button.walkthrough-highlight {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--emeritus-green-dark);
+      box-shadow:
+        0 0 0 4px rgba(255, 255, 255, 0.98),
+        0 0 0 10px rgba(11, 143, 77, 0.5),
+        0 12px 28px rgba(8, 108, 58, 0.24);
+    }
+    .walkthrough-elevated {
+      z-index: 1101 !important;
+    }
+    .filter-menu.walkthrough-elevated {
+      z-index: 1102 !important;
+    }
+    .detail-modal.walkthrough-elevated {
+      position: fixed;
+      z-index: 1104 !important;
+      background: transparent;
+      backdrop-filter: none;
+    }
+    .detail-modal-panel.walkthrough-elevated {
+      position: relative;
+      z-index: 1105 !important;
+    }
     @media (max-width: 820px) {
       .page-shell {
         padding: 20px 16px 32px;
@@ -696,9 +880,14 @@
         padding: 18px;
         border-radius: 22px;
       }
+      .detail-modal-scroll {
+        padding-right: 8px;
+        margin-right: -8px;
+      }
       .detail-card-head {
         flex-direction: row;
         align-items: flex-start;
+        flex-wrap: nowrap;
       }
       .filter-row {
         grid-template-columns: 1fr;
@@ -706,6 +895,14 @@
       .header-bar {
         flex-direction: column;
         align-items: stretch;
+      }
+      .header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .walkthrough-trigger {
+        width: 100%;
       }
       .brand-block {
         flex-direction: column;
@@ -731,6 +928,19 @@
       }
       .pagination-bar {
         bottom: 8px;
+      }
+      .walkthrough-card {
+        width: calc(100vw - 24px);
+      }
+      .walkthrough-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .walkthrough-action-group {
+        width: 100%;
+      }
+      .walkthrough-button {
+        width: 100%;
       }
     }
     @media (min-width: 1280px) {
@@ -763,7 +973,10 @@
             <p class="brand-subtitle">Release Notes</p>
           </div>
         </div>
-        <input type="search" id="globalSearch" class="header-search" placeholder="Search all columns" aria-label="Global Search" />
+        <div class="header-actions">
+          <button id="startWalkthrough" class="walkthrough-trigger" type="button">Start Walkthrough</button>
+          <input type="search" id="globalSearch" class="header-search" placeholder="Global Search" aria-label="Global Search" />
+        </div>
       </div>
     </header>
 
@@ -872,7 +1085,23 @@
         </div>
         <button id="closeDetailCard" class="detail-close" type="button">Close</button>
       </div>
-      <div id="detailGrid" class="detail-grid"></div>
+      <div class="detail-modal-scroll">
+        <div id="detailGrid" class="detail-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="walkthroughOverlay" class="walkthrough-overlay hidden" aria-hidden="true"></div>
+  <div id="walkthroughCard" class="walkthrough-card hidden" role="dialog" aria-modal="true" aria-labelledby="walkthroughTitle">
+    <p id="walkthroughStep" class="walkthrough-step">Step 1 of 1</p>
+    <h3 id="walkthroughTitle" class="walkthrough-title">Walkthrough</h3>
+    <p id="walkthroughBody" class="walkthrough-body"></p>
+    <div class="walkthrough-actions">
+      <div class="walkthrough-action-group">
+        <button id="walkthroughBack" class="walkthrough-button secondary" type="button">Back</button>
+        <button id="walkthroughNext" class="walkthrough-button" type="button">Next</button>
+      </div>
+      <button id="walkthroughSkip" class="walkthrough-button secondary" type="button">Skip</button>
     </div>
   </div>
 
@@ -939,6 +1168,53 @@
     const multiSelectDisplayFields = new Set(['University Name', 'Program Name']);
     let dataTable;
     let tableFilterRegistered = false;
+    let activeWalkthroughTarget = null;
+    let activeWalkthroughElevatedElements = [];
+    let activeWalkthroughPreviewCleanup = null;
+    let walkthroughIndex = -1;
+
+    const walkthroughSteps = [
+      {
+        selector: '#globalSearch',
+        title: 'Global Search',
+        body: 'Use this search box to scan across the table for issue keys, titles, descriptions, business units, owners, and other visible values.'
+      },
+      {
+        selector: '.controls',
+        title: 'Filter Bar',
+        body: 'This section contains the main controls for narrowing the dataset. Filters work together, so each extra selection further reduces the results.'
+      },
+      {
+        selector: '#filterUniversityTrigger',
+        title: 'Multi-Select Filters',
+        body: 'Each filter opens a checkbox menu. You can pick one or many values, use Select All, and the table refreshes as soon as you update the selection.'
+      },
+      {
+        selector: '#resetFilters',
+        title: 'Reset Filters',
+        body: 'Reset clears your current selections and search text, then reapplies the default release-month filter if that month exists in the data.'
+      },
+      {
+        selector: '#downloadExcel',
+        title: 'Download Excel',
+        body: 'Excel export includes only the rows that currently match your filters and search, so the file reflects the exact working view.'
+      },
+      {
+        selector: '#masterTable',
+        title: 'Release Notes Table',
+        body: 'This is the main workspace. You can scroll, review rows, and click sortable headers to change the visible order of the data.'
+      },
+      {
+        selector: '#masterTable tbody .issue-key-button',
+        title: 'Issue Detail View',
+        body: 'Click any issue key in Card Details to open the full row inside a modal card view. This is useful when a row contains longer content.'
+      },
+      {
+        selector: '.pagination-bar',
+        title: 'Pagination',
+        body: 'Use the bottom bar to move between pages, adjust rows per page, and see how many records are currently being displayed.'
+      }
+    ];
 
     const domElements = {
       loading: document.getElementById('loading'),
@@ -956,7 +1232,16 @@
       detailCardTitle: document.getElementById('detailCardTitle'),
       detailCardSubtitle: document.getElementById('detailCardSubtitle'),
       detailGrid: document.getElementById('detailGrid'),
-      closeDetailCard: document.getElementById('closeDetailCard')
+      closeDetailCard: document.getElementById('closeDetailCard'),
+      startWalkthrough: document.getElementById('startWalkthrough'),
+      walkthroughOverlay: document.getElementById('walkthroughOverlay'),
+      walkthroughCard: document.getElementById('walkthroughCard'),
+      walkthroughStep: document.getElementById('walkthroughStep'),
+      walkthroughTitle: document.getElementById('walkthroughTitle'),
+      walkthroughBody: document.getElementById('walkthroughBody'),
+      walkthroughBack: document.getElementById('walkthroughBack'),
+      walkthroughNext: document.getElementById('walkthroughNext'),
+      walkthroughSkip: document.getElementById('walkthroughSkip')
     };
     const filterSelectElements = Object.fromEntries(
       Object.entries(filterFields).map(([field, id]) => [field, domElements[id]])
@@ -974,6 +1259,16 @@
     );
 
     let pendingLocalCsvResolver = null;
+
+    function addWalkthroughElevatedElement(element) {
+      if (!element) {
+        return;
+      }
+      element.classList.add('walkthrough-elevated');
+      if (!activeWalkthroughElevatedElements.includes(element)) {
+        activeWalkthroughElevatedElements.push(element);
+      }
+    }
 
     function showError(message) {
       domElements.loading.classList.add('hidden');
@@ -1453,6 +1748,10 @@
         </article>
       `).join('');
       domElements.detailModal.classList.remove('hidden');
+      if (walkthroughIndex >= 0) {
+        addWalkthroughElevatedElement(domElements.detailModal);
+        addWalkthroughElevatedElement(domElements.detailModal.querySelector('.detail-modal-panel'));
+      }
     }
 
     function downloadFilteredRowsAsExcel() {
@@ -1485,6 +1784,323 @@
       const fileSuffix = (selectedReleaseDates.length ? selectedReleaseDates.join('-') : 'All')
         .replace(/[^A-Za-z0-9-]+/g, '_');
       XLSX.writeFile(workbook, `release-notes-${fileSuffix}.xlsx`);
+    }
+
+    function getWalkthroughTarget(step) {
+      if (!step?.selector) {
+        return null;
+      }
+      return document.querySelector(step.selector);
+    }
+
+    function clearWalkthroughHighlight() {
+      if (activeWalkthroughTarget) {
+        activeWalkthroughTarget.classList.remove('walkthrough-highlight');
+        activeWalkthroughTarget = null;
+      }
+      if (activeWalkthroughPreviewCleanup) {
+        activeWalkthroughPreviewCleanup();
+        activeWalkthroughPreviewCleanup = null;
+      }
+      activeWalkthroughElevatedElements.forEach(element => {
+        element.classList.remove('walkthrough-elevated');
+      });
+      activeWalkthroughElevatedElements = [];
+    }
+
+    function elevateWalkthroughAncestors(target, step) {
+      if (!target) {
+        return;
+      }
+
+      const selectorsToElevate = step?.selector === '#globalSearch'
+        ? []
+        : step?.selector === '#masterTable'
+        ? [
+            '.dataTables_scroll',
+            '.dataTables_scrollHead',
+            '.dataTables_scrollBody',
+            '.table-shell',
+            '.table-container',
+            'thead',
+            'tbody'
+          ]
+        : step?.selector === '#masterTable tbody .issue-key-button'
+        ? []
+        : step?.selector === '.pagination-bar'
+        ? [
+            '.pagination-bar'
+          ]
+        : [
+            '.filter-dropdown',
+            '.filter-group',
+            '.controls',
+            '.header-actions',
+            '.header-bar',
+            '.table-shell',
+            '.table-container',
+            '.pagination-bar',
+            '.dataTables_wrapper',
+            'thead',
+            'tbody',
+            'tr'
+          ];
+
+      const elevated = new Set();
+      selectorsToElevate.forEach(selector => {
+        const ancestor = target.closest(selector);
+        if (ancestor) {
+          elevated.add(ancestor);
+        }
+      });
+
+      elevated.forEach(addWalkthroughElevatedElement);
+    }
+
+    function getWalkthroughPositionRect(target) {
+      const step = walkthroughSteps[walkthroughIndex];
+      if (step?.selector === '#filterUniversityTrigger') {
+        const dropdown = filterDropdownElements['University Name'];
+        if (dropdown?.container) {
+          return dropdown.container.getBoundingClientRect();
+        }
+      }
+      if (step?.selector === '#masterTable tbody .issue-key-button' && !domElements.detailModal.classList.contains('hidden')) {
+        const detailPanel = domElements.detailModal.querySelector('.detail-modal-panel');
+        if (detailPanel) {
+          return detailPanel.getBoundingClientRect();
+        }
+      }
+      return target?.getBoundingClientRect() || null;
+    }
+
+    function positionWalkthroughCard(target) {
+      const card = domElements.walkthroughCard;
+      const margin = 16;
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const cardRect = card.getBoundingClientRect();
+
+      if (!target) {
+        card.style.top = `${Math.max(margin, (viewportHeight - cardRect.height) / 2)}px`;
+        card.style.left = `${Math.max(margin, (viewportWidth - cardRect.width) / 2)}px`;
+        return;
+      }
+
+      const targetRect = getWalkthroughPositionRect(target);
+      if (!targetRect) {
+        return;
+      }
+
+      const step = walkthroughSteps[walkthroughIndex];
+      if (step?.selector === '#filterUniversityTrigger') {
+        const dropdownMenu = filterDropdownElements['University Name']?.menu;
+        const menuRect = dropdownMenu && !dropdownMenu.classList.contains('hidden')
+          ? dropdownMenu.getBoundingClientRect()
+          : targetRect;
+        const rightPlacementLeft = menuRect.right + 24;
+        const leftPlacementLeft = menuRect.left - cardRect.width - 24;
+        const fitsRight = rightPlacementLeft + cardRect.width <= viewportWidth - margin;
+        const fitsLeft = leftPlacementLeft >= margin;
+        const alignedTop = Math.min(
+          Math.max(margin, menuRect.top),
+          viewportHeight - cardRect.height - margin
+        );
+
+        if (fitsRight || fitsLeft) {
+          card.style.top = `${alignedTop}px`;
+          card.style.left = `${fitsRight ? rightPlacementLeft : leftPlacementLeft}px`;
+          return;
+        }
+
+        const belowMenuTop = Math.min(
+          viewportHeight - cardRect.height - margin,
+          menuRect.bottom + 20
+        );
+        const centeredBelowLeft = Math.min(
+          Math.max(margin, menuRect.left),
+          viewportWidth - cardRect.width - margin
+        );
+        card.style.top = `${Math.max(margin, belowMenuTop)}px`;
+        card.style.left = `${centeredBelowLeft}px`;
+        return;
+      }
+
+      if (step?.selector === '#masterTable tbody .issue-key-button') {
+        const detailPanel = domElements.detailModal.querySelector('.detail-modal-panel');
+        const panelRect = detailPanel ? detailPanel.getBoundingClientRect() : targetRect;
+        const leftPlacementLeft = panelRect.left - cardRect.width - 24;
+        const rightPlacementLeft = panelRect.right + 24;
+        const fitsLeft = leftPlacementLeft >= margin;
+        const fitsRight = rightPlacementLeft + cardRect.width <= viewportWidth - margin;
+        const alignedTop = Math.min(
+          Math.max(margin, panelRect.top + 12),
+          viewportHeight - cardRect.height - margin
+        );
+
+        if (fitsLeft || fitsRight) {
+          card.style.top = `${alignedTop}px`;
+          card.style.left = `${fitsLeft ? leftPlacementLeft : rightPlacementLeft}px`;
+          return;
+        }
+
+        card.style.top = `${Math.max(margin, viewportHeight - cardRect.height - margin)}px`;
+        card.style.left = `${Math.max(margin, viewportWidth - cardRect.width - margin)}px`;
+        return;
+      }
+
+      const spaceBelow = viewportHeight - targetRect.bottom;
+      const spaceAbove = targetRect.top;
+      const top = spaceBelow >= cardRect.height + 24 || spaceBelow >= spaceAbove
+        ? Math.min(viewportHeight - cardRect.height - margin, targetRect.bottom + 16)
+        : Math.max(margin, targetRect.top - cardRect.height - 16);
+      const centeredLeft = targetRect.left + (targetRect.width / 2) - (cardRect.width / 2);
+      const left = Math.min(
+        Math.max(margin, centeredLeft),
+        viewportWidth - cardRect.width - margin
+      );
+
+      card.style.top = `${top}px`;
+      card.style.left = `${left}px`;
+    }
+
+    function applyWalkthroughPreview(step) {
+      closeFilterDropdowns();
+      closeDetailCard();
+
+      if (step?.selector === '#masterTable tbody .issue-key-button') {
+        const previewButton = document.querySelector('#masterTable tbody .issue-key-button');
+        if (previewButton) {
+          previewButton.click();
+        }
+        return;
+      }
+
+      if (step?.selector !== '#filterUniversityTrigger') {
+        return;
+      }
+
+      const dropdown = filterDropdownElements['University Name'];
+      const selectElement = domElements.filterUniversity;
+      if (!dropdown?.container || !dropdown.trigger || !dropdown.menu || !dropdown.triggerText || !selectElement) {
+        return;
+      }
+
+      dropdown.container.classList.add('open');
+      dropdown.menu.classList.remove('hidden');
+      dropdown.trigger.setAttribute('aria-expanded', 'true');
+      dropdown.menu.style.display = 'grid';
+      addWalkthroughElevatedElement(dropdown.menu);
+
+      const checkboxes = Array.from(
+        dropdown.menu.querySelectorAll('input[type="checkbox"]')
+      );
+      const optionCheckboxes = checkboxes.filter(checkbox => checkbox.value !== '__all__');
+      const previewCheckboxes = optionCheckboxes.slice(0, 2);
+
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = previewCheckboxes.includes(checkbox);
+      });
+
+      dropdown.triggerText.textContent = previewCheckboxes.length
+        ? `${previewCheckboxes.length} selected`
+        : 'All';
+
+      activeWalkthroughPreviewCleanup = () => {
+        dropdown.menu.style.display = '';
+        syncFilterDropdown(selectElement);
+        dropdown.container.classList.remove('open');
+        dropdown.menu.classList.add('hidden');
+        dropdown.trigger.setAttribute('aria-expanded', 'false');
+      };
+    }
+
+    function stopWalkthrough() {
+      walkthroughIndex = -1;
+      clearWalkthroughHighlight();
+      closeFilterDropdowns();
+      closeDetailCard();
+      domElements.walkthroughOverlay.classList.add('hidden');
+      domElements.walkthroughOverlay.setAttribute('aria-hidden', 'true');
+      domElements.walkthroughCard.classList.add('hidden');
+      domElements.walkthroughCard.classList.remove('walkthrough-card-hidden');
+      domElements.walkthroughCard.style.top = '';
+      domElements.walkthroughCard.style.left = '';
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }
+
+    function renderWalkthroughStep() {
+      const step = walkthroughSteps[walkthroughIndex];
+      const target = getWalkthroughTarget(step);
+      if (!step || !target) {
+        moveWalkthrough(1);
+        return;
+      }
+
+      clearWalkthroughHighlight();
+      activeWalkthroughTarget = target;
+      activeWalkthroughTarget.classList.add('walkthrough-highlight');
+      elevateWalkthroughAncestors(target, step);
+
+      domElements.walkthroughStep.textContent = `Step ${walkthroughIndex + 1} of ${walkthroughSteps.length}`;
+      domElements.walkthroughTitle.textContent = step.title;
+      domElements.walkthroughBody.textContent = step.body;
+      domElements.walkthroughBack.disabled = walkthroughIndex === 0;
+      domElements.walkthroughNext.textContent = walkthroughIndex === walkthroughSteps.length - 1 ? 'Finish' : 'Next';
+
+      if (step.selector === '#masterTable tbody .issue-key-button') {
+        domElements.walkthroughCard.classList.add('walkthrough-card-hidden');
+        activeWalkthroughTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        window.setTimeout(() => {
+          if (walkthroughIndex < 0 || walkthroughSteps[walkthroughIndex]?.selector !== step.selector) {
+            return;
+          }
+          applyWalkthroughPreview(step);
+          window.requestAnimationFrame(() => {
+            positionWalkthroughCard(target);
+            domElements.walkthroughCard.classList.remove('walkthrough-card-hidden');
+          });
+        }, 300);
+        return;
+      }
+
+      domElements.walkthroughCard.classList.remove('walkthrough-card-hidden');
+      applyWalkthroughPreview(step);
+      activeWalkthroughTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+      window.requestAnimationFrame(() => positionWalkthroughCard(target));
+    }
+
+    function moveWalkthrough(stepDelta) {
+      if (walkthroughIndex === -1) {
+        return;
+      }
+
+      let nextIndex = walkthroughIndex + stepDelta;
+      while (nextIndex >= 0 && nextIndex < walkthroughSteps.length) {
+        if (getWalkthroughTarget(walkthroughSteps[nextIndex])) {
+          walkthroughIndex = nextIndex;
+          renderWalkthroughStep();
+          return;
+        }
+        nextIndex += stepDelta;
+      }
+
+      if (stepDelta > 0) {
+        stopWalkthrough();
+      }
+    }
+
+    function startWalkthrough() {
+      const firstAvailableIndex = walkthroughSteps.findIndex(step => getWalkthroughTarget(step));
+      if (firstAvailableIndex === -1) {
+        return;
+      }
+
+      walkthroughIndex = firstAvailableIndex;
+      domElements.walkthroughOverlay.classList.remove('hidden');
+      domElements.walkthroughOverlay.setAttribute('aria-hidden', 'false');
+      domElements.walkthroughCard.classList.remove('hidden');
+      renderWalkthroughStep();
     }
 
     function initializeDataTable(data) {
@@ -1797,12 +2413,15 @@
     window.addEventListener('DOMContentLoaded', () => {
       initializeFilterDropdowns();
       document.addEventListener('click', event => {
+        if (walkthroughIndex >= 0 && walkthroughSteps[walkthroughIndex]?.selector === '#filterUniversityTrigger') {
+          return;
+        }
         if (!event.target.closest('.filter-dropdown')) {
           closeFilterDropdowns();
         }
       });
       document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && walkthroughIndex === -1) {
           closeFilterDropdowns();
         }
       });
@@ -1836,13 +2455,27 @@
         });
       });
       domElements.closeDetailCard.addEventListener('click', closeDetailCard);
+      domElements.startWalkthrough.addEventListener('click', startWalkthrough);
+      domElements.walkthroughBack.addEventListener('click', () => moveWalkthrough(-1));
+      domElements.walkthroughNext.addEventListener('click', () => moveWalkthrough(1));
+      domElements.walkthroughSkip.addEventListener('click', stopWalkthrough);
+      window.addEventListener('resize', () => {
+        if (walkthroughIndex >= 0) {
+          positionWalkthroughCard(activeWalkthroughTarget);
+        }
+      });
+      window.addEventListener('scroll', () => {
+        if (walkthroughIndex >= 0) {
+          positionWalkthroughCard(activeWalkthroughTarget);
+        }
+      }, true);
       domElements.detailModal.addEventListener('click', event => {
         if (event.target === domElements.detailModal) {
           closeDetailCard();
         }
       });
       document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && !domElements.detailModal.classList.contains('hidden')) {
+        if (event.key === 'Escape' && walkthroughIndex === -1 && !domElements.detailModal.classList.contains('hidden')) {
           closeDetailCard();
         }
       });
