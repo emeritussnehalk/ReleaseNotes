@@ -79,8 +79,1185 @@
       max-width: none;
     }
     .filter-row,
+    .dashboard-shell,
     .table-container {
       margin-top: 24px;
+    }
+    .view-switcher {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid rgba(11, 143, 77, 0.12);
+      box-shadow:
+        0 8px 18px rgba(8, 108, 58, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.94);
+      align-items: center;
+      position: relative;
+      flex: 0 0 auto;
+      overflow: visible;
+      z-index: 2;
+    }
+    .view-switch-button {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 0;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      box-shadow: none;
+      display: inline-grid;
+      place-items: center;
+      position: relative;
+      overflow: visible;
+      transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+    }
+    .view-switch-button::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%) translateY(4px);
+      padding: 5px 9px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      color: rgba(23, 49, 39, 0.78);
+      font-size: 0.72rem;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+      border: 1px solid rgba(11, 143, 77, 0.12);
+      box-shadow: 0 6px 14px rgba(8, 48, 28, 0.08);
+      z-index: 5;
+    }
+    .view-switch-button:hover {
+      transform: translateY(-1px);
+      box-shadow: none;
+      background: rgba(11, 143, 77, 0.06);
+      color: var(--ink);
+    }
+    .view-switch-button:hover::after,
+    .view-switch-button:focus-visible::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .view-switch-button.active {
+      background: linear-gradient(135deg, var(--emeritus-green-dark), var(--emeritus-green));
+      color: #ffffff;
+      border-color: rgba(11, 143, 77, 0.28);
+      box-shadow: 0 10px 18px rgba(8, 108, 58, 0.16);
+    }
+    .view-switch-button:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 3px rgba(11, 143, 77, 0.16),
+        0 10px 20px rgba(8, 108, 58, 0.12);
+    }
+    .view-switch-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      color: currentColor;
+    }
+    .dashboard-shell {
+      display: grid;
+      gap: 18px;
+    }
+    .view-panel.hidden {
+      display: none;
+    }
+    .dashboard-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 22px 24px;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(8, 108, 58, 0.96), rgba(11, 143, 77, 0.9)),
+        linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
+      color: #f4fff8;
+      box-shadow: 0 18px 40px rgba(8, 108, 58, 0.18);
+      overflow: hidden;
+      position: relative;
+    }
+    .dashboard-header::after {
+      content: "";
+      position: absolute;
+      inset: auto -5% -45% auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+    .dashboard-title-block {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 8px;
+      max-width: 720px;
+    }
+    .dashboard-eyebrow {
+      margin: 0;
+      font-size: 0.76rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(244, 255, 248, 0.76);
+      font-weight: 700;
+    }
+    .dashboard-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 2vw, 2.1rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+    .dashboard-subtitle {
+      margin: 0;
+      max-width: 62ch;
+      color: rgba(244, 255, 248, 0.88);
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+    .dashboard-toolbar {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+      align-content: start;
+    }
+    .dashboard-toolbar-label {
+      margin: 0;
+      font-size: 0.78rem;
+      color: rgba(244, 255, 248, 0.76);
+      font-weight: 600;
+    }
+    .dashboard-chip-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .dashboard-chip {
+      min-height: 38px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+    }
+    .dashboard-chip:hover,
+    .dashboard-chip:focus-visible {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.34);
+      transform: translateY(-1px);
+      outline: none;
+    }
+    .dashboard-chip.active {
+      background: #ffffff;
+      color: var(--emeritus-green-dark);
+      border-color: #ffffff;
+      box-shadow: 0 10px 18px rgba(6, 54, 29, 0.14);
+    }
+    .dashboard-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+    .summary-card {
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 251, 247, 0.98));
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 14px 34px rgba(8, 108, 58, 0.08);
+      display: grid;
+      gap: 8px;
+      min-height: 126px;
+    }
+    .summary-label {
+      margin: 0;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .summary-value {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .summary-meta {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+      grid-auto-flow: row dense;
+    }
+    .dashboard-control-strip {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 14px 34px rgba(8, 108, 58, 0.07);
+    }
+    .dashboard-control-copy {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+    .dashboard-control-title {
+      margin: 0;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .dashboard-control-help {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+    .dashboard-card {
+      grid-column: span 12;
+      padding: 20px 20px 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 16px 38px rgba(8, 108, 58, 0.08);
+      display: grid;
+      gap: 16px;
+      min-width: 0;
+      align-self: start;
+    }
+    .dashboard-card.wide {
+      grid-column: span 12;
+    }
+    .dashboard-stack {
+      grid-column: span 12;
+      display: grid;
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      align-self: stretch;
+      height: 100%;
+    }
+    .dashboard-card.compact {
+      gap: 10px;
+      padding: 14px 16px 14px;
+      height: 100%;
+    }
+    .dashboard-card.compact .dashboard-card-subtitle {
+      font-size: 0.82rem;
+      line-height: 1.28;
+    }
+    .dashboard-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .dashboard-card-title {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+    .dashboard-card-subtitle {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+      max-width: 62ch;
+    }
+    .dashboard-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .chart-frame {
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(11, 143, 77, 0.04), rgba(11, 143, 77, 0.01));
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      padding: 14px;
+      min-height: 250px;
+      overflow: auto hidden;
+    }
+    .chart-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .chart-clickable {
+      cursor: pointer;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+    .chart-clickable:hover {
+      opacity: 0.9;
+    }
+    .chart-clickable.is-selected .chart-bar {
+      stroke: #0a6f3c;
+      stroke-width: 4;
+      paint-order: stroke fill;
+    }
+    .chart-clickable.is-selected .chart-point-label,
+    .chart-clickable.is-selected .chart-axis-label,
+    .chart-clickable.is-selected .lollipop-label,
+    .chart-clickable.is-selected .lollipop-value {
+      fill: #0a6f3c;
+    }
+    .chart-axis-label {
+      font-size: 11px;
+      fill: #6d8378;
+    }
+    .chart-grid-line {
+      stroke: rgba(23, 49, 39, 0.1);
+      stroke-width: 1;
+    }
+    .chart-bar {
+      fill: #0b8f4d;
+    }
+    .chart-bar-secondary {
+      fill: #4eab78;
+    }
+    .chart-bar-tertiary {
+      fill: #87c7a1;
+    }
+    .chart-line {
+      fill: none;
+      stroke: #0b8f4d;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .chart-point {
+      fill: #ffffff;
+      stroke: #0b8f4d;
+      stroke-width: 2.5;
+    }
+    .chart-point-label {
+      font-size: 11px;
+      fill: #2c4b3f;
+      font-weight: 700;
+    }
+    .lollipop-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .lollipop-line {
+      stroke: rgba(11, 143, 77, 0.2);
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+    .lollipop-fill {
+      stroke: #0b8f4d;
+      stroke-width: 12;
+      stroke-linecap: round;
+    }
+    .lollipop-dot {
+      fill: #ffffff;
+      stroke: #0b8f4d;
+      stroke-width: 4.5;
+    }
+    .chart-clickable.is-selected .lollipop-fill {
+      stroke: #0a6f3c;
+      stroke-width: 14;
+    }
+    .chart-clickable.is-selected .lollipop-dot {
+      stroke: #0a6f3c;
+      stroke-width: 5.5;
+    }
+    .lollipop-label {
+      font-size: 14px;
+      fill: #173127;
+      font-weight: 700;
+    }
+    .lollipop-value {
+      font-size: 12px;
+      fill: #5a7266;
+      font-weight: 700;
+    }
+    .stacked-share {
+      display: grid;
+      gap: 14px;
+    }
+    .stacked-share-bar {
+      display: flex;
+      min-height: 22px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #edf5f0;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+    }
+    .stacked-share-segment {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      min-width: 0;
+      position: relative;
+    }
+    .stacked-share-segment:hover,
+    .stacked-share-segment:focus-visible {
+      filter: brightness(0.96);
+      outline: none;
+    }
+    .stacked-share-segment.is-selected {
+      box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.95);
+      filter: saturate(1.08) brightness(0.92);
+    }
+    .stacked-share-list {
+      display: grid;
+      gap: 10px;
+    }
+    .stacked-share-item {
+      appearance: none;
+      width: 100%;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: #fbfdfb;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      font: inherit;
+    }
+    .stacked-share-item:hover,
+    .stacked-share-item:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(11, 143, 77, 0.2);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.08);
+      outline: none;
+    }
+    .stacked-share-item.is-selected {
+      border-color: rgba(11, 143, 77, 0.42);
+      background: linear-gradient(180deg, rgba(232, 245, 237, 0.92), rgba(248, 252, 249, 0.98));
+      box-shadow:
+        0 0 0 2px rgba(11, 143, 77, 0.18),
+        0 12px 24px rgba(8, 108, 58, 0.1);
+    }
+    .stacked-share-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .stacked-share-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .stacked-share-meta {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .metric-list {
+      display: grid;
+      gap: 12px;
+    }
+    .metric-button {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+    .metric-row {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      background: #fbfdfb;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+    .metric-button:hover .metric-row,
+    .metric-button:focus-visible .metric-row {
+      transform: translateY(-1px);
+      border-color: rgba(11, 143, 77, 0.22);
+      box-shadow: 0 14px 24px rgba(8, 108, 58, 0.08);
+      outline: none;
+    }
+    .metric-button.is-selected .metric-row {
+      border-color: rgba(11, 143, 77, 0.42);
+      background: linear-gradient(180deg, rgba(232, 245, 237, 0.9), rgba(250, 253, 251, 0.98));
+      box-shadow:
+        0 0 0 2px rgba(11, 143, 77, 0.16),
+        0 14px 24px rgba(8, 108, 58, 0.1);
+    }
+    .metric-row-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      font-size: 0.92rem;
+    }
+    .metric-row-label {
+      color: var(--ink);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+    .metric-row-value {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .metric-track {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: #e6f2ea;
+      overflow: hidden;
+    }
+    .metric-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0b8f4d 0%, #63ba86 100%);
+    }
+    .metric-fill.alt {
+      background: linear-gradient(90deg, #1b7d5c 0%, #5fc7b4 100%);
+    }
+    .metric-fill.gold {
+      background: linear-gradient(90deg, #b6801a 0%, #efc861 100%);
+    }
+    .impact-layout {
+      display: grid;
+      gap: 14px;
+    }
+    .impact-visual {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: center;
+    }
+    .impact-donut {
+      width: 190px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(11, 143, 77, 0.08);
+    }
+    .impact-donut::after {
+      content: "";
+      position: absolute;
+      inset: 22%;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(11, 143, 77, 0.08);
+    }
+    .impact-donut-center {
+      position: absolute;
+      inset: 22%;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      padding: 8px 14px;
+    }
+    .impact-donut-center strong {
+      font-size: 1.8rem;
+      line-height: 1;
+      color: var(--ink);
+      display: block;
+      margin: 0;
+    }
+    .impact-donut-center span {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      line-height: 1.15;
+      display: block;
+      margin: 0;
+    }
+    .impact-bar {
+      display: flex;
+      min-height: 24px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #edf5f0;
+    }
+    .impact-segment {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12);
+    }
+    .impact-segment.high {
+      background: #0b8f4d;
+    }
+    .impact-segment.medium {
+      background: #58b07d;
+    }
+    .impact-segment.low {
+      background: #9ed0b3;
+      color: #214234;
+      text-shadow: none;
+    }
+    .impact-breakdown {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .impact-pill {
+      padding: 14px 14px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      background: #f8fcf9;
+      display: grid;
+      gap: 4px;
+    }
+    .impact-pill strong {
+      font-size: 1.18rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .impact-pill span {
+      font-size: 0.84rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .impact-action-list {
+      display: grid;
+      gap: 10px;
+      flex: 1 1 280px;
+    }
+    .impact-action {
+      appearance: none;
+      width: 100%;
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: #fbfdfb;
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      transition: border-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+      font: inherit;
+    }
+    .impact-action:hover,
+    .impact-action:focus-visible {
+      border-color: rgba(11, 143, 77, 0.24);
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(244, 250, 246, 0.98), rgba(250, 253, 251, 0.98));
+      box-shadow: 0 12px 22px rgba(8, 108, 58, 0.06);
+      outline: none;
+    }
+    .impact-action.is-selected {
+      border-color: rgba(11, 143, 77, 0.44);
+      background: linear-gradient(180deg, rgba(232, 245, 237, 0.98), rgba(246, 251, 248, 0.98));
+      box-shadow:
+        0 0 0 2px rgba(11, 143, 77, 0.16),
+        0 14px 26px rgba(8, 108, 58, 0.1);
+    }
+    .impact-action.is-selected .impact-action-label,
+    .impact-action.is-selected .impact-action-count {
+      color: var(--emeritus-green-dark);
+    }
+    .impact-action-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .impact-action-count {
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .swatch-high,
+    .swatch-medium,
+    .swatch-low {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .swatch-high {
+      background: #0b8f4d;
+    }
+    .swatch-medium {
+      background: #58b07d;
+    }
+    .swatch-low {
+      background: #9ed0b3;
+    }
+    .tile-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .tile-chip {
+      appearance: none;
+      border: 1px solid rgba(11, 143, 77, 0.12);
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.34), transparent 42%),
+        linear-gradient(135deg, rgba(11, 143, 77, 0.12), rgba(11, 143, 77, 0.04));
+      color: var(--ink);
+      padding: 12px 14px;
+      text-align: left;
+      cursor: pointer;
+      display: grid;
+      gap: 6px;
+      min-width: 128px;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      font: inherit;
+    }
+    .tile-chip:hover,
+    .tile-chip:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(11, 143, 77, 0.24);
+      box-shadow: 0 14px 26px rgba(8, 108, 58, 0.08);
+      outline: none;
+    }
+    .tile-chip strong {
+      font-size: 1rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+    .tile-chip span {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+    .university-list {
+      display: grid;
+      gap: 10px;
+    }
+    .vertical-bars {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+      min-height: 180px;
+      padding-top: 4px;
+    }
+    .vertical-bar-item {
+      appearance: none;
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 8px 6px 6px;
+      background: transparent;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      align-self: stretch;
+      cursor: pointer;
+      transition: transform 0.16s ease, background 0.16s ease;
+      font: inherit;
+    }
+    .vertical-bar-item:hover,
+    .vertical-bar-item:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(11, 143, 77, 0.035);
+      outline: none;
+    }
+    .vertical-bar-item.is-selected {
+      background: linear-gradient(180deg, rgba(232, 245, 237, 0.92), rgba(249, 252, 250, 0.98));
+      box-shadow:
+        0 0 0 2px rgba(11, 143, 77, 0.16),
+        0 12px 24px rgba(8, 108, 58, 0.1);
+    }
+    .vertical-bar-count {
+      color: var(--emeritus-green-dark);
+      font-size: 0.9rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .vertical-bar-track {
+      width: 100%;
+      min-height: 92px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .vertical-bar-fill {
+      width: 100%;
+      max-width: 42px;
+      min-height: 14px;
+      border-radius: 10px 10px 6px 6px;
+      background: linear-gradient(180deg, rgba(125, 199, 154, 0.95) 0%, rgba(11, 143, 77, 0.92) 100%);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+    .vertical-bar-label {
+      color: var(--ink);
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: center;
+      overflow-wrap: anywhere;
+      max-width: 8ch;
+    }
+    .university-item {
+      appearance: none;
+      width: 100%;
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      border-radius: 16px;
+      padding: 12px 14px;
+      background:
+        linear-gradient(135deg, rgba(11, 143, 77, 0.08), rgba(11, 143, 77, 0.02)),
+        #ffffff;
+      display: grid;
+      gap: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      font: inherit;
+    }
+    .university-item:hover,
+    .university-item:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(11, 143, 77, 0.2);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.08);
+      outline: none;
+    }
+    .university-item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .university-item-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .university-rank {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: rgba(11, 143, 77, 0.12);
+      color: var(--emeritus-green-dark);
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+    .university-name {
+      overflow-wrap: anywhere;
+      font-size: 0.9rem;
+      line-height: 1.2;
+    }
+    .university-count {
+      color: var(--emeritus-green-dark);
+      font-size: 0.88rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .university-track {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: #e6f2ea;
+      overflow: hidden;
+    }
+    .university-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #0b8f4d 0%, #8ec9a0 100%);
+    }
+    .bubble-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding-top: 4px;
+    }
+    .bubble-chip {
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.22) 38%, transparent 40%),
+        linear-gradient(135deg, rgba(11, 143, 77, 0.92), rgba(87, 177, 120, 0.92));
+      color: #ffffff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 10px;
+      box-shadow: 0 14px 24px rgba(8, 108, 58, 0.12);
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      font: inherit;
+    }
+    .bubble-chip:hover,
+    .bubble-chip:focus-visible {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 18px 32px rgba(8, 108, 58, 0.16);
+      outline: none;
+    }
+    .bubble-chip strong {
+      font-size: 1rem;
+      line-height: 1;
+      display: block;
+    }
+    .bubble-chip span {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      font-weight: 700;
+      max-width: 9ch;
+      overflow-wrap: anywhere;
+    }
+    .program-ladder {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .program-rung {
+      appearance: none;
+      width: 100%;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      border-radius: 16px;
+      padding: 10px 12px;
+      background:
+        linear-gradient(135deg, rgba(11, 143, 77, 0.05), rgba(11, 143, 77, 0.015)),
+        #ffffff;
+      cursor: pointer;
+      display: grid;
+      gap: 8px;
+      text-align: left;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      font: inherit;
+    }
+    .program-rung:hover,
+    .program-rung:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(11, 143, 77, 0.16);
+      background:
+        linear-gradient(135deg, rgba(11, 143, 77, 0.07), rgba(11, 143, 77, 0.02)),
+        #ffffff;
+      box-shadow: 0 10px 18px rgba(8, 108, 58, 0.06);
+      outline: none;
+    }
+    .program-rung.is-selected {
+      border-color: rgba(11, 143, 77, 0.42);
+      background:
+        linear-gradient(135deg, rgba(11, 143, 77, 0.1), rgba(11, 143, 77, 0.03)),
+        #ffffff;
+      box-shadow:
+        0 0 0 2px rgba(11, 143, 77, 0.16),
+        0 12px 22px rgba(8, 108, 58, 0.1);
+    }
+    .program-rung-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .program-rank {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(11, 143, 77, 0.1);
+      color: var(--emeritus-green-dark);
+      font-size: 0.74rem;
+      font-weight: 800;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+    .program-count {
+      color: var(--emeritus-green-dark);
+      font-size: 0.88rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .program-name {
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 0.84rem;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+    .program-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: #e8f3ed;
+      overflow: hidden;
+    }
+    .program-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(11, 143, 77, 0.9) 0%, rgba(125, 199, 154, 0.85) 100%);
+    }
+    .heatmap-wrap {
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .heatmap {
+      display: grid;
+      gap: 8px;
+      min-width: 680px;
+    }
+    .heatmap-header,
+    .heatmap-row {
+      display: grid;
+      grid-template-columns: 180px repeat(var(--heatmap-columns, 6), minmax(70px, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+    .heatmap-corner,
+    .heatmap-month {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: center;
+    }
+    .heatmap-corner {
+      text-align: left;
+      padding-left: 2px;
+    }
+    .heatmap-label {
+      font-size: 0.88rem;
+      color: var(--ink);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+    .heatmap-cell {
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      display: grid;
+      place-items: center;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #173127;
+    }
+    .heatmap-button {
+      appearance: none;
+      width: 100%;
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 0;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+    .heatmap-button:hover,
+    .heatmap-button:focus-visible {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(8, 108, 58, 0.1);
+      outline: none;
+    }
+    .dashboard-empty {
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+      border-radius: 20px;
+      border: 1px dashed rgba(11, 143, 77, 0.22);
+      color: var(--muted);
+      background: rgba(11, 143, 77, 0.02);
+    }
+    .dashboard-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+    .table-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .table-caption {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
     }
     .header-bar {
       display: flex;
@@ -104,11 +1281,12 @@
       backdrop-filter: blur(10px);
     }
     .header-search {
-      width: min(320px, 100%);
+      width: 320px;
+      min-width: 320px;
       min-height: 42px;
       padding: 10px 14px;
       font-size: 0.9rem;
-      flex: 0 1 320px;
+      flex: 0 0 320px;
       margin-left: auto;
     }
     .header-actions {
@@ -116,8 +1294,9 @@
       align-items: center;
       gap: 12px;
       margin-left: auto;
-      flex: 0 1 auto;
-      width: min(520px, 100%);
+      flex: 0 0 auto;
+      width: auto;
+      flex-wrap: nowrap;
     }
     .walkthrough-trigger {
       width: auto;
@@ -164,12 +1343,62 @@
     }
     .filter-group.action-group {
       min-width: 0;
+      flex: 0 0 auto;
+      width: 100%;
     }
     .filter-group.action-group button {
-      min-height: 46px;
-      padding: 10px 14px;
-      font-size: 0.92rem;
+      min-height: 44px;
+      padding: 10px 16px;
+      font-size: 0.86rem;
+      line-height: 1.1;
       white-space: nowrap;
+      width: auto;
+      min-width: 100%;
+      justify-content: center;
+      border-radius: 14px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease,
+        color 0.16s ease;
+    }
+    #resetFilters,
+    #openTableFromDashboard {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 250, 246, 0.98));
+      color: var(--emeritus-green-dark);
+      border: 1px solid rgba(11, 143, 77, 0.18);
+      box-shadow: 0 8px 18px rgba(8, 108, 58, 0.06);
+    }
+    #resetFilters:hover,
+    #openTableFromDashboard:hover {
+      background: linear-gradient(180deg, #ffffff, #eef8f2);
+      border-color: rgba(11, 143, 77, 0.28);
+      box-shadow: 0 12px 24px rgba(8, 108, 58, 0.1);
+    }
+    #downloadExcel {
+      background: linear-gradient(135deg, var(--emeritus-green-dark), var(--emeritus-green));
+      border: 1px solid rgba(11, 143, 77, 0.24);
+      box-shadow: 0 10px 22px rgba(8, 108, 58, 0.14);
+    }
+    #downloadExcel:hover {
+      background: linear-gradient(135deg, #075f34, #0a8045);
+      box-shadow: 0 14px 26px rgba(8, 108, 58, 0.18);
+    }
+    #openTableFromDashboard:disabled,
+    #openTableFromDashboard:disabled:hover {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 248, 0.92));
+      color: rgba(23, 49, 39, 0.42);
+      border-color: rgba(11, 143, 77, 0.1);
+    }
+    .filter-group.action-group button:disabled,
+    .filter-group.action-group button:disabled:hover {
+      cursor: not-allowed;
+      opacity: 0.45;
+      transform: none;
+      box-shadow: none;
     }
     .filter-group .filter-trigger.filter-active,
     .filter-group input.filter-active {
@@ -924,6 +2153,32 @@
       border-radius: 18px;
       box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.96), 0 0 0 10px rgba(11, 143, 77, 0.3);
     }
+    #resetFilters.walkthrough-highlight,
+    #downloadExcel.walkthrough-highlight,
+    #openTableFromDashboard.walkthrough-highlight,
+    #startWalkthrough.walkthrough-highlight,
+    #globalSearch.walkthrough-highlight,
+    .view-switch-button.walkthrough-highlight {
+      border: 2px solid rgba(11, 143, 77, 0.92) !important;
+      box-shadow:
+        0 0 0 3px rgba(255, 255, 255, 0.98),
+        0 0 0 8px rgba(11, 143, 77, 0.24),
+        0 14px 28px rgba(8, 108, 58, 0.14);
+    }
+    .walkthrough-toggle-pulse {
+      animation: walkthroughTogglePulse 1.1s ease;
+    }
+    @keyframes walkthroughTogglePulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.08);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
     .pagination-bar.walkthrough-highlight {
       border-radius: 24px;
       overflow: hidden;
@@ -945,6 +2200,19 @@
     }
     .walkthrough-elevated {
       z-index: 1101 !important;
+    }
+    .dashboard-summary.walkthrough-elevated {
+      position: relative;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(249, 252, 250, 0.94);
+      border: 1px solid rgba(11, 143, 77, 0.1);
+      box-shadow: 0 12px 30px rgba(8, 108, 58, 0.08);
+    }
+    .dashboard-summary.walkthrough-elevated .summary-card {
+      box-shadow: none;
+      border: 1px solid rgba(11, 143, 77, 0.08);
+      background: #ffffff;
     }
     .filter-menu.walkthrough-elevated {
       z-index: 1102 !important;
@@ -994,6 +2262,11 @@
         flex-direction: column;
         align-items: stretch;
       }
+      .header-search {
+        width: 100%;
+        min-width: 0;
+        flex: 1 1 auto;
+      }
       .walkthrough-trigger {
         width: 100%;
       }
@@ -1038,8 +2311,31 @@
       }
     }
     @media (min-width: 1280px) {
+      .dashboard-card.span-4 {
+        grid-column: span 4;
+      }
+      .dashboard-card.span-5 {
+        grid-column: span 5;
+      }
+      .dashboard-card.span-6 {
+        grid-column: span 6;
+      }
+      .dashboard-card.span-7 {
+        grid-column: span 7;
+      }
+      .dashboard-stack.span-5 {
+        grid-column: span 5;
+      }
       .filter-row {
-        grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) minmax(130px, 0.8fr) minmax(130px, 0.8fr);
+        grid-template-columns:
+          minmax(135px, 1fr)
+          minmax(135px, 1fr)
+          minmax(135px, 1fr)
+          minmax(135px, 1fr)
+          minmax(135px, 1fr)
+          minmax(138px, 0.74fr)
+          minmax(166px, 0.9fr)
+          minmax(188px, 0.98fr);
         gap: 12px;
       }
       .filter-group {
@@ -1052,6 +2348,27 @@
       button {
         min-height: 48px;
         padding: 10px 14px;
+      }
+    }
+    @media (max-width: 900px) {
+      .dashboard-header {
+        padding: 20px;
+      }
+      .dashboard-toolbar {
+        justify-items: start;
+      }
+      .dashboard-chip-group {
+        justify-content: flex-start;
+      }
+      .chart-frame {
+        min-height: 220px;
+      }
+      .program-ladder {
+        grid-template-columns: 1fr;
+      }
+      .heatmap-header,
+      .heatmap-row {
+        grid-template-columns: 150px repeat(var(--heatmap-columns, 6), minmax(64px, 1fr));
       }
     }
   </style>
@@ -1069,6 +2386,18 @@
         </div>
         <div class="header-actions">
           <button id="startWalkthrough" class="walkthrough-trigger" type="button">Start Walkthrough</button>
+          <div class="view-switcher" role="tablist" aria-label="Data Views">
+            <button id="showTableView" class="view-switch-button active" type="button" role="tab" aria-selected="true" aria-label="Tabular View" data-label="Tabular View">
+              <svg class="view-switch-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13zm2 .5v3h4V6H6zm6 0v3h6V6h-6zM6 11v3h4v-3H6zm6 0v3h6v-3h-6zM6 16v2h4v-2H6zm6 0v2h6v-2h-6z"></path>
+              </svg>
+            </button>
+            <button id="showDashboardView" class="view-switch-button" type="button" role="tab" aria-selected="false" aria-label="Dashboard View" data-label="Dashboard View">
+              <svg class="view-switch-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M4 4h7v7H4V4zm9 0h7v11h-7V4zM4 13h7v7H4v-7zm9 4h7v3h-7v-3z"></path>
+              </svg>
+            </button>
+          </div>
           <input type="search" id="globalSearch" class="header-search" placeholder="Global Search" aria-label="Global Search" />
         </div>
       </div>
@@ -1138,10 +2467,79 @@
             <label>&nbsp;</label>
             <button id="downloadExcel" type="button">Download Excel</button>
           </div>
+          <div class="filter-group action-group">
+            <label>&nbsp;</label>
+            <button id="openTableFromDashboard" type="button">Open Matching Rows</button>
+          </div>
         </div>
       </div>
 
-      <div class="table-container">
+      <section id="dashboardView" class="dashboard-shell view-panel hidden" aria-label="Dashboard View">
+        <p id="dashboardScope" class="hidden"></p>
+        <div id="dashboardSummary" class="dashboard-summary" aria-live="polite"></div>
+
+        <div class="dashboard-grid">
+          <article class="dashboard-card span-7">
+            <div class="dashboard-card-header">
+              <div>
+                <h3 class="dashboard-card-title">Month-wise release trend</h3>
+                <p class="dashboard-card-subtitle">Column chart for release volume over time. Click a month to focus the page on that release month.</p>
+              </div>
+            </div>
+            <div class="chart-frame">
+              <div id="trendChart"></div>
+            </div>
+          </article>
+
+          <article class="dashboard-card span-5">
+            <div class="dashboard-card-header">
+              <div>
+                <h3 class="dashboard-card-title">Business impact mix</h3>
+                <p class="dashboard-card-subtitle">Donut view of `High`, `Medium`, and `Low` impact releases. Click a segment card to filter by impact.</p>
+              </div>
+            </div>
+            <div id="impactSummary" class="impact-layout"></div>
+          </article>
+
+          <article class="dashboard-card span-7">
+            <div class="dashboard-card-header">
+              <div>
+                <h3 class="dashboard-card-title">Business unit-wise release count</h3>
+                <p class="dashboard-card-subtitle">Ranked distribution of release activity by business unit. Click a row to filter the full page to that unit.</p>
+              </div>
+            </div>
+            <div id="businessUnitChart"></div>
+          </article>
+
+          <div class="dashboard-stack span-5">
+            <article class="dashboard-card compact">
+              <div class="dashboard-card-header">
+                <div>
+                  <h3 class="dashboard-card-title">Top universities</h3>
+                  <p class="dashboard-card-subtitle">Stacked share view of the most active universities. Click a segment or row to filter.</p>
+                </div>
+              </div>
+              <div id="universityChart"></div>
+            </article>
+
+            <article class="dashboard-card compact">
+              <div class="dashboard-card-header">
+                <div>
+                  <h3 class="dashboard-card-title">Top programs</h3>
+                  <p class="dashboard-card-subtitle">Compact ranked program ladder. Click any program to drill down.</p>
+                </div>
+              </div>
+              <div id="programChart" class="program-ladder"></div>
+            </article>
+          </div>
+
+        </div>
+      </section>
+
+      <section id="tableView" class="table-container view-panel" aria-labelledby="tableViewTitle">
+        <div class="table-actions">
+          <p id="tableViewTitle" class="table-caption">Tabular view keeps the existing searchable, pageable, exportable release explorer exactly as before.</p>
+        </div>
         <div class="table-shell">
           <table id="masterTable" class="display stripe hover" style="width:100%">
             <thead>
@@ -1165,7 +2563,7 @@
             <tbody></tbody>
           </table>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 
@@ -1201,7 +2599,10 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script>
+    const emeritusLogoDataUri = 'data:image/webp;base64,UklGRlYGAABXRUJQVlA4WAoAAAAQAAAAkwEAbwAAQUxQSNkDAAABkBYATBZti0AEIhhhEYxABCMsghGIYIRFMAIRaLAf58Y8kLvn/YyICYCfc5Zb/yEEZYhkW9B3+/J549/AsPP4pYLx//ffX9YiXf4wfFd/Yui907dM3pv/tIeIOCPkryRSN7eV9HgVyT0p1L5hbIuk4wuSf3pB0qNDIjW1rDuLyvsa5kL8FRYdnUIVHa9Q3FkR17IvDSg6vZD48wuJjg4sKpsCFWnNOGen0y6DEBFeHmSt4snLjElyiTIQEXqMLN7rjJXgkcci+SGyeNfwIAtfjkDIIcpgZH+EJO4bPAjK5RBqaMvDkfUBQnU7Yc4kN0UZT3mATdxxRgq3+khs4btObtzbCl+bJDklVg2Fr/f3Oy01J8SVjvqSYUYInFu4AeUuBGcDwXUgy+FkNBCY3yqI8YygJpYaOsp45/IEgjYeBsBmqMNDQwlgXRN0RNDhYNiEMhA4NYnPsYH/dEmy8FDIgM+BH0QxrDJ7+wchpJXpq8sHUcNVkrGwIY4ODFJx/qoi+1UZC4peYXinQeSIY7iXB1dYkfiSRM1DWKrhGN9mEuE0N0yNDoLa8VIUxjsy2ZNDxsuUxbqOL1SbSN3jxDR7wKEIApCoeEsrO7gWGB9sLSLCOHFRYwhVYRgNPgHkNhHGaYNdkXUTNY6G4BEgO4js0xaqwkXJMJgdHgLIQzhMGpCi19hZbakJHgMWdhCeNSgtBJ3t1ZYDPAjAerYJzVpqqKE3SoaaAtgfAABzk8T5YGr0ArYR3JXJnjyANdngeQDCVhr2Xgg6fBsC5yY0FbgNwdmEhhqGVe8AgFRMZdbgsKQRQNbk6CoZqC2IfvgAkEXCrEXDCUMIVZO1JzQcbclAXpAsOGuQNRwDbIYSOgoGiU1sWN0gfwChXjEMAoome0dwGvaWVYzRb/0AgK6WYaBBsKPdIGiL1XCCkbfBZLxzeYpQXjIMAw7D2dFiqYslnmJMhk2E0ZQNSyf38lNAeokDiVUT6gfYIHXTUhVjDdoirwdqKEaYjsLNN7TecnLr7gRkkNgPWkQKISLuRcwEaigXIiVviLgdYuT5cBxBO3uFYuB+4DC5nqAfcmP6JsBqkK2fUO6pi7bJjSV8FYANNXQDS71lATXKnSt8F6JBjn5gqX51AeN2Q4YvA+wGWfuBeHqdC5iX0yvD1yFUQwn9AFD1qATNqXjUDb4PkAyy9wSBakuhAJ6ptNQcYSroxqtEulskPV5F8k9XpKMFNjK+RNKxgXR0AoB1Z6UyIbgvxFU5cwrQ+HyfKiIivOGCiAE8v1W9/y5C752+ZWP877//DcCRb9+bJ/znkB9IAFZQOCBWAgAAkCEAnQEqlAFwAD5tLpRGpCIiITEyeQiADYlnbuDBJ/gHlbUAnhIgH4AfoB/AMD/b2auf0nQX/ir+QFZH7u/sayEHiO/4D+AeoB0gHoAdYB+unkAfCH+1vox///W1egH0AU/6QjB4uNJzht+XCfwU9d2uFIXycjDdL7nYZ6/D0o6oG5geIbpfdrhSF8m7btmroN97ipVtaAl+8SlhU41IHA+c+Q9+tKB24OaAC5GIrv+xVnmcKQvk2Hz4lCqA1A2l4lX7tpDouwMWVNPIPPdA9xY99hfnjv3eoEuNjpeaII3RyEOyV/ET9xQ5r39O1Gle9yt7faUL8aJTb6y1gjQ/rGleIbJTsqmRXHakL5OR2M5bVPAgoADrgwFib7x5O55ZjleMIiAhrS31/3WfcaWX9sAMQf+4p3oM+UV9zhREn7DY5BoRLKCvDfy2ihLnrD4csdYFF6r82Jr5+Pu2UV9zhe5av9vtAQs7qk0au8oNkiCGFijRTbb+fpmwqVu5/DiYM03/4AWpF0HagBHmd+nzfpNPDN3mAD4EwS/cXsvkOlkchoulkciOgATYmvIbgTfyTfm7RB5v8pm2FnSJeWZhoAO6JDsd6GuO+IqOrlCP7dXzOA7G8W+5IS91ShwjqjrZVx/1wgzf+G1e2Xi5v/nVaLl4bLL/51YYgpC3c8+OrZ155w8fXT3//l7YJwj//5ch6f+cUBv6/zdYDZn+wsM2oY2VmZ/sIBOcjXOY0elRSmr/5xp1C/o3T//OL5EWQMi//X4dullFepWGyDfg3k28ByLAAAAAAA==';
     const csvUrl = './data/master.csv';
     const exactHeaders = [
       'Issue Type',
@@ -1262,13 +2663,25 @@
     const tableHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
     const detailCardHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
     let dataTable;
+    let allRecords = [];
     let tableFilterRegistered = false;
     let activeWalkthroughTarget = null;
     let activeWalkthroughElevatedElements = [];
     let activeWalkthroughPreviewCleanup = null;
+    let walkthroughPreviewBypass = false;
+    let walkthroughStartView = 'table';
     let walkthroughIndex = -1;
+    let dashboardMonthWindow = 6;
+    let activeView = 'dashboard';
+    let dashboardDrilldownFilters = {};
+    const impactLevels = ['High', 'Medium', 'Low'];
 
-    const walkthroughSteps = [
+    const tabularWalkthroughSteps = [
+      {
+        selector: '.view-switcher',
+        title: 'View Toggle',
+        body: 'Use this toggle to switch between the tabular explorer and the visual dashboard at any time. You are currently walking through the tabular view.'
+      },
       {
         selector: '#globalSearch',
         title: 'Global Search',
@@ -1311,6 +2724,78 @@
       }
     ];
 
+    const dashboardWalkthroughSteps = [
+      {
+        selector: '.view-switcher',
+        title: 'View Toggle',
+        body: 'Use this toggle to switch between the dashboard and the tabular explorer at any time. You are currently walking through the dashboard view.'
+      },
+      {
+        selector: '#globalSearch',
+        title: 'Global Search',
+        body: 'This search box stays available in dashboard view too. It applies across the visible dataset and updates the dashboard cards and charts together.'
+      },
+      {
+        selector: '.controls',
+        title: 'Filter Bar',
+        body: 'The same filter bar is available here as well. Any selection you make updates both the dashboard metrics and the tabular dataset.'
+      },
+      {
+        selector: '#filterUniversityTrigger',
+        title: 'Multi-Select Filters',
+        body: 'These filters behave the same way in dashboard view. Open a dropdown, select one or more values, and all dashboard cards and charts refresh immediately.'
+      },
+      {
+        selector: '#resetFilters',
+        title: 'Reset Filters',
+        body: 'Reset clears the active dashboard filters, drill-down selections, and search text, then reapplies the default release-month filter if it exists.'
+      },
+      {
+        selector: '#downloadExcel',
+        title: 'Download PDF',
+        body: 'In dashboard view, this button downloads the current dashboard as a PDF, including the visible summary cards, charts, and active filter context.'
+      },
+      {
+        selector: '#openTableFromDashboard',
+        title: 'Open Matching Rows',
+        body: 'Use this action to jump from the dashboard into tabular view while keeping the same currently matched dataset and drill-down selections.'
+      },
+      {
+        selector: '#dashboardSummary',
+        title: 'Summary Cards',
+        body: 'These KPI cards give a quick snapshot of the current visible dataset, including total releases, impact level, active business units, teams, and universities.'
+      },
+      {
+        selector: '#trendChart',
+        title: 'Monthly Trend',
+        body: 'This chart shows release volume over time. Click a month to filter the dashboard and table to that release month.'
+      },
+      {
+        selector: '#impactSummary',
+        title: 'Business Impact Mix',
+        body: 'Use the donut and impact cards to focus on High, Medium, or Low impact releases.'
+      },
+      {
+        selector: '#businessUnitChart',
+        title: 'Business Unit Breakdown',
+        body: 'This chart highlights which business units are driving release volume. Click any unit to drill into it.'
+      },
+      {
+        selector: '#universityChart',
+        title: 'Top Universities',
+        body: 'This compact chart compares the most active universities in the current result set. Click a bar to filter.'
+      },
+      {
+        selector: '#programChart',
+        title: 'Top Programs',
+        body: 'This ladder ranks the most active programs and lets you drill down to one or more programs directly from the dashboard.'
+      }
+    ];
+
+    function getActiveWalkthroughSteps() {
+      return activeView === 'dashboard' ? dashboardWalkthroughSteps : tabularWalkthroughSteps;
+    }
+
     const domElements = {
       loading: document.getElementById('loading'),
       error: document.getElementById('error'),
@@ -1323,6 +2808,22 @@
       globalSearch: document.getElementById('globalSearch'),
       resetFilters: document.getElementById('resetFilters'),
       downloadExcel: document.getElementById('downloadExcel'),
+      showDashboardView: document.getElementById('showDashboardView'),
+      showTableView: document.getElementById('showTableView'),
+      dashboardView: document.getElementById('dashboardView'),
+      tableView: document.getElementById('tableView'),
+      dashboardScope: document.getElementById('dashboardScope'),
+      dashboardSummary: document.getElementById('dashboardSummary'),
+      dashboardRangeControls: document.getElementById('dashboardRangeControls'),
+      openTableFromDashboard: document.getElementById('openTableFromDashboard'),
+      tableViewTitle: document.getElementById('tableViewTitle'),
+      trendChart: document.getElementById('trendChart'),
+      impactSummary: document.getElementById('impactSummary'),
+      businessUnitChart: document.getElementById('businessUnitChart'),
+      techTeamChart: document.getElementById('techTeamChart'),
+      universityChart: document.getElementById('universityChart'),
+      programChart: document.getElementById('programChart'),
+      businessUnitHeatmap: document.getElementById('businessUnitHeatmap'),
       detailModal: document.getElementById('detailModal'),
       detailCardTitle: document.getElementById('detailCardTitle'),
       detailCardSubtitle: document.getElementById('detailCardSubtitle'),
@@ -1443,7 +2944,7 @@
         return input;
       }
 
-      let normalized = input.replace(/(\d)\uFFFD(\d)/g, '$1–$2');
+      let normalized = input.replace(/(\d)\uFFFD(\d)/g, '$1-$2');
       let useOpeningQuote = true;
       normalized = normalized.replace(/\uFFFD/g, () => {
         const quote = useOpeningQuote ? '“' : '”';
@@ -1580,6 +3081,617 @@
       }
       const date = new Date(`${match[1]} 01, ${match[2]}`);
       return Number.isNaN(date.getTime()) ? Number.MAX_SAFE_INTEGER : date.getTime();
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('en-US').format(Number(value) || 0);
+    }
+
+    function formatPercent(value) {
+      if (!Number.isFinite(value)) {
+        return '0%';
+      }
+      return `${Math.round(value)}%`;
+    }
+
+    function splitMultiValue(value) {
+      return String(value || '')
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+    }
+
+    function getFilteredDashboardRows() {
+      return dataTable
+        ? dataTable.rows({ search: 'applied' }).data().toArray()
+        : allRecords;
+    }
+
+    function getAllActiveFilters() {
+      const visibleFilters = getSelectedFilters();
+      return { ...visibleFilters, ...dashboardDrilldownFilters };
+    }
+
+    function isDashboardFilterValueActive(field, value) {
+      if (!field || !value) {
+        return false;
+      }
+      const activeValues = getAllActiveFilters()[field] || [];
+      return activeValues.includes(value);
+    }
+
+    function rowMatchesSelectedValues(rowData, field, selectedValues) {
+      if (!selectedValues?.length) {
+        return true;
+      }
+      const rowValues = field === 'Business Impact'
+        ? [String(rowData[field] || '').trim()].filter(Boolean)
+        : getRowFieldValues(rowData, field);
+      return selectedValues.some(value => rowValues.includes(value));
+    }
+
+    function aggregateCounts(rows, field) {
+      const counts = new Map();
+      const activeFieldFilters = getAllActiveFilters()[field] || [];
+      rows.forEach(row => {
+        const rowValues = multiSelectDisplayFields.has(field)
+          ? splitMultiValue(row[field])
+          : [String(row[field] || '').trim()].filter(Boolean);
+        const values = activeFieldFilters.length
+          ? rowValues.filter(value => activeFieldFilters.includes(value))
+          : rowValues;
+        values.forEach(value => {
+          counts.set(value, (counts.get(value) || 0) + 1);
+        });
+      });
+      return Array.from(counts.entries())
+        .map(([label, count]) => ({ label, count }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+    }
+
+    function getMonthSeries(rows) {
+      const counts = new Map();
+      rows.forEach(row => {
+        if (row.__monthYear) {
+          counts.set(row.__monthYear, (counts.get(row.__monthYear) || 0) + 1);
+        }
+      });
+      return Array.from(counts.entries())
+        .map(([label, count]) => ({ label, count, sortValue: parseMonthYearLabel(label) }))
+        .sort((a, b) => a.sortValue - b.sortValue);
+    }
+
+    function buildSummaryCards(rows) {
+      const uniqueBusinessUnits = new Set();
+      const uniqueTeams = new Set();
+      const uniqueUniversities = new Set();
+      const highImpactCount = rows.filter(row => String(row['Business Impact'] || '').trim().toLowerCase() === 'high').length;
+
+      rows.forEach(row => {
+        splitMultiValue(row['Business Unit']).forEach(value => uniqueBusinessUnits.add(value));
+        splitMultiValue(row['University Name']).forEach(value => uniqueUniversities.add(value));
+        if (row.Project) {
+          uniqueTeams.add(row.Project);
+        }
+      });
+
+      const monthSeries = getMonthSeries(rows);
+      const latestMonth = monthSeries[monthSeries.length - 1];
+      const previousMonth = monthSeries[monthSeries.length - 2];
+      const latestDelta = latestMonth && previousMonth ? latestMonth.count - previousMonth.count : 0;
+      const deltaLabel = latestMonth
+        ? previousMonth
+          ? `${latestDelta >= 0 ? '+' : ''}${latestDelta} vs ${previousMonth.label}`
+          : `Only month in view: ${latestMonth.label}`
+        : 'No release month available';
+
+      return [
+        {
+          label: 'Visible Releases',
+          value: formatNumber(rows.length),
+          meta: latestMonth ? `Latest month: ${latestMonth.label}` : 'Based on current filters'
+        },
+        {
+          label: 'High Impact',
+          value: formatNumber(highImpactCount),
+          meta: rows.length ? `${formatPercent((highImpactCount / rows.length) * 100)} of visible releases` : 'No releases in scope'
+        },
+        {
+          label: 'Business Units',
+          value: formatNumber(uniqueBusinessUnits.size),
+          meta: 'Distinct units with visible releases'
+        },
+        {
+          label: 'Tech Teams',
+          value: formatNumber(uniqueTeams.size),
+          meta: 'Distinct delivery teams in scope'
+        },
+        {
+          label: 'Universities',
+          value: formatNumber(uniqueUniversities.size),
+          meta: deltaLabel
+        }
+      ];
+    }
+
+    function renderSummaryCards(rows) {
+      const cards = buildSummaryCards(rows);
+      domElements.dashboardSummary.innerHTML = cards.map(card => `
+        <article class="summary-card">
+          <p class="summary-label">${escapeHtml(card.label)}</p>
+          <p class="summary-value">${escapeHtml(card.value)}</p>
+          <p class="summary-meta">${escapeHtml(card.meta)}</p>
+        </article>
+      `).join('');
+    }
+
+    function renderEmptyState(container, message) {
+      container.innerHTML = `<div class="dashboard-empty">${escapeHtml(message)}</div>`;
+    }
+
+    function setActiveView(view) {
+      activeView = view;
+      const isDashboard = view === 'dashboard';
+      domElements.dashboardView.classList.toggle('hidden', !isDashboard);
+      domElements.tableView.classList.toggle('hidden', isDashboard);
+      domElements.showDashboardView.classList.toggle('active', isDashboard);
+      domElements.showTableView.classList.toggle('active', !isDashboard);
+      domElements.showDashboardView.setAttribute('aria-selected', String(isDashboard));
+      domElements.showTableView.setAttribute('aria-selected', String(!isDashboard));
+      if (domElements.openTableFromDashboard) {
+        domElements.openTableFromDashboard.disabled = !isDashboard;
+      }
+      if (domElements.downloadExcel) {
+        domElements.downloadExcel.textContent = isDashboard ? 'Download PDF' : 'Download Excel';
+        domElements.downloadExcel.setAttribute('aria-label', isDashboard ? 'Download dashboard as PDF' : 'Download filtered rows as Excel');
+        domElements.downloadExcel.setAttribute('title', isDashboard ? 'Download dashboard as PDF' : 'Download filtered rows as Excel');
+      }
+      if (!isDashboard && dataTable) {
+        setTimeout(() => {
+          dataTable.columns.adjust();
+          syncTableScrollWidth(dataTable);
+        }, 0);
+      }
+    }
+
+    function toggleSelectionValues(currentValues, candidateValues) {
+      const nextSet = new Set(currentValues || []);
+      const values = (candidateValues || []).filter(Boolean);
+      const allSelected = values.length > 0 && values.every(value => nextSet.has(value));
+
+      values.forEach(value => {
+        if (allSelected) {
+          nextSet.delete(value);
+        } else {
+          nextSet.add(value);
+        }
+      });
+
+      return Array.from(nextSet);
+    }
+
+    function applyDashboardSelection(selections, targetView = 'dashboard') {
+      const items = Array.isArray(selections) ? selections : [selections];
+      items.forEach(item => {
+        if (!item?.field) {
+          return;
+        }
+        const selectElement = filterSelectElements[item.field];
+        const candidateValues = (Array.isArray(item.values) ? item.values : [item.value]).filter(Boolean);
+        if (selectElement) {
+          const currentValues = getSelectedValues(selectElement);
+          const nextValues = toggleSelectionValues(currentValues, candidateValues);
+          delete dashboardDrilldownFilters[item.field];
+          setSelectedValues(selectElement, nextValues);
+          syncFilterDropdown(selectElement);
+        } else {
+          const currentValues = dashboardDrilldownFilters[item.field] || [];
+          const nextValues = toggleSelectionValues(currentValues, candidateValues);
+          if (nextValues.length) {
+            dashboardDrilldownFilters[item.field] = nextValues;
+          } else {
+            delete dashboardDrilldownFilters[item.field];
+          }
+        }
+      });
+      applyCustomFilters();
+      setActiveView(targetView);
+    }
+
+    function renderMetricList(container, items, emptyMessage, options = {}) {
+      if (!items.length) {
+        renderEmptyState(container, emptyMessage);
+        return;
+      }
+      const {
+        field,
+        maxItems = 8,
+        fillClass = ''
+      } = options;
+      const topItems = items.slice(0, maxItems);
+      const maxCount = topItems[0]?.count || 1;
+      container.innerHTML = topItems.map(item => {
+        const percent = maxCount ? (item.count / maxCount) * 100 : 0;
+        const isSelected = isDashboardFilterValueActive(field, item.label);
+        return `
+          <button class="metric-button${isSelected ? ' is-selected' : ''}" type="button" data-dashboard-filter-field="${escapeHtml(field)}" data-dashboard-filter-value="${escapeHtml(item.label)}" title="${escapeHtml(`Filter by ${item.label}`)}">
+            <div class="metric-row">
+              <div class="metric-row-head">
+                <span class="metric-row-label">${escapeHtml(item.label)}</span>
+                <span class="metric-row-value">${escapeHtml(formatNumber(item.count))}</span>
+              </div>
+              <div class="metric-track">
+                <div class="metric-fill ${fillClass}" style="width:${percent.toFixed(2)}%"></div>
+              </div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderVerticalBarChart(container, items, emptyMessage, field) {
+      if (!items.length) {
+        renderEmptyState(container, emptyMessage);
+        return;
+      }
+      const topItems = items.slice(0, 4);
+      const maxCount = topItems[0]?.count || 1;
+      container.innerHTML = `
+        <div class="vertical-bars">
+          ${topItems.map(item => {
+            const percent = maxCount ? (item.count / maxCount) * 100 : 0;
+            const height = Math.max(18, Math.round(percent));
+            const isSelected = isDashboardFilterValueActive(field, item.label);
+            return `
+              <button class="vertical-bar-item${isSelected ? ' is-selected' : ''}" type="button" data-dashboard-filter-field="${escapeHtml(field)}" data-dashboard-filter-value="${escapeHtml(item.label)}" title="${escapeHtml(`Filter by ${item.label}`)}">
+                <span class="vertical-bar-count">${escapeHtml(formatNumber(item.count))}</span>
+                <div class="vertical-bar-track">
+                  <div class="vertical-bar-fill" style="height:${height}%"></div>
+                </div>
+                <span class="vertical-bar-label">${escapeHtml(item.label)}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderLollipopChart(container, items, emptyMessage, field) {
+      if (!items.length) {
+        renderEmptyState(container, emptyMessage);
+        return;
+      }
+      const topItems = items.slice(0, 6);
+      const maxCount = topItems[0]?.count || 1;
+      const width = 760;
+      const rowHeight = 68;
+      const height = (topItems.length * rowHeight) + 40;
+      const labelWidth = 195;
+      const chartStart = 220;
+      const chartEnd = width - 36;
+      const usableWidth = chartEnd - chartStart;
+
+      container.innerHTML = `
+        <svg class="lollipop-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(field)} distribution">
+          ${topItems.map((item, index) => {
+            const y = 36 + (index * rowHeight);
+            const endX = chartStart + ((item.count / maxCount) * usableWidth);
+            const isSelected = isDashboardFilterValueActive(field, item.label);
+            return `
+              <g class="chart-clickable${isSelected ? ' is-selected' : ''}" tabindex="0" role="button" data-dashboard-filter-field="${escapeHtml(field)}" data-dashboard-filter-value="${escapeHtml(item.label)}">
+                <text class="lollipop-label" x="${labelWidth}" y="${y - 8}" text-anchor="end">${escapeHtml(item.label)}</text>
+                <text class="lollipop-value" x="${labelWidth}" y="${y + 16}" text-anchor="end">${escapeHtml(`${formatNumber(item.count)} releases`)}</text>
+                <line class="lollipop-line" x1="${chartStart}" y1="${y}" x2="${chartEnd}" y2="${y}"></line>
+                <line class="lollipop-fill" x1="${chartStart}" y1="${y}" x2="${endX}" y2="${y}"></line>
+                <circle class="lollipop-dot" cx="${endX}" cy="${y}" r="11"></circle>
+                <title>${escapeHtml(`${item.label}: ${item.count} releases`)}</title>
+              </g>
+            `;
+          }).join('')}
+        </svg>
+      `;
+    }
+
+    function renderStackedShareChart(container, items, emptyMessage, field) {
+      if (!items.length) {
+        renderEmptyState(container, emptyMessage);
+        return;
+      }
+      const topItems = items.slice(0, 5);
+      const total = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
+      const colors = ['#0b8f4d', '#38a169', '#68b87f', '#8ec9a0', '#b4ddc0'];
+
+      container.innerHTML = `
+        <div class="stacked-share">
+          <div class="stacked-share-bar" aria-label="${escapeHtml(field)} stacked share">
+            ${topItems.map((item, index) => {
+              const percent = (item.count / total) * 100;
+              const isSelected = isDashboardFilterValueActive(field, item.label);
+              return `
+                <button
+                  class="stacked-share-segment${isSelected ? ' is-selected' : ''}"
+                  type="button"
+                  style="width:${percent.toFixed(2)}%; background:${colors[index % colors.length]};"
+                  data-dashboard-filter-field="${escapeHtml(field)}"
+                  data-dashboard-filter-value="${escapeHtml(item.label)}"
+                  title="${escapeHtml(`Filter by ${item.label}`)}"
+                ></button>
+              `;
+            }).join('')}
+          </div>
+          <div class="stacked-share-list">
+            ${topItems.map((item, index) => `
+              <button class="stacked-share-item${isDashboardFilterValueActive(field, item.label) ? ' is-selected' : ''}" type="button" data-dashboard-filter-field="${escapeHtml(field)}" data-dashboard-filter-value="${escapeHtml(item.label)}">
+                <span class="stacked-share-label">
+                  <span class="stacked-share-swatch" style="background:${colors[index % colors.length]}"></span>
+                  ${escapeHtml(item.label)}
+                </span>
+                <span class="stacked-share-meta">${escapeHtml(`${formatNumber(item.count)} - ${formatPercent((item.count / total) * 100)}`)}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProgramLadder(container, items, emptyMessage, field) {
+      if (!items.length) {
+        renderEmptyState(container, emptyMessage);
+        return;
+      }
+      const topItems = items.slice(0, 10);
+      const maxCount = topItems[0]?.count || 1;
+      container.innerHTML = topItems.map((item, index) => {
+        const widthPercent = maxCount ? (item.count / maxCount) * 100 : 0;
+        const isSelected = isDashboardFilterValueActive(field, item.label);
+        return `
+          <button
+            class="program-rung${isSelected ? ' is-selected' : ''}"
+            type="button"
+            data-dashboard-filter-field="${escapeHtml(field)}"
+            data-dashboard-filter-value="${escapeHtml(item.label)}"
+            title="${escapeHtml(`Filter by ${item.label}`)}"
+          >
+            <div class="program-rung-head">
+              <span class="program-rank">${index + 1}</span>
+              <span class="program-count">${escapeHtml(formatNumber(item.count))}</span>
+            </div>
+            <div class="program-name">${escapeHtml(item.label)}</div>
+            <div class="program-track">
+              <div class="program-fill" style="width:${widthPercent.toFixed(2)}%"></div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderTrendChart(rows) {
+      const allMonths = getMonthSeries(rows);
+      if (!allMonths.length) {
+        renderEmptyState(domElements.trendChart, 'No releases match the current filters, so there is no monthly trend to display.');
+        return;
+      }
+      const months = dashboardMonthWindow === 'all' ? allMonths : allMonths.slice(-Number(dashboardMonthWindow));
+      const width = Math.max(720, months.length * 86);
+      const height = 280;
+      const margin = { top: 18, right: 18, bottom: 58, left: 42 };
+      const plotWidth = width - margin.left - margin.right;
+      const plotHeight = height - margin.top - margin.bottom;
+      const maxValue = Math.max(...months.map(item => item.count), 1);
+      const columnWidth = Math.min(58, plotWidth / Math.max(months.length, 1) - 14);
+      const gap = months.length > 0 ? plotWidth / months.length : plotWidth;
+      const gridValues = Array.from(new Set([0, Math.ceil(maxValue / 2), maxValue])).sort((a, b) => a - b);
+
+      domElements.trendChart.innerHTML = `
+        <svg class="chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Month-wise release trend">
+          ${gridValues.map(value => {
+            const y = margin.top + plotHeight - ((value / maxValue) * plotHeight);
+            return `
+              <line class="chart-grid-line" x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}"></line>
+              <text class="chart-axis-label" x="${margin.left - 8}" y="${y + 4}" text-anchor="end">${value}</text>
+            `;
+          }).join('')}
+          ${months.map((item, index) => {
+            const x = margin.left + (index * gap) + ((gap - columnWidth) / 2);
+            const barHeight = (item.count / maxValue) * plotHeight;
+            const y = margin.top + plotHeight - barHeight;
+            const isSelected = isDashboardFilterValueActive('Release Date', item.label);
+            return `
+              <g class="chart-clickable${isSelected ? ' is-selected' : ''}" tabindex="0" role="button" data-dashboard-filter-field="Release Date" data-dashboard-filter-value="${escapeHtml(item.label)}">
+                <rect class="chart-bar" x="${x}" y="${y}" width="${columnWidth}" height="${barHeight}" rx="12" ry="12"></rect>
+                <text class="chart-point-label" x="${x + (columnWidth / 2)}" y="${y - 10}" text-anchor="middle">${item.count}</text>
+                <text class="chart-axis-label" x="${x + (columnWidth / 2)}" y="${height - 18}" text-anchor="middle">${escapeHtml(item.label)}</text>
+                <title>${escapeHtml(`${item.label}: ${item.count} releases`)}</title>
+              </g>
+            `;
+          }).join('')}
+        </svg>
+      `;
+    }
+
+    function renderImpactSummary(rows) {
+      if (!rows.length) {
+        renderEmptyState(domElements.impactSummary, 'Impact distribution will appear once at least one release is visible.');
+        return;
+      }
+      const counts = impactLevels.map(level => {
+        const count = rows.filter(row => String(row['Business Impact'] || '').trim().toLowerCase() === level.toLowerCase()).length;
+        return { level, count, percent: rows.length ? (count / rows.length) * 100 : 0 };
+      });
+      let progress = 0;
+      const donutSegments = counts.map(item => {
+        const start = progress;
+        progress += item.percent;
+        const color = item.level === 'High' ? '#0b8f4d' : item.level === 'Medium' ? '#58b07d' : '#9ed0b3';
+        return `${color} ${start.toFixed(2)}% ${progress.toFixed(2)}%`;
+      }).join(', ');
+
+      domElements.impactSummary.innerHTML = `
+        <div class="impact-visual">
+          <div class="impact-donut" style="background: conic-gradient(${donutSegments});">
+            <div class="impact-donut-center">
+              <strong>${escapeHtml(formatNumber(rows.length))}</strong>
+              <span>Total Releases</span>
+            </div>
+          </div>
+          <div class="impact-action-list">
+            ${counts.map(item => `
+              <button class="impact-action${isDashboardFilterValueActive('Business Impact', item.level) ? ' is-selected' : ''}" type="button" data-dashboard-filter-field="Business Impact" data-dashboard-filter-value="${escapeHtml(item.level)}">
+                <span class="impact-action-label">
+                  <span class="swatch-${item.level.toLowerCase()}"></span>
+                  ${escapeHtml(item.level)} impact
+                </span>
+                <span class="impact-action-count">${escapeHtml(`${formatNumber(item.count)} - ${formatPercent(item.percent)}`)}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="impact-breakdown">
+          ${counts.map(item => `
+            <div class="impact-pill">
+              <strong>${escapeHtml(formatNumber(item.count))}</strong>
+              <span>${escapeHtml(`${item.level} impact - ${formatPercent(item.percent)}`)}</span>
+            </div>
+          `).join('')}
+        </div>
+        <p class="dashboard-note">Click one of the impact cards to focus the entire page on that impact level.</p>
+      `;
+    }
+
+    function renderHeatmap(rows) {
+      const topUnits = aggregateCounts(rows, 'Business Unit').slice(0, 6).map(item => item.label);
+      const monthSeries = getMonthSeries(rows);
+      const visibleMonths = dashboardMonthWindow === 'all' ? monthSeries : monthSeries.slice(-Number(dashboardMonthWindow));
+      const monthLabels = visibleMonths.map(item => item.label);
+
+      if (!topUnits.length || !monthLabels.length) {
+        renderEmptyState(domElements.businessUnitHeatmap, 'The heatmap needs at least one visible business unit and one release month.');
+        return;
+      }
+
+      const matrix = new Map();
+      let maxCount = 0;
+      rows.forEach(row => {
+        if (!row.__monthYear || !monthLabels.includes(row.__monthYear)) {
+          return;
+        }
+        splitMultiValue(row['Business Unit']).forEach(unit => {
+          if (!topUnits.includes(unit)) {
+            return;
+          }
+          const key = `${unit}__${row.__monthYear}`;
+          const nextValue = (matrix.get(key) || 0) + 1;
+          matrix.set(key, nextValue);
+          maxCount = Math.max(maxCount, nextValue);
+        });
+      });
+
+      const header = `
+        <div class="heatmap-header" style="--heatmap-columns:${monthLabels.length}">
+          <div class="heatmap-corner">Business Unit</div>
+          ${monthLabels.map(month => `<div class="heatmap-month">${escapeHtml(month)}</div>`).join('')}
+        </div>
+      `;
+      const rowsMarkup = topUnits.map(unit => `
+        <div class="heatmap-row" style="--heatmap-columns:${monthLabels.length}">
+          <div class="heatmap-label">${escapeHtml(unit)}</div>
+          ${monthLabels.map(month => {
+            const count = matrix.get(`${unit}__${month}`) || 0;
+            const intensity = maxCount ? count / maxCount : 0;
+            const background = count
+              ? `rgba(11, 143, 77, ${Math.max(0.12, intensity * 0.92).toFixed(2)})`
+              : 'rgba(11, 143, 77, 0.04)';
+            const color = intensity > 0.58 ? '#ffffff' : '#173127';
+            return `
+              <button
+                class="heatmap-button"
+                type="button"
+                style="background:${background}; color:${color}"
+                data-dashboard-filter-field="Business Unit"
+                data-dashboard-filter-value="${escapeHtml(unit)}"
+                data-dashboard-secondary-field="Release Date"
+                data-dashboard-secondary-value="${escapeHtml(month)}"
+                title="${escapeHtml(`Filter by ${unit} in ${month}`)}"
+              >${count || '-'}</button>
+            `;
+          }).join('')}
+        </div>
+      `).join('');
+
+      domElements.businessUnitHeatmap.innerHTML = `<div class="heatmap">${header}${rowsMarkup}</div>`;
+    }
+
+    function renderDashboard(rows) {
+      const selectedMonths = getSelectedValues(domElements.filterReleaseDate);
+      const drilldownLabel = Object.entries(dashboardDrilldownFilters)
+        .filter(([, values]) => values?.length)
+        .map(([field, values]) => `${displayLabels[field] || field}: ${values.join(', ')}`)
+        .join(' | ');
+      const baseScope = selectedMonths.length
+        ? `Showing dashboard metrics for ${selectedMonths.join(', ')} with all active filters and search applied.`
+        : 'Showing dashboard metrics for all visible months with all active filters and search applied.';
+      domElements.dashboardScope.textContent = drilldownLabel
+        ? `${baseScope} Interactive drill-down: ${drilldownLabel}.`
+        : baseScope;
+      domElements.tableViewTitle.textContent = drilldownLabel
+        ? `Tabular view is showing the current filtered dataset. Interactive drill-down active: ${drilldownLabel}.`
+        : 'Tabular view keeps the existing searchable, pageable, exportable release explorer exactly as before.';
+
+      renderSummaryCards(rows);
+      renderTrendChart(rows);
+      renderImpactSummary(rows);
+      renderLollipopChart(domElements.businessUnitChart, aggregateCounts(rows, 'Business Unit'), 'No business-unit data is available for the current selection.', 'Business Unit');
+      renderVerticalBarChart(domElements.universityChart, aggregateCounts(rows, 'University Name'), 'No university data is available for the current selection.', 'University Name');
+      renderProgramLadder(domElements.programChart, aggregateCounts(rows, 'Program Name'), 'No program data is available for the current selection.', 'Program Name');
+    }
+
+    function updateDashboard() {
+      renderDashboard(getFilteredDashboardRows());
+    }
+
+    function initializeDashboardControls() {
+      domElements.dashboardRangeControls?.addEventListener('click', event => {
+        const button = event.target.closest('[data-range]');
+        if (!button) {
+          return;
+        }
+        dashboardMonthWindow = button.dataset.range === 'all' ? 'all' : Number(button.dataset.range);
+        Array.from(domElements.dashboardRangeControls.querySelectorAll('[data-range]')).forEach(item => {
+          item.classList.toggle('active', item === button);
+        });
+        updateDashboard();
+      });
+
+      domElements.showDashboardView?.addEventListener('click', () => setActiveView('dashboard'));
+      domElements.showTableView?.addEventListener('click', () => setActiveView('table'));
+      domElements.openTableFromDashboard?.addEventListener('click', () => setActiveView('table'));
+
+      domElements.dashboardView?.addEventListener('click', event => {
+        const trigger = event.target.closest('[data-dashboard-filter-field]');
+        if (!trigger) {
+          return;
+        }
+        const selections = [{
+          field: trigger.dataset.dashboardFilterField,
+          value: trigger.dataset.dashboardFilterValue
+        }];
+        if (trigger.dataset.dashboardSecondaryField && trigger.dataset.dashboardSecondaryValue) {
+          selections.push({
+            field: trigger.dataset.dashboardSecondaryField,
+            value: trigger.dataset.dashboardSecondaryValue
+          });
+        }
+        applyDashboardSelection(selections, 'dashboard');
+      });
+
+      domElements.dashboardView?.addEventListener('keydown', event => {
+        const trigger = event.target.closest('[data-dashboard-filter-field]');
+        if (!trigger || (event.key !== 'Enter' && event.key !== ' ')) {
+          return;
+        }
+        event.preventDefault();
+        trigger.click();
+      });
     }
 
     function getBusinessImpactSortValue(value) {
@@ -1812,6 +3924,7 @@
     }
 
     function resetFilters() {
+      dashboardDrilldownFilters = {};
       Object.values(filterSelectElements).forEach(select => {
         if (select) {
           setSelectedValues(select, []);
@@ -1879,6 +3992,253 @@
       const fileSuffix = (selectedReleaseDates.length ? selectedReleaseDates.join('-') : 'All')
         .replace(/[^A-Za-z0-9-]+/g, '_');
       XLSX.writeFile(workbook, `release-notes-${fileSuffix}.xlsx`);
+    }
+
+    function buildActiveFilterSummary() {
+      const filters = getSelectedFilters();
+      const parts = Object.entries(filters)
+        .filter(([, values]) => values.length)
+        .map(([field, values]) => `${displayLabels[field] || field}: ${values.join(', ')}`);
+
+      const drilldowns = Object.entries(dashboardDrilldownFilters)
+        .filter(([, values]) => values?.length)
+        .map(([field, values]) => `${displayLabels[field] || field}: ${values.join(', ')}`);
+
+      if (domElements.globalSearch.value.trim()) {
+        parts.push(`Global Search: ${domElements.globalSearch.value.trim()}`);
+      }
+
+      return [...parts, ...drilldowns];
+    }
+
+    async function downloadDashboardAsPdf() {
+      if (domElements.dashboardView.classList.contains('hidden')) {
+        showError('Dashboard PDF is only available while dashboard view is visible.');
+        return;
+      }
+      if (typeof html2canvas === 'undefined' || !window.jspdf?.jsPDF) {
+        showError('PDF export libraries are not available right now.');
+        return;
+      }
+
+      const filterSummary = buildActiveFilterSummary();
+      const exportedAt = new Date().toLocaleString('en-IN', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      });
+      const selectedReleaseDates = getSelectedValues(domElements.filterReleaseDate);
+      const fileSuffix = (selectedReleaseDates.length ? selectedReleaseDates.join('-') : 'All')
+        .replace(/[^A-Za-z0-9-]+/g, '_');
+
+      const exportContainer = document.createElement('div');
+      exportContainer.setAttribute('aria-hidden', 'true');
+      exportContainer.style.position = 'fixed';
+      exportContainer.style.left = '-20000px';
+      exportContainer.style.top = '0';
+      exportContainer.style.width = '1320px';
+      exportContainer.style.padding = '24px 28px 40px';
+      exportContainer.style.background = '#ffffff';
+      exportContainer.style.color = '#173127';
+      exportContainer.style.zIndex = '-1';
+      exportContainer.innerHTML = `
+        <style>
+          .pdf-export-shell {
+            width: 100%;
+            display: grid;
+            gap: 18px;
+            background: #ffffff;
+          }
+          .pdf-export-row {
+            display: grid;
+            gap: 16px;
+            align-items: start;
+          }
+          .pdf-export-row.two-up {
+            grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+          }
+          .pdf-export-stack {
+            display: grid;
+            gap: 16px;
+          }
+          .pdf-export-header {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 4px;
+          }
+          .pdf-export-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 4px;
+          }
+          .pdf-export-brand-logo {
+            width: 168px;
+            height: 44px;
+            display: block;
+            flex: 0 0 auto;
+          }
+          .pdf-export-brand-copy {
+            display: grid;
+            gap: 2px;
+            min-width: 0;
+          }
+          .pdf-export-eyebrow {
+            margin: 0;
+            font-size: 0.88rem;
+            letter-spacing: -0.02em;
+            text-transform: none;
+            color: #086c3a;
+            font-weight: 700;
+          }
+          .pdf-export-title {
+            margin: 0;
+            font-size: 0.92rem;
+            line-height: 1.1;
+            color: #111111;
+            font-weight: 600;
+          }
+          .pdf-export-meta {
+            margin: 6px 0 0;
+            color: #4d6358;
+            font-size: 0.95rem;
+          }
+          .pdf-export-filters {
+            margin: 6px 0 0;
+            padding: 14px 16px;
+            border: 1px solid #d8e7dd;
+            border-radius: 16px;
+            background: #f7fbf8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+          }
+          .pdf-export-filters strong {
+            color: #086c3a;
+          }
+          .pdf-export-dashboard #dashboardScope,
+          .pdf-export-dashboard #dashboardRangeControls,
+          .pdf-export-dashboard #openTableFromDashboard,
+          .pdf-export-dashboard .dashboard-note {
+            display: none !important;
+          }
+          .pdf-export-dashboard .dashboard-shell,
+          .pdf-export-dashboard .dashboard-grid {
+            gap: 16px;
+          }
+          .pdf-export-dashboard .dashboard-card,
+          .pdf-export-dashboard .summary-card,
+          .pdf-export-dashboard .dashboard-stack {
+            box-shadow: none;
+            break-inside: avoid;
+          }
+          .pdf-export-dashboard button {
+            pointer-events: none;
+          }
+        </style>
+        <main class="pdf-export-shell pdf-export-dashboard">
+          <header class="pdf-export-header">
+            <div class="pdf-export-brand" aria-label="Emeritus">
+              <img src="${emeritusLogoDataUri}" alt="Emeritus" class="pdf-export-brand-logo" />
+              <div class="pdf-export-brand-copy">
+                <p class="pdf-export-eyebrow">India Degrees Business</p>
+                <h1 class="pdf-export-title">Release Notes</h1>
+              </div>
+            </div>
+            <p class="pdf-export-meta">Exported on ${escapeHtml(exportedAt)}</p>
+            <div class="pdf-export-filters">
+              <strong>Applied filters:</strong>
+              ${filterSummary.length ? escapeHtml(filterSummary.join(' | ')) : 'None'}
+            </div>
+          </header>
+          <section class="pdf-export-body"></section>
+        </main>
+      `;
+
+      document.body.appendChild(exportContainer);
+
+      try {
+        const exportBody = exportContainer.querySelector('.pdf-export-body');
+        const exportHeader = exportContainer.querySelector('.pdf-export-header');
+        const summaryClone = domElements.dashboardSummary.cloneNode(true);
+        const cards = Array.from(domElements.dashboardView.querySelectorAll('.dashboard-grid > .dashboard-card, .dashboard-grid > .dashboard-stack'));
+
+        const firstRow = document.createElement('section');
+        firstRow.className = 'pdf-export-row two-up';
+        if (cards[0]) firstRow.appendChild(cards[0].cloneNode(true));
+        if (cards[1]) firstRow.appendChild(cards[1].cloneNode(true));
+
+        const secondRow = document.createElement('section');
+        secondRow.className = 'pdf-export-row two-up';
+        if (cards[2]) secondRow.appendChild(cards[2].cloneNode(true));
+        if (cards[3]) secondRow.appendChild(cards[3].cloneNode(true));
+
+        const exportPages = [
+          [exportHeader, summaryClone, firstRow].filter(Boolean),
+          [secondRow].filter(Boolean)
+        ].filter(page => page.length);
+        exportBody.innerHTML = '';
+
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: 'a4',
+          compress: true
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const margin = 8;
+        const usableWidth = pdfWidth - (margin * 2);
+        const usableHeight = pdfHeight - (margin * 2);
+        for (let pageIndex = 0; pageIndex < exportPages.length; pageIndex += 1) {
+          if (pageIndex > 0) {
+            pdf.addPage();
+          }
+
+          const pageWrapper = document.createElement('section');
+          pageWrapper.className = 'pdf-export-shell';
+          exportPages[pageIndex].forEach(block => pageWrapper.appendChild(block.cloneNode(true)));
+          exportBody.innerHTML = '';
+          exportBody.appendChild(pageWrapper);
+
+          const canvas = await html2canvas(pageWrapper, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            windowWidth: pageWrapper.scrollWidth || exportContainer.scrollWidth,
+            windowHeight: pageWrapper.scrollHeight || exportContainer.scrollHeight
+          });
+
+          let pageWidth = usableWidth;
+          let pageHeight = (canvas.height * pageWidth) / canvas.width;
+
+          if (pageHeight > usableHeight) {
+            const fitScale = usableHeight / pageHeight;
+            pageWidth *= fitScale;
+            pageHeight *= fitScale;
+          }
+
+          const centeredX = margin + ((usableWidth - pageWidth) / 2);
+          const centeredY = margin + ((usableHeight - pageHeight) / 2);
+          pdf.addImage(canvas.toDataURL('image/png'), 'PNG', centeredX, centeredY, pageWidth, pageHeight, undefined, 'FAST');
+        }
+
+        pdf.save(`release-dashboard-${fileSuffix}.pdf`);
+      } catch (error) {
+        console.error(error);
+        showError('Dashboard PDF export failed. Please try again.');
+      } finally {
+        exportContainer.remove();
+      }
+    }
+
+    function handlePrimaryDownload() {
+      if (activeView === 'dashboard') {
+        downloadDashboardAsPdf();
+        return;
+      }
+      downloadFilteredRowsAsExcel();
     }
 
     function syncTableScrollWidth(apiInstance) {
@@ -1988,7 +4348,14 @@
       if (!step?.selector) {
         return null;
       }
-      return document.querySelector(step.selector);
+      const element = document.querySelector(step.selector);
+      if (!element) {
+        return null;
+      }
+      if (activeView === 'dashboard' && step.selector !== '#dashboardView') {
+        return element.closest('.dashboard-card') || element;
+      }
+      return element;
     }
 
     function clearWalkthroughHighlight() {
@@ -2006,6 +4373,41 @@
       activeWalkthroughElevatedElements = [];
     }
 
+    function isWalkthroughActive() {
+      return walkthroughIndex >= 0;
+    }
+
+    function isBlockedWalkthroughTarget(target) {
+      if (!target || !isWalkthroughActive()) {
+        return false;
+      }
+      if (walkthroughPreviewBypass) {
+        return false;
+      }
+      if (target.closest('#walkthroughCard') || target.closest('.walkthrough-trigger') || target.closest('#detailModal')) {
+        return false;
+      }
+      if (!target.closest('#appContent')) {
+        return false;
+      }
+      const blockedSelector = [
+        'button',
+        'a',
+        'input',
+        'select',
+        'textarea',
+        '[role="button"]',
+        '[data-dashboard-filter-field]',
+        '.paginate_button',
+        '.pagination-length-trigger',
+        '.pagination-length-option',
+        '.filter-trigger',
+        '.issue-key-button',
+        'th'
+      ].join(', ');
+      return Boolean(target.closest(blockedSelector));
+    }
+
     function elevateWalkthroughAncestors(target, step) {
       if (!target) {
         return;
@@ -2013,6 +4415,19 @@
 
       const selectorsToElevate = step?.selector === '#globalSearch'
         ? []
+        : step?.selector === '.view-switcher'
+        ? []
+        : [
+            '#resetFilters',
+            '#downloadExcel',
+            '#openTableFromDashboard',
+            '#showTableView',
+            '#showDashboardView',
+            '#startWalkthrough'
+          ].includes(step?.selector)
+        ? [
+            '.controls'
+          ]
         : step?.selector === '#masterTable'
         ? [
             '.dataTables_scroll',
@@ -2056,7 +4471,8 @@
     }
 
     function getWalkthroughPositionRect(target) {
-      const step = walkthroughSteps[walkthroughIndex];
+      const steps = getActiveWalkthroughSteps();
+      const step = steps[walkthroughIndex];
       if (step?.selector === '#filterUniversityTrigger') {
         const dropdown = filterDropdownElements['University Name'];
         if (dropdown?.container) {
@@ -2090,7 +4506,8 @@
         return;
       }
 
-      const step = walkthroughSteps[walkthroughIndex];
+      const steps = getActiveWalkthroughSteps();
+      const step = steps[walkthroughIndex];
       if (step?.selector === '#filterUniversityTrigger') {
         const dropdownMenu = filterDropdownElements['University Name']?.menu;
         const menuRect = dropdownMenu && !dropdownMenu.classList.contains('hidden')
@@ -2169,7 +4586,12 @@
       if (step?.selector === '#masterTable tbody .issue-key-button') {
         const previewButton = document.querySelector('#masterTable tbody .issue-key-button');
         if (previewButton) {
-          previewButton.click();
+          walkthroughPreviewBypass = true;
+          try {
+            previewButton.click();
+          } finally {
+            walkthroughPreviewBypass = false;
+          }
         }
         return;
       }
@@ -2224,11 +4646,13 @@
       domElements.walkthroughCard.classList.remove('walkthrough-card-hidden');
       domElements.walkthroughCard.style.top = '';
       domElements.walkthroughCard.style.left = '';
+      setActiveView(walkthroughStartView);
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     }
 
     function renderWalkthroughStep() {
-      const step = walkthroughSteps[walkthroughIndex];
+      const steps = getActiveWalkthroughSteps();
+      const step = steps[walkthroughIndex];
       const target = getWalkthroughTarget(step);
       if (!step || !target) {
         moveWalkthrough(1);
@@ -2240,17 +4664,18 @@
       activeWalkthroughTarget.classList.add('walkthrough-highlight');
       elevateWalkthroughAncestors(target, step);
 
-      domElements.walkthroughStep.textContent = `Step ${walkthroughIndex + 1} of ${walkthroughSteps.length}`;
+      domElements.walkthroughStep.textContent = `Step ${walkthroughIndex + 1} of ${steps.length}`;
       domElements.walkthroughTitle.textContent = step.title;
       domElements.walkthroughBody.textContent = step.body;
       domElements.walkthroughBack.disabled = walkthroughIndex === 0;
-      domElements.walkthroughNext.textContent = walkthroughIndex === walkthroughSteps.length - 1 ? 'Finish' : 'Next';
+      domElements.walkthroughNext.textContent = walkthroughIndex === steps.length - 1 ? 'Finish' : 'Next';
 
       if (step.selector === '#masterTable tbody .issue-key-button') {
         domElements.walkthroughCard.classList.add('walkthrough-card-hidden');
         activeWalkthroughTarget.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
         window.setTimeout(() => {
-          if (walkthroughIndex < 0 || walkthroughSteps[walkthroughIndex]?.selector !== step.selector) {
+          const activeSteps = getActiveWalkthroughSteps();
+          if (walkthroughIndex < 0 || activeSteps[walkthroughIndex]?.selector !== step.selector) {
             return;
           }
           applyWalkthroughPreview(step);
@@ -2273,9 +4698,10 @@
         return;
       }
 
+      const steps = getActiveWalkthroughSteps();
       let nextIndex = walkthroughIndex + stepDelta;
-      while (nextIndex >= 0 && nextIndex < walkthroughSteps.length) {
-        if (getWalkthroughTarget(walkthroughSteps[nextIndex])) {
+      while (nextIndex >= 0 && nextIndex < steps.length) {
+        if (getWalkthroughTarget(steps[nextIndex])) {
           walkthroughIndex = nextIndex;
           renderWalkthroughStep();
           return;
@@ -2289,11 +4715,13 @@
     }
 
     function startWalkthrough() {
-      const firstAvailableIndex = walkthroughSteps.findIndex(step => getWalkthroughTarget(step));
+      const steps = getActiveWalkthroughSteps();
+      const firstAvailableIndex = steps.findIndex(step => getWalkthroughTarget(step));
       if (firstAvailableIndex === -1) {
         return;
       }
 
+      walkthroughStartView = activeView;
       walkthroughIndex = firstAvailableIndex;
       domElements.walkthroughOverlay.classList.remove('hidden');
       domElements.walkthroughOverlay.setAttribute('aria-hidden', 'false');
@@ -2430,12 +4858,14 @@
           api.columns.adjust();
           syncTableScrollWidth(api);
           enhancePaginationLengthControl(api);
+          updateDashboard();
         },
         drawCallback: function() {
           const api = this.api();
           api.columns.adjust();
           syncTableScrollWidth(api);
           enhancePaginationLengthControl(api);
+          updateDashboard();
         }
       });
 
@@ -2444,13 +4874,12 @@
           if (settings.nTable.id !== 'masterTable') {
             return true;
           }
-          const filters = getSelectedFilters();
+          const filters = getAllActiveFilters();
           for (const [field, selectedValues] of Object.entries(filters)) {
             if (!selectedValues.length) {
               continue;
             }
-            const rowValues = getRowFieldValues(rowData, field);
-            if (!selectedValues.some(value => rowValues.includes(value))) {
+            if (!rowMatchesSelectedValues(rowData, field, selectedValues)) {
               return false;
             }
           }
@@ -2475,7 +4904,7 @@
         }
       });
       domElements.resetFilters.addEventListener('click', resetFilters);
-      domElements.downloadExcel.addEventListener('click', downloadFilteredRowsAsExcel);
+      domElements.downloadExcel.addEventListener('click', handlePrimaryDownload);
       applyCustomFilters();
     }
 
@@ -2599,6 +5028,7 @@
         });
 
         records.sort(compareRecords);
+        allRecords = records;
         buildFilterOptions(records);
         initializeDataTable(records);
         domElements.loading.classList.add('hidden');
@@ -2616,8 +5046,40 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       initializeFilterDropdowns();
+      initializeDashboardControls();
+      setActiveView('table');
       document.addEventListener('click', event => {
-        if (walkthroughIndex >= 0 && walkthroughSteps[walkthroughIndex]?.selector === '#filterUniversityTrigger') {
+        if (!isBlockedWalkthroughTarget(event.target)) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+      }, true);
+      document.addEventListener('keydown', event => {
+        if (!isWalkthroughActive()) {
+          return;
+        }
+        const target = event.target;
+        if (!target || target.closest('#walkthroughCard')) {
+          return;
+        }
+        const isInputLike = target.matches?.('input, textarea, select');
+        const isActionKey = event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar';
+        const isTypingKey = event.key.length === 1;
+        if (isBlockedWalkthroughTarget(target) && (isInputLike || isActionKey || isTypingKey)) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+      document.addEventListener('focusin', event => {
+        if (!isBlockedWalkthroughTarget(event.target)) {
+          return;
+        }
+        event.target.blur?.();
+      });
+      document.addEventListener('click', event => {
+        const steps = getActiveWalkthroughSteps();
+        if (walkthroughIndex >= 0 && steps[walkthroughIndex]?.selector === '#filterUniversityTrigger') {
           return;
         }
         if (!event.target.closest('.filter-dropdown')) {
@@ -2698,3 +5160,4 @@
   </script>
 </body>
 </html>
+
