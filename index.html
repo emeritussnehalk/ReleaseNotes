@@ -431,6 +431,9 @@
       min-height: 250px;
       overflow: auto hidden;
     }
+    .trend-chart-frame {
+      min-height: 320px;
+    }
     .parent-chart-ladder {
       display: grid;
       grid-template-columns: 1fr;
@@ -499,9 +502,19 @@
     .chart-clickable.is-selected .lollipop-value {
       fill: #0a6f3c;
     }
+    .chart-clickable.is-selected .chart-line,
+    .chart-clickable.is-selected .chart-point {
+      stroke: #0a6f3c;
+    }
     .chart-axis-label {
-      font-size: 11px;
+      font-size: 16px;
       fill: #6d8378;
+      font-weight: 600;
+    }
+    .chart-month-label {
+      font-size: 18px;
+      fill: #5d7569;
+      font-weight: 600;
     }
     .chart-grid-line {
       stroke: rgba(23, 49, 39, 0.1);
@@ -519,19 +532,55 @@
     .chart-line {
       fill: none;
       stroke: #0b8f4d;
-      stroke-width: 3;
+      stroke-width: 3.5;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
     .chart-point {
       fill: #ffffff;
       stroke: #0b8f4d;
-      stroke-width: 2.5;
+      stroke-width: 2.75;
+      transition: transform 0.16s ease, fill 0.16s ease, stroke 0.16s ease;
+      transform-box: fill-box;
+      transform-origin: center;
     }
     .chart-point-label {
       font-size: 11px;
       fill: #2c4b3f;
       font-weight: 700;
+    }
+    .chart-hit-area {
+      fill: transparent;
+    }
+    .chart-hover-label,
+    .chart-hover-label-bg {
+      opacity: 0;
+      transition: opacity 0.16s ease;
+      pointer-events: none;
+    }
+    .chart-hover-label {
+      font-size: 18px;
+      fill: #173127;
+      font-weight: 700;
+    }
+    .chart-hover-label-bg {
+      fill: rgba(255, 255, 255, 0.96);
+      stroke: rgba(11, 143, 77, 0.18);
+      stroke-width: 1;
+    }
+    .chart-clickable:hover .chart-hover-label,
+    .chart-clickable:hover .chart-hover-label-bg,
+    .chart-clickable:focus-visible .chart-hover-label,
+    .chart-clickable:focus-visible .chart-hover-label-bg,
+    .chart-clickable.is-selected .chart-hover-label,
+    .chart-clickable.is-selected .chart-hover-label-bg {
+      opacity: 1;
+    }
+    .chart-clickable:hover .chart-point,
+    .chart-clickable:focus-visible .chart-point,
+    .chart-clickable.is-selected .chart-point {
+      fill: #effaf4;
+      transform: scale(1.18);
     }
     .lollipop-svg {
       width: 100%;
@@ -2530,7 +2579,7 @@
             </div>
           </div>
           <div class="filter-group">
-            <label for="filterParentTrigger">Parent</label>
+            <label for="filterParentTrigger">Project Name</label>
             <div class="filter-dropdown" data-filter-id="filterParent">
               <button id="filterParentTrigger" class="filter-trigger" type="button" aria-expanded="false">
                 <span class="filter-trigger-text">All</span>
@@ -2591,7 +2640,7 @@
                 <p class="dashboard-card-subtitle">Column chart for release volume over time. Click a month to focus the page on that release month.</p>
               </div>
             </div>
-            <div class="chart-frame">
+            <div class="chart-frame trend-chart-frame">
               <div id="trendChart"></div>
             </div>
           </article>
@@ -2641,8 +2690,8 @@
           <article class="dashboard-card span-7">
             <div class="dashboard-card-header">
               <div>
-                <h3 class="dashboard-card-title">Parent-wise release count</h3>
-                <p class="dashboard-card-subtitle">All visible parent containers ranked by release count. Scroll if needed and click a parent to filter the page to that parent.</p>
+                <h3 class="dashboard-card-title">Project name-wise release count</h3>
+                <p class="dashboard-card-subtitle">All visible project names ranked by release count. Scroll if needed and click a project name to filter the page to that project.</p>
               </div>
             </div>
             <div id="parentChart" class="parent-chart-ladder"></div>
@@ -2669,8 +2718,8 @@
                 <th>Sr. No.</th>
                 <th>Issue Type</th>
                 <th>Card Details</th>
+                <th>Project Name</th>
                 <th>Title</th>
-                <th>Parent</th>
                 <th>Description</th>
                 <th>University Name</th>
                 <th>Program Name</th>
@@ -2730,8 +2779,8 @@
     const exactHeaders = [
       'Issue Type',
       'Key',
-      'Summary',
       'Parent',
+      'Summary',
       'Description for RN',
       'University Name',
       'Program Name',
@@ -2756,7 +2805,7 @@
       'Issue Type': 'Issue Type',
       'Key': 'Card Details',
       'Summary': 'Title',
-      'Parent': 'Parent',
+      'Parent': 'Project Name',
       'Description for RN': 'Description',
       'University Name': 'University Name',
       'Program Name': 'Program Name',
@@ -2810,7 +2859,7 @@
     let walkthroughPreviewBypass = false;
     let walkthroughStartView = 'table';
     let walkthroughIndex = -1;
-    let dashboardMonthWindow = 6;
+    let dashboardMonthWindow = 'all';
     let activeView = 'dashboard';
     let dashboardDrilldownFilters = {};
     const impactLevels = ['High', 'Medium', 'Low'];
@@ -2890,24 +2939,24 @@
         body: 'Reset clears the active dashboard filters, drill-down selections, and search text, then reapplies the default release-month filter if it exists.'
       },
       {
-        selector: '#downloadExcel',
-        title: 'Download PDF',
-        body: 'In dashboard view, this button downloads the current dashboard as a PDF, including the visible summary cards, charts, and active filter context.'
-      },
-      {
         selector: '#openTableFromDashboard',
         title: 'Open Matching Rows',
         body: 'Use this action to jump from the dashboard into tabular view while keeping the same currently matched dataset and drill-down selections.'
       },
       {
+        selector: '#downloadExcel',
+        title: 'Download PDF',
+        body: 'In dashboard view, this button downloads the current dashboard as a PDF, including the visible summary cards, charts, and active filter context.'
+      },
+      {
         selector: '#dashboardSummary',
         title: 'Summary Cards',
-        body: 'These KPI cards give a quick snapshot of the current visible dataset, including total releases, impact level, active business units, teams, and universities.'
+        body: 'These KPI cards summarize the current view with visible releases, high impact count, distinct business units, and distinct skill sets.'
       },
       {
         selector: '#trendChart',
         title: 'Monthly Trend',
-        body: 'This chart shows release volume over time. Click a month to filter the dashboard and table to that release month.'
+        body: 'This line chart shows release volume over time. Hover a point to see the month count, or click a month to filter the dashboard and table to that release month.'
       },
       {
         selector: '#impactSummary',
@@ -2928,6 +2977,16 @@
         selector: '#programChart',
         title: 'Top Programs',
         body: 'This ladder ranks the most active programs and lets you drill down to one or more programs directly from the dashboard.'
+      },
+      {
+        selector: '#parentChart',
+        title: 'Project Name-wise Release Count',
+        body: 'This list shows how many visible cards map to each project name. Scroll through the project names and click one to filter the page to that project.'
+      },
+      {
+        selector: '#techTeamChart',
+        title: 'Portal Skill Set Count',
+        body: 'This chart focuses on Portal and counts visible releases by skill set. Use it to see which Portal skill sets have the most release activity.'
       }
     ];
 
@@ -3481,13 +3540,15 @@
         renderEmptyState(container, emptyMessage);
         return;
       }
-      const { maxItems = 4 } = options;
+      const { maxItems = 4, scaleToTotal = false } = options;
       const topItems = items.slice(0, maxItems);
       const maxCount = topItems[0]?.count || 1;
+      const totalCount = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
       container.innerHTML = `
         <div class="vertical-bars" style="grid-template-columns: repeat(${topItems.length}, minmax(0, 1fr));">
           ${topItems.map(item => {
-            const percent = maxCount ? (item.count / maxCount) * 100 : 0;
+            const basis = scaleToTotal ? totalCount : maxCount;
+            const percent = basis ? (item.count / basis) * 100 : 0;
             const height = Math.max(18, Math.round(percent));
             const isSelected = isDashboardFilterValueActive(field, item.label);
             return `
@@ -3590,11 +3651,13 @@
         renderEmptyState(container, emptyMessage);
         return;
       }
-      const { maxItems = 10, compactList = false, countLabel = '' } = options;
+      const { maxItems = 10, compactList = false, countLabel = '', scaleToTotal = false } = options;
       const topItems = maxItems === 'all' ? items : items.slice(0, maxItems);
       const maxCount = topItems[0]?.count || 1;
+      const totalCount = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
       container.innerHTML = topItems.map((item, index) => {
-        const widthPercent = maxCount ? (item.count / maxCount) * 100 : 0;
+        const basis = scaleToTotal ? totalCount : maxCount;
+        const widthPercent = basis ? (item.count / basis) * 100 : 0;
         const isSelected = isDashboardFilterValueActive(field, item.label);
         const displayCount = countLabel ? `${formatNumber(item.count)} ${countLabel}` : formatNumber(item.count);
         const compactContent = compactList
@@ -3639,15 +3702,20 @@
         return;
       }
       const months = dashboardMonthWindow === 'all' ? allMonths : allMonths.slice(-Number(dashboardMonthWindow));
-      const width = Math.max(720, months.length * 86);
-      const height = 280;
-      const margin = { top: 18, right: 18, bottom: 58, left: 42 };
+      const width = Math.max(820, months.length * 96);
+      const height = 300;
+      const margin = { top: 24, right: 18, bottom: 66, left: 46 };
       const plotWidth = width - margin.left - margin.right;
       const plotHeight = height - margin.top - margin.bottom;
       const maxValue = Math.max(...months.map(item => item.count), 1);
-      const columnWidth = Math.min(58, plotWidth / Math.max(months.length, 1) - 14);
-      const gap = months.length > 0 ? plotWidth / months.length : plotWidth;
+      const slotWidth = months.length > 0 ? plotWidth / months.length : plotWidth;
       const gridValues = Array.from(new Set([0, Math.ceil(maxValue / 2), maxValue])).sort((a, b) => a - b);
+      const points = months.map((item, index) => {
+        const x = margin.left + (index * slotWidth) + (slotWidth / 2);
+        const y = margin.top + plotHeight - ((item.count / maxValue) * plotHeight);
+        return { ...item, x, y };
+      });
+      const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
 
       domElements.trendChart.innerHTML = `
         <svg class="chart-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Month-wise release trend">
@@ -3658,17 +3726,22 @@
               <text class="chart-axis-label" x="${margin.left - 8}" y="${y + 4}" text-anchor="end">${value}</text>
             `;
           }).join('')}
-          ${months.map((item, index) => {
-            const x = margin.left + (index * gap) + ((gap - columnWidth) / 2);
-            const barHeight = (item.count / maxValue) * plotHeight;
-            const y = margin.top + plotHeight - barHeight;
-            const isSelected = isDashboardFilterValueActive('Release Date', item.label);
+          <line class="chart-grid-line" x1="${margin.left}" y1="${margin.top + plotHeight}" x2="${width - margin.right}" y2="${margin.top + plotHeight}"></line>
+          <path class="chart-line" d="${linePath}"></path>
+          ${points.map(point => {
+            const isSelected = isDashboardFilterValueActive('Release Date', point.label);
+            const labelWidth = Math.max(28, String(point.count).length * 8 + 10);
+            const labelHeight = 24;
+            const labelX = point.x - (labelWidth / 2);
+            const labelY = Math.max(4, point.y - 34);
             return `
-              <g class="chart-clickable${isSelected ? ' is-selected' : ''}" tabindex="0" role="button" data-dashboard-filter-field="Release Date" data-dashboard-filter-value="${escapeHtml(item.label)}">
-                <rect class="chart-bar" x="${x}" y="${y}" width="${columnWidth}" height="${barHeight}" rx="12" ry="12"></rect>
-                <text class="chart-point-label" x="${x + (columnWidth / 2)}" y="${y - 10}" text-anchor="middle">${item.count}</text>
-                <text class="chart-axis-label" x="${x + (columnWidth / 2)}" y="${height - 18}" text-anchor="middle">${escapeHtml(item.label)}</text>
-                <title>${escapeHtml(`${item.label}: ${item.count} releases`)}</title>
+              <g class="chart-clickable${isSelected ? ' is-selected' : ''}" tabindex="0" role="button" aria-label="${escapeHtml(`${point.label}: ${point.count} releases`)}" data-dashboard-filter-field="Release Date" data-dashboard-filter-value="${escapeHtml(point.label)}">
+                <rect class="chart-hit-area" x="${point.x - (slotWidth / 2)}" y="${margin.top}" width="${slotWidth}" height="${plotHeight + margin.bottom}"></rect>
+                <circle class="chart-point" cx="${point.x}" cy="${point.y}" r="7"></circle>
+                <rect class="chart-hover-label-bg" x="${labelX}" y="${labelY}" width="${labelWidth}" height="${labelHeight}" rx="12" ry="12"></rect>
+                <text class="chart-hover-label" x="${point.x}" y="${labelY + 16}" text-anchor="middle">${point.count}</text>
+                <text class="chart-month-label" x="${point.x}" y="${height - 18}" text-anchor="middle">${escapeHtml(point.label)}</text>
+                <title>${escapeHtml(`${point.label}: ${point.count} releases`)}</title>
               </g>
             `;
           }).join('')}
@@ -3811,14 +3884,26 @@
         'Business Unit',
         { scaleToTotal: true }
       );
-      renderVerticalBarChart(domElements.universityChart, aggregateCounts(rows, 'University Name'), 'No university data is available for the current selection.', 'University Name');
-      renderProgramLadder(domElements.programChart, aggregateCounts(rows, 'Program Name'), 'No program data is available for the current selection.', 'Program Name');
+      renderVerticalBarChart(
+        domElements.universityChart,
+        aggregateCounts(rows, 'University Name'),
+        'No university data is available for the current selection.',
+        'University Name',
+        { scaleToTotal: true }
+      );
+      renderProgramLadder(
+        domElements.programChart,
+        aggregateCounts(rows, 'Program Name'),
+        'No program data is available for the current selection.',
+        'Program Name',
+        { scaleToTotal: true }
+      );
       renderVerticalBarChart(
         domElements.techTeamChart,
         aggregateSkillSetCountsForProject(rows, 'Portal'),
         'No Portal skill-set data is available for the current selection.',
         'Skill Set',
-        { maxItems: 8 }
+        { maxItems: 8, scaleToTotal: true }
       );
       renderProgramLadder(
         domElements.parentChart,
