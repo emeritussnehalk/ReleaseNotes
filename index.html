@@ -431,6 +431,51 @@
       min-height: 250px;
       overflow: auto hidden;
     }
+    .parent-chart-ladder {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      max-height: 420px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+    .parent-chart-ladder .program-rung.compact-list {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: 14px;
+      row-gap: 0;
+      padding: 12px 14px;
+    }
+    .parent-chart-ladder .program-rung.compact-list .program-rung-head {
+      display: contents;
+    }
+    .parent-chart-ladder .program-rung.compact-list .program-rank {
+      display: none;
+    }
+    .parent-chart-ladder .program-rung.compact-list .program-name {
+      font-size: 0.86rem;
+      line-height: 1.25;
+      grid-column: 1;
+      grid-row: 1;
+      padding-top: 2px;
+    }
+    .parent-chart-ladder .program-rung.compact-list .program-count {
+      min-width: 0;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(11, 143, 77, 0.08);
+      color: var(--emeritus-green-dark);
+      font-size: 0.92rem;
+      text-align: right;
+      grid-column: 2;
+      grid-row: 1;
+      line-height: 1;
+    }
+    .parent-chart-ladder .program-rung.compact-list .program-track {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      display: none;
+    }
     .chart-svg {
       width: 100%;
       height: auto;
@@ -1348,7 +1393,7 @@
     }
     .filter-group.action-group button {
       min-height: 44px;
-      padding: 10px 16px;
+      padding: 10px 12px;
       font-size: 0.86rem;
       line-height: 1.1;
       white-space: nowrap;
@@ -1372,6 +1417,10 @@
       border: 1px solid rgba(11, 143, 77, 0.18);
       box-shadow: 0 8px 18px rgba(8, 108, 58, 0.06);
     }
+    #resetFilters {
+      font-size: 0.82rem;
+      letter-spacing: 0;
+    }
     #resetFilters:hover,
     #openTableFromDashboard:hover {
       background: linear-gradient(180deg, #ffffff, #eef8f2);
@@ -1382,10 +1431,35 @@
       background: linear-gradient(135deg, var(--emeritus-green-dark), var(--emeritus-green));
       border: 1px solid rgba(11, 143, 77, 0.24);
       box-shadow: 0 10px 22px rgba(8, 108, 58, 0.14);
+      min-width: 44px;
+      width: 44px;
+      min-height: 44px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      justify-self: center;
     }
     #downloadExcel:hover {
       background: linear-gradient(135deg, #075f34, #0a8045);
       box-shadow: 0 14px 26px rgba(8, 108, 58, 0.18);
+    }
+    #downloadExcel .button-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      color: #ffffff;
+    }
+    #downloadExcel .button-text {
+      display: none;
+    }
+    #openTableFromDashboard {
+      min-width: 0;
+      width: 100%;
+      padding-inline: 12px;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     #openTableFromDashboard:disabled,
     #openTableFromDashboard:disabled:hover {
@@ -1454,7 +1528,7 @@
     .filter-menu {
       position: absolute;
       left: 0;
-      right: 0;
+      min-width: max(100%, 320px);
       top: calc(100% + 8px);
       z-index: 60;
       display: grid;
@@ -1598,17 +1672,13 @@
       scrollbar-width: thin;
     }
     .dataTables_scrollHeadInner {
-      width: max-content !important;
       min-width: 100% !important;
-      max-width: none !important;
     }
     .dataTables_scrollHeadInner table,
     .dataTables_scrollBody table,
     table.dataTable {
       border-collapse: separate !important;
       border-spacing: 0;
-      min-width: max-content !important;
-      width: max-content !important;
       table-layout: auto !important;
     }
     .dataTables_wrapper .dataTables_scrollBody {
@@ -1619,6 +1689,26 @@
     table.dataTable td {
       box-sizing: border-box;
       min-width: 150px;
+    }
+    table.dataTable th.col-srno,
+    table.dataTable td.col-srno {
+      min-width: 64px;
+      width: 64px;
+    }
+    table.dataTable th.col-card-details,
+    table.dataTable td.col-card-details {
+      min-width: 132px;
+      width: 132px;
+    }
+    table.dataTable th.col-release-date,
+    table.dataTable td.col-release-date {
+      min-width: 180px;
+      width: 180px;
+    }
+    .dataTables_scrollHead th:last-child,
+    .dataTables_scrollBody td:last-child {
+      min-width: 180px !important;
+      width: 180px !important;
     }
     table.dataTable th {
       padding: 14px 12px;
@@ -1644,10 +1734,6 @@
       color: var(--ink);
       border-bottom: 2px solid #cfe3d5;
       box-shadow: 0 2px 0 #cfe3d5;
-    }
-    table.dataTable td:nth-child(14),
-    table.dataTable th:nth-child(14) {
-      min-width: 160px;
     }
     .cell-wrap {
       display: block;
@@ -2311,6 +2397,9 @@
       }
     }
     @media (min-width: 1280px) {
+      .dashboard-card.span-12 {
+        grid-column: span 12;
+      }
       .dashboard-card.span-4 {
         grid-column: span 4;
       }
@@ -2333,9 +2422,10 @@
           minmax(135px, 1fr)
           minmax(135px, 1fr)
           minmax(135px, 1fr)
-          minmax(138px, 0.74fr)
-          minmax(166px, 0.9fr)
-          minmax(188px, 0.98fr);
+          minmax(135px, 1fr)
+          minmax(132px, 0.72fr)
+          minmax(188px, 0.98fr)
+          minmax(64px, 0.38fr);
         gap: 12px;
       }
       .filter-group {
@@ -2440,6 +2530,16 @@
             </div>
           </div>
           <div class="filter-group">
+            <label for="filterParentTrigger">Parent</label>
+            <div class="filter-dropdown" data-filter-id="filterParent">
+              <button id="filterParentTrigger" class="filter-trigger" type="button" aria-expanded="false">
+                <span class="filter-trigger-text">All</span>
+              </button>
+              <div class="filter-menu hidden"></div>
+              <select id="filterParent" class="filter-native" multiple></select>
+            </div>
+          </div>
+          <div class="filter-group">
             <label for="filterTechTeamTrigger">Tech Team</label>
             <div class="filter-dropdown" data-filter-id="filterTechTeam">
               <button id="filterTechTeamTrigger" class="filter-trigger" type="button" aria-expanded="false">
@@ -2465,11 +2565,16 @@
           </div>
           <div class="filter-group action-group">
             <label>&nbsp;</label>
-            <button id="downloadExcel" type="button">Download Excel</button>
+            <button id="openTableFromDashboard" type="button">Open Matching Rows</button>
           </div>
           <div class="filter-group action-group">
             <label>&nbsp;</label>
-            <button id="openTableFromDashboard" type="button">Open Matching Rows</button>
+            <button id="downloadExcel" type="button" aria-label="Download filtered rows as Excel" title="Download filtered rows as Excel">
+              <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29a1 1 0 1 1 1.4 1.41l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.41L11 12.59V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z"></path>
+              </svg>
+              <span class="button-text">Download</span>
+            </button>
           </div>
         </div>
       </div>
@@ -2533,13 +2638,30 @@
             </article>
           </div>
 
+          <article class="dashboard-card span-7">
+            <div class="dashboard-card-header">
+              <div>
+                <h3 class="dashboard-card-title">Parent-wise release count</h3>
+                <p class="dashboard-card-subtitle">All visible parent containers ranked by release count. Scroll if needed and click a parent to filter the page to that parent.</p>
+              </div>
+            </div>
+            <div id="parentChart" class="parent-chart-ladder"></div>
+          </article>
+
+          <article class="dashboard-card span-5">
+            <div class="dashboard-card-header">
+              <div>
+                <h3 class="dashboard-card-title">Portal skill set count</h3>
+                <p class="dashboard-card-subtitle">Count of visible releases by skill set for `Portal`. Each bar shows how many release rows map to that skill set.</p>
+              </div>
+            </div>
+            <div id="techTeamChart"></div>
+          </article>
+
         </div>
       </section>
 
-      <section id="tableView" class="table-container view-panel" aria-labelledby="tableViewTitle">
-        <div class="table-actions">
-          <p id="tableViewTitle" class="table-caption">Tabular view keeps the existing searchable, pageable, exportable release explorer exactly as before.</p>
-        </div>
+      <section id="tableView" class="table-container view-panel" aria-label="Table View">
         <div class="table-shell">
           <table id="masterTable" class="display stripe hover" style="width:100%">
             <thead>
@@ -2548,6 +2670,7 @@
                 <th>Issue Type</th>
                 <th>Card Details</th>
                 <th>Title</th>
+                <th>Parent</th>
                 <th>Description</th>
                 <th>University Name</th>
                 <th>Program Name</th>
@@ -2608,6 +2731,7 @@
       'Issue Type',
       'Key',
       'Summary',
+      'Parent',
       'Description for RN',
       'University Name',
       'Program Name',
@@ -2624,6 +2748,7 @@
       'University Name': 'filterUniversity',
       'Program Name': 'filterProgram',
       'Business Unit': 'filterBusinessUnit',
+      'Parent': 'filterParent',
       'Project': 'filterTechTeam',
       'Release Date': 'filterReleaseDate'
     };
@@ -2631,6 +2756,7 @@
       'Issue Type': 'Issue Type',
       'Key': 'Card Details',
       'Summary': 'Title',
+      'Parent': 'Parent',
       'Description for RN': 'Description',
       'University Name': 'University Name',
       'Program Name': 'Program Name',
@@ -2647,6 +2773,7 @@
       'Issue Type': ['Issue Type'],
       'Key': ['Issue key'],
       'Summary': ['Summary'],
+      'Parent': ['Parent summary'],
       'Description for RN': ['Custom field (Description for RN)'],
       'University Name': ['Custom field (University Name)'],
       'Program Name': ['Custom field (Program Name)'],
@@ -2659,6 +2786,18 @@
       'Project': ['Project name', 'Project key'],
       'Release Date': ['Custom field (Release Date)']
     };
+    const requiredDisplayFields = [
+      'Key',
+      'Summary',
+      'Parent',
+      'University Name',
+      'Program Name',
+      'Business Unit',
+      'Skill Set',
+      'Business Impact',
+      'Project',
+      'Release Date'
+    ];
     const multiSelectDisplayFields = new Set(['University Name', 'Program Name']);
     const tableHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
     const detailCardHeaders = exactHeaders.filter(header => header !== 'Tutorial Doc');
@@ -2803,6 +2942,7 @@
       filterUniversity: document.getElementById('filterUniversity'),
       filterProgram: document.getElementById('filterProgram'),
       filterBusinessUnit: document.getElementById('filterBusinessUnit'),
+      filterParent: document.getElementById('filterParent'),
       filterTechTeam: document.getElementById('filterTechTeam'),
       filterReleaseDate: document.getElementById('filterReleaseDate'),
       globalSearch: document.getElementById('globalSearch'),
@@ -2816,11 +2956,11 @@
       dashboardSummary: document.getElementById('dashboardSummary'),
       dashboardRangeControls: document.getElementById('dashboardRangeControls'),
       openTableFromDashboard: document.getElementById('openTableFromDashboard'),
-      tableViewTitle: document.getElementById('tableViewTitle'),
       trendChart: document.getElementById('trendChart'),
       impactSummary: document.getElementById('impactSummary'),
       businessUnitChart: document.getElementById('businessUnitChart'),
       techTeamChart: document.getElementById('techTeamChart'),
+      parentChart: document.getElementById('parentChart'),
       universityChart: document.getElementById('universityChart'),
       programChart: document.getElementById('programChart'),
       businessUnitHeatmap: document.getElementById('businessUnitHeatmap'),
@@ -2846,6 +2986,7 @@
       Object.entries(filterFields).map(([field, id]) => {
         const container = document.querySelector(`[data-filter-id="${id}"]`);
         return [field, {
+          field,
           container,
           trigger: container?.querySelector('.filter-trigger'),
           triggerText: container?.querySelector('.filter-trigger-text'),
@@ -3067,11 +3208,15 @@
       syncFilterDropdown(selectElement);
     }
 
-    function getPreviousMonthYearLabel() {
+    function getMonthYearLabelFromOffset(offsetFromCurrentMonth) {
       const today = new Date();
-      const previousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-      const monthName = previousMonth.toLocaleString('en-US', { month: 'short' });
-      return `${monthName}-${previousMonth.getFullYear()}`;
+      const targetMonth = new Date(today.getFullYear(), today.getMonth() + offsetFromCurrentMonth, 1);
+      const monthName = targetMonth.toLocaleString('en-US', { month: 'short' });
+      return `${monthName}-${targetMonth.getFullYear()}`;
+    }
+
+    function getPreviousMonthYearLabel() {
+      return getMonthYearLabelFromOffset(-1);
     }
 
     function parseMonthYearLabel(value) {
@@ -3149,6 +3294,21 @@
         .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
     }
 
+    function aggregateSkillSetCountsForProject(rows, projectName) {
+      const counts = new Map();
+      rows.forEach(row => {
+        if (String(row.Project || '').trim() !== projectName) {
+          return;
+        }
+        splitMultiValue(row['Skill Set']).forEach(value => {
+          counts.set(value, (counts.get(value) || 0) + 1);
+        });
+      });
+      return Array.from(counts.entries())
+        .map(([label, count]) => ({ label, count }))
+        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+    }
+
     function getMonthSeries(rows) {
       const counts = new Map();
       rows.forEach(row => {
@@ -3163,38 +3323,32 @@
 
     function buildSummaryCards(rows) {
       const uniqueBusinessUnits = new Set();
-      const uniqueTeams = new Set();
-      const uniqueUniversities = new Set();
+      const uniqueSkillSets = new Set();
       const highImpactCount = rows.filter(row => String(row['Business Impact'] || '').trim().toLowerCase() === 'high').length;
 
       rows.forEach(row => {
         splitMultiValue(row['Business Unit']).forEach(value => uniqueBusinessUnits.add(value));
-        splitMultiValue(row['University Name']).forEach(value => uniqueUniversities.add(value));
-        if (row.Project) {
-          uniqueTeams.add(row.Project);
-        }
+        splitMultiValue(row['Skill Set']).forEach(value => uniqueSkillSets.add(value));
       });
 
       const monthSeries = getMonthSeries(rows);
-      const latestMonth = monthSeries[monthSeries.length - 1];
-      const previousMonth = monthSeries[monthSeries.length - 2];
-      const latestDelta = latestMonth && previousMonth ? latestMonth.count - previousMonth.count : 0;
-      const deltaLabel = latestMonth
-        ? previousMonth
-          ? `${latestDelta >= 0 ? '+' : ''}${latestDelta} vs ${previousMonth.label}`
-          : `Only month in view: ${latestMonth.label}`
-        : 'No release month available';
+      const monthCountMap = new Map(monthSeries.map(item => [item.label, item.count]));
+      const selectedMonths = getSelectedValues(domElements.filterReleaseDate);
+      const latestMonthLabel = selectedMonths.length === 1
+        ? selectedMonths[0]
+        : getPreviousMonthYearLabel();
+      const latestMonthCount = monthCountMap.get(latestMonthLabel) || 0;
 
       return [
         {
           label: 'Visible Releases',
           value: formatNumber(rows.length),
-          meta: latestMonth ? `Latest month: ${latestMonth.label}` : 'Based on current filters'
+          meta: `${formatNumber(latestMonthCount)} releases in ${latestMonthLabel}`
         },
         {
           label: 'High Impact',
           value: formatNumber(highImpactCount),
-          meta: rows.length ? `${formatPercent((highImpactCount / rows.length) * 100)} of visible releases` : 'No releases in scope'
+          meta: 'Count of high impact releases'
         },
         {
           label: 'Business Units',
@@ -3202,14 +3356,9 @@
           meta: 'Distinct units with visible releases'
         },
         {
-          label: 'Tech Teams',
-          value: formatNumber(uniqueTeams.size),
-          meta: 'Distinct delivery teams in scope'
-        },
-        {
-          label: 'Universities',
-          value: formatNumber(uniqueUniversities.size),
-          meta: deltaLabel
+          label: 'Skill Sets',
+          value: formatNumber(uniqueSkillSets.size),
+          meta: 'Distinct skill sets with visible releases'
         }
       ];
     }
@@ -3242,14 +3391,12 @@
         domElements.openTableFromDashboard.disabled = !isDashboard;
       }
       if (domElements.downloadExcel) {
-        domElements.downloadExcel.textContent = isDashboard ? 'Download PDF' : 'Download Excel';
         domElements.downloadExcel.setAttribute('aria-label', isDashboard ? 'Download dashboard as PDF' : 'Download filtered rows as Excel');
         domElements.downloadExcel.setAttribute('title', isDashboard ? 'Download dashboard as PDF' : 'Download filtered rows as Excel');
       }
       if (!isDashboard && dataTable) {
         setTimeout(() => {
           dataTable.columns.adjust();
-          syncTableScrollWidth(dataTable);
         }, 0);
       }
     }
@@ -3329,15 +3476,16 @@
       }).join('');
     }
 
-    function renderVerticalBarChart(container, items, emptyMessage, field) {
+    function renderVerticalBarChart(container, items, emptyMessage, field, options = {}) {
       if (!items.length) {
         renderEmptyState(container, emptyMessage);
         return;
       }
-      const topItems = items.slice(0, 4);
+      const { maxItems = 4 } = options;
+      const topItems = items.slice(0, maxItems);
       const maxCount = topItems[0]?.count || 1;
       container.innerHTML = `
-        <div class="vertical-bars">
+        <div class="vertical-bars" style="grid-template-columns: repeat(${topItems.length}, minmax(0, 1fr));">
           ${topItems.map(item => {
             const percent = maxCount ? (item.count / maxCount) * 100 : 0;
             const height = Math.max(18, Math.round(percent));
@@ -3356,13 +3504,15 @@
       `;
     }
 
-    function renderLollipopChart(container, items, emptyMessage, field) {
+    function renderLollipopChart(container, items, emptyMessage, field, options = {}) {
       if (!items.length) {
         renderEmptyState(container, emptyMessage);
         return;
       }
-      const topItems = items.slice(0, 6);
+      const { valueLabel = 'releases', maxItems = 6, scaleToTotal = false } = options;
+      const topItems = maxItems === 'all' ? items : items.slice(0, maxItems);
       const maxCount = topItems[0]?.count || 1;
+      const totalCount = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
       const width = 760;
       const rowHeight = 68;
       const height = (topItems.length * rowHeight) + 40;
@@ -3375,16 +3525,17 @@
         <svg class="lollipop-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(field)} distribution">
           ${topItems.map((item, index) => {
             const y = 36 + (index * rowHeight);
-            const endX = chartStart + ((item.count / maxCount) * usableWidth);
+            const basis = scaleToTotal ? totalCount : maxCount;
+            const endX = chartStart + ((item.count / basis) * usableWidth);
             const isSelected = isDashboardFilterValueActive(field, item.label);
             return `
               <g class="chart-clickable${isSelected ? ' is-selected' : ''}" tabindex="0" role="button" data-dashboard-filter-field="${escapeHtml(field)}" data-dashboard-filter-value="${escapeHtml(item.label)}">
                 <text class="lollipop-label" x="${labelWidth}" y="${y - 8}" text-anchor="end">${escapeHtml(item.label)}</text>
-                <text class="lollipop-value" x="${labelWidth}" y="${y + 16}" text-anchor="end">${escapeHtml(`${formatNumber(item.count)} releases`)}</text>
+                <text class="lollipop-value" x="${labelWidth}" y="${y + 16}" text-anchor="end">${escapeHtml(`${formatNumber(item.count)} ${valueLabel}`)}</text>
                 <line class="lollipop-line" x1="${chartStart}" y1="${y}" x2="${chartEnd}" y2="${y}"></line>
                 <line class="lollipop-fill" x1="${chartStart}" y1="${y}" x2="${endX}" y2="${y}"></line>
                 <circle class="lollipop-dot" cx="${endX}" cy="${y}" r="11"></circle>
-                <title>${escapeHtml(`${item.label}: ${item.count} releases`)}</title>
+                <title>${escapeHtml(`${item.label}: ${item.count} ${valueLabel}`)}</title>
               </g>
             `;
           }).join('')}
@@ -3434,32 +3585,48 @@
       `;
     }
 
-    function renderProgramLadder(container, items, emptyMessage, field) {
+    function renderProgramLadder(container, items, emptyMessage, field, options = {}) {
       if (!items.length) {
         renderEmptyState(container, emptyMessage);
         return;
       }
-      const topItems = items.slice(0, 10);
+      const { maxItems = 10, compactList = false, countLabel = '' } = options;
+      const topItems = maxItems === 'all' ? items : items.slice(0, maxItems);
       const maxCount = topItems[0]?.count || 1;
       container.innerHTML = topItems.map((item, index) => {
         const widthPercent = maxCount ? (item.count / maxCount) * 100 : 0;
         const isSelected = isDashboardFilterValueActive(field, item.label);
-        return `
-          <button
-            class="program-rung${isSelected ? ' is-selected' : ''}"
-            type="button"
-            data-dashboard-filter-field="${escapeHtml(field)}"
-            data-dashboard-filter-value="${escapeHtml(item.label)}"
-            title="${escapeHtml(`Filter by ${item.label}`)}"
-          >
+        const displayCount = countLabel ? `${formatNumber(item.count)} ${countLabel}` : formatNumber(item.count);
+        const compactContent = compactList
+          ? `
             <div class="program-rung-head">
               <span class="program-rank">${index + 1}</span>
-              <span class="program-count">${escapeHtml(formatNumber(item.count))}</span>
+            </div>
+            <div class="program-name">${escapeHtml(item.label)}</div>
+            <span class="program-count">${escapeHtml(displayCount)}</span>
+            <div class="program-track">
+              <div class="program-fill" style="width:${widthPercent.toFixed(2)}%"></div>
+            </div>
+          `
+          : `
+            <div class="program-rung-head">
+              <span class="program-rank">${index + 1}</span>
+              <span class="program-count">${escapeHtml(displayCount)}</span>
             </div>
             <div class="program-name">${escapeHtml(item.label)}</div>
             <div class="program-track">
               <div class="program-fill" style="width:${widthPercent.toFixed(2)}%"></div>
             </div>
+          `;
+        return `
+          <button
+            class="program-rung${compactList ? ' compact-list' : ''}${isSelected ? ' is-selected' : ''}"
+            type="button"
+            data-dashboard-filter-field="${escapeHtml(field)}"
+            data-dashboard-filter-value="${escapeHtml(item.label)}"
+            title="${escapeHtml(`Filter by ${item.label}`)}"
+          >
+            ${compactContent}
           </button>
         `;
       }).join('');
@@ -3633,16 +3800,33 @@
       domElements.dashboardScope.textContent = drilldownLabel
         ? `${baseScope} Interactive drill-down: ${drilldownLabel}.`
         : baseScope;
-      domElements.tableViewTitle.textContent = drilldownLabel
-        ? `Tabular view is showing the current filtered dataset. Interactive drill-down active: ${drilldownLabel}.`
-        : 'Tabular view keeps the existing searchable, pageable, exportable release explorer exactly as before.';
 
       renderSummaryCards(rows);
       renderTrendChart(rows);
       renderImpactSummary(rows);
-      renderLollipopChart(domElements.businessUnitChart, aggregateCounts(rows, 'Business Unit'), 'No business-unit data is available for the current selection.', 'Business Unit');
+      renderLollipopChart(
+        domElements.businessUnitChart,
+        aggregateCounts(rows, 'Business Unit'),
+        'No business-unit data is available for the current selection.',
+        'Business Unit',
+        { scaleToTotal: true }
+      );
       renderVerticalBarChart(domElements.universityChart, aggregateCounts(rows, 'University Name'), 'No university data is available for the current selection.', 'University Name');
       renderProgramLadder(domElements.programChart, aggregateCounts(rows, 'Program Name'), 'No program data is available for the current selection.', 'Program Name');
+      renderVerticalBarChart(
+        domElements.techTeamChart,
+        aggregateSkillSetCountsForProject(rows, 'Portal'),
+        'No Portal skill-set data is available for the current selection.',
+        'Skill Set',
+        { maxItems: 8 }
+      );
+      renderProgramLadder(
+        domElements.parentChart,
+        aggregateCounts(rows, 'Parent'),
+        'No parent data is available for the current selection.',
+        'Parent',
+        { maxItems: 'all', compactList: true }
+      );
     }
 
     function updateDashboard() {
@@ -3730,6 +3914,7 @@
         'University Name': new Set(),
         'Program Name': new Set(),
         'Business Unit': new Set(),
+        'Parent': new Set(),
         'Project': new Set(),
         'Release Date': new Set()
       };
@@ -3769,6 +3954,7 @@
         'University Name': getSelectedValues(domElements.filterUniversity),
         'Program Name': getSelectedValues(domElements.filterProgram),
         'Business Unit': getSelectedValues(domElements.filterBusinessUnit),
+        'Parent': getSelectedValues(domElements.filterParent),
         'Project': getSelectedValues(domElements.filterTechTeam),
         'Release Date': getSelectedValues(domElements.filterReleaseDate)
       };
@@ -3791,12 +3977,12 @@
       return field ? filterDropdownElements[field] : null;
     }
 
-    function getFilterTriggerLabel(values) {
+    function getFilterTriggerLabel(values, field) {
       if (!values.length) {
         return 'All';
       }
-      if (values.length <= 2) {
-        return values.join(', ');
+      if (field === 'Release Date' && values.length === 1) {
+        return values[0];
       }
       return `${values.length} selected`;
     }
@@ -3808,7 +3994,7 @@
       }
       const optionValues = Array.from(selectElement.options).map(option => option.value);
       const selectedValues = new Set(getSelectedValues(selectElement));
-      dropdown.triggerText.textContent = getFilterTriggerLabel(Array.from(selectedValues));
+      dropdown.triggerText.textContent = getFilterTriggerLabel(Array.from(selectedValues), dropdown.field);
       dropdown.menu.innerHTML = '';
 
       const selectAllLabel = document.createElement('label');
@@ -4242,32 +4428,11 @@
     }
 
     function syncTableScrollWidth(apiInstance) {
-      const api = apiInstance || dataTable;
-      if (!api) {
-        return;
-      }
+      return;
+    }
 
-      const container = api.table().container();
-      const scrollBody = container.querySelector('.dataTables_scrollBody');
-      const scrollHeadInner = container.querySelector('.dataTables_scrollHeadInner');
-      const scrollHeadTable = scrollHeadInner?.querySelector('table');
-      const scrollBodyTable = scrollBody?.querySelector('table');
-      const visibleHeaders = api.columns(':visible').header().toArray();
-
-      if (!scrollBody || !scrollHeadInner || !scrollHeadTable || !scrollBodyTable || !visibleHeaders.length) {
-        return;
-      }
-
-      const totalVisibleWidth = visibleHeaders.reduce(
-        (sum, header) => sum + Math.ceil(header.getBoundingClientRect().width),
-        0
-      );
-      const targetWidth = Math.max(totalVisibleWidth, scrollBody.clientWidth);
-      const widthValue = `${targetWidth}px`;
-
-      scrollHeadInner.style.width = widthValue;
-      scrollHeadTable.style.width = widthValue;
-      scrollBodyTable.style.width = widthValue;
+    function applyTableColumnHeaderClasses(apiInstance) {
+      return;
     }
 
     function closePaginationLengthMenus() {
@@ -4735,7 +4900,8 @@
         title: 'Sr. No.',
         data: null,
         defaultContent: '',
-        width: '88px',
+        width: '64px',
+        className: 'col-srno',
         orderable: false,
         searchable: false,
         render: (data, type, row, meta) => {
@@ -4748,7 +4914,8 @@
             title: displayLabels[header] || header,
             data: header,
             defaultContent: '',
-            width: '160px',
+            width: '132px',
+            className: 'col-card-details',
             render: (data, type) => {
               if (type !== 'display') {
                 return data || '';
@@ -4796,6 +4963,7 @@
             data: header,
             defaultContent: '',
             width: '160px',
+            className: 'col-release-date',
             render: (data, type, row) => {
               if (type === 'sort' || type === 'type') {
                 return row.__releaseSort || 0;
@@ -4855,15 +5023,17 @@
         ],
         initComplete: function() {
           const api = this.api();
-          api.columns.adjust();
-          syncTableScrollWidth(api);
+          window.requestAnimationFrame(() => {
+            api.columns.adjust();
+          });
           enhancePaginationLengthControl(api);
           updateDashboard();
         },
         drawCallback: function() {
           const api = this.api();
-          api.columns.adjust();
-          syncTableScrollWidth(api);
+          window.requestAnimationFrame(() => {
+            api.columns.adjust();
+          });
           enhancePaginationLengthControl(api);
           updateDashboard();
         }
@@ -4990,12 +5160,12 @@
           return map;
         }, {});
 
-        const missingFields = exactHeaders.filter(displayField => {
+        const missingFields = requiredDisplayFields.filter(displayField => {
           const sourceNames = displayFieldSources[displayField] || [displayField];
           return !sourceNames.some(sourceName => headerIndex[sourceName]?.length);
         });
         if (missingFields.length) {
-          throw new Error(`CSV header mismatch. Missing source columns for: ${missingFields.join(', ')}`);
+          throw new Error(`CSV is missing required columns for: ${missingFields.join(', ')}`);
         }
 
         const records = rows.slice(1).map(row => {
@@ -5134,7 +5304,6 @@
       window.addEventListener('resize', () => {
         if (dataTable) {
           dataTable.columns.adjust();
-          syncTableScrollWidth(dataTable);
         }
         if (walkthroughIndex >= 0) {
           positionWalkthroughCard(activeWalkthroughTarget);
