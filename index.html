@@ -1260,68 +1260,6 @@
       border-radius: inherit;
       background: linear-gradient(90deg, rgba(11, 143, 77, 0.9) 0%, rgba(125, 199, 154, 0.85) 100%);
     }
-    .heatmap-wrap {
-      overflow-x: auto;
-      padding-bottom: 4px;
-    }
-    .heatmap {
-      display: grid;
-      gap: 8px;
-      min-width: 680px;
-    }
-    .heatmap-header,
-    .heatmap-row {
-      display: grid;
-      grid-template-columns: 180px repeat(var(--heatmap-columns, 6), minmax(70px, 1fr));
-      gap: 8px;
-      align-items: center;
-    }
-    .heatmap-corner,
-    .heatmap-month {
-      font-size: 0.8rem;
-      color: var(--muted);
-      font-weight: 700;
-      text-align: center;
-    }
-    .heatmap-corner {
-      text-align: left;
-      padding-left: 2px;
-    }
-    .heatmap-label {
-      font-size: 0.88rem;
-      color: var(--ink);
-      font-weight: 600;
-      overflow-wrap: anywhere;
-    }
-    .heatmap-cell {
-      min-height: 52px;
-      border-radius: 16px;
-      border: 1px solid rgba(11, 143, 77, 0.08);
-      display: grid;
-      place-items: center;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #173127;
-    }
-    .heatmap-button {
-      appearance: none;
-      width: 100%;
-      min-height: 52px;
-      border-radius: 16px;
-      border: 1px solid rgba(11, 143, 77, 0.08);
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.92rem;
-      font-weight: 700;
-      padding: 0;
-      transition: transform 0.16s ease, box-shadow 0.16s ease;
-    }
-    .heatmap-button:hover,
-    .heatmap-button:focus-visible {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(8, 108, 58, 0.1);
-      outline: none;
-    }
     .dashboard-empty {
       min-height: 180px;
       display: grid;
@@ -1459,43 +1397,100 @@
         background 0.16s ease,
         color 0.16s ease;
     }
-    #resetFilters,
     #openTableFromDashboard {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 250, 246, 0.98));
       color: var(--emeritus-green-dark);
       border: 1px solid rgba(11, 143, 77, 0.18);
       box-shadow: 0 8px 18px rgba(8, 108, 58, 0.06);
     }
-    #resetFilters {
-      font-size: 0.82rem;
+    #resetFilters,
+    #clearFilters {
+      font-size: 0.78rem;
       letter-spacing: 0;
     }
-    #resetFilters:hover,
     #openTableFromDashboard:hover {
       background: linear-gradient(180deg, #ffffff, #eef8f2);
       border-color: rgba(11, 143, 77, 0.28);
       box-shadow: 0 12px 24px rgba(8, 108, 58, 0.1);
     }
+    .filter-action-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      min-width: 0;
+      width: 100%;
+      height: 52px;
+      min-height: 52px;
+      max-height: 52px;
+      padding: 4px;
+      border-radius: 16px;
+      border: 1px solid rgba(11, 143, 77, 0.18);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 250, 246, 0.98));
+      box-shadow: 0 8px 18px rgba(8, 108, 58, 0.06);
+      overflow: hidden;
+    }
+    .filter-action-buttons button {
+      min-width: 0;
+      width: 100%;
+      height: 42px;
+      min-height: 42px;
+      max-height: 42px;
+      padding-inline: 8px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--emeritus-green-dark);
+      box-shadow: none;
+      transform: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .filter-action-buttons button + button {
+      border-left: 1px solid rgba(11, 143, 77, 0.12);
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .filter-action-buttons button:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .filter-action-buttons button:hover,
+    .filter-action-buttons button:focus-visible {
+      background: rgba(11, 143, 77, 0.08);
+      color: var(--emeritus-green-dark);
+      box-shadow: none;
+      transform: none;
+    }
+    .filter-action-buttons button:focus-visible {
+      outline: 2px solid rgba(11, 143, 77, 0.32);
+      outline-offset: -2px;
+    }
     #downloadExcel {
       background: linear-gradient(135deg, var(--emeritus-green-dark), var(--emeritus-green));
       border: 1px solid rgba(11, 143, 77, 0.24);
       box-shadow: 0 10px 22px rgba(8, 108, 58, 0.14);
-      min-width: 44px;
-      width: 44px;
-      min-height: 44px;
+      width: 38px;
+      min-width: 38px;
+      max-width: 38px;
+      height: 38px;
+      min-height: 38px;
+      max-height: 38px;
       padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       justify-self: center;
+      align-self: end;
+      aspect-ratio: 1;
     }
     #downloadExcel:hover {
       background: linear-gradient(135deg, #075f34, #0a8045);
       box-shadow: 0 14px 26px rgba(8, 108, 58, 0.18);
+      transform: none;
     }
     #downloadExcel .button-icon {
-      width: 18px;
-      height: 18px;
+      width: 15px;
+      height: 15px;
       display: block;
       color: #ffffff;
     }
@@ -1601,8 +1596,13 @@
       border-radius: 12px;
       cursor: pointer;
     }
-    .filter-option:hover {
+    .filter-option:hover,
+    .filter-option:focus-within {
       background: #f1f8f4;
+    }
+    .filter-option:focus-within {
+      outline: 2px solid rgba(11, 143, 77, 0.28);
+      outline-offset: 2px;
     }
     .filter-option.select-all {
       border-bottom: 1px solid rgba(11, 143, 77, 0.1);
@@ -1622,10 +1622,13 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    label {
+    label,
+    .filter-actions-label {
+      display: block;
       font-size: 0.9rem;
       color: var(--ink);
       font-weight: 600;
+      line-height: 1.2;
     }
     select,
     input[type="search"],
@@ -2289,6 +2292,7 @@
       box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.96), 0 0 0 10px rgba(11, 143, 77, 0.3);
     }
     #resetFilters.walkthrough-highlight,
+    #clearFilters.walkthrough-highlight,
     #downloadExcel.walkthrough-highlight,
     #openTableFromDashboard.walkthrough-highlight,
     #startWalkthrough.walkthrough-highlight,
@@ -2466,27 +2470,33 @@
       }
       .filter-row {
         grid-template-columns:
-          minmax(135px, 1fr)
-          minmax(135px, 1fr)
-          minmax(135px, 1fr)
-          minmax(135px, 1fr)
-          minmax(135px, 1fr)
-          minmax(135px, 1fr)
-          minmax(132px, 0.72fr)
-          minmax(188px, 0.98fr)
-          minmax(64px, 0.38fr);
+          repeat(6, minmax(116px, 1fr))
+          minmax(164px, 0.78fr)
+          minmax(142px, 0.56fr)
+          minmax(52px, 0.22fr);
         gap: 12px;
       }
       .filter-group {
         min-width: 0;
       }
-      .filter-group label {
+      .filter-group label,
+      .filter-actions-label {
         font-size: 0.86rem;
       }
       .filter-trigger,
       button {
         min-height: 48px;
         padding: 10px 14px;
+      }
+      .filter-action-buttons {
+        height: 48px;
+        min-height: 48px;
+        max-height: 48px;
+      }
+      .filter-action-buttons button {
+        height: 38px;
+        min-height: 38px;
+        max-height: 38px;
       }
     }
     @media (max-width: 900px) {
@@ -2505,9 +2515,409 @@
       .program-ladder {
         grid-template-columns: 1fr;
       }
-      .heatmap-header,
-      .heatmap-row {
-        grid-template-columns: 150px repeat(var(--heatmap-columns, 6), minmax(64px, 1fr));
+    }
+    @media (max-width: 1279px) {
+      .page-shell {
+        padding: 16px 18px 34px;
+      }
+      .header-bar {
+        align-items: stretch;
+      }
+      .brand-block {
+        flex: 1 1 100%;
+      }
+      .header-actions {
+        display: grid;
+        grid-template-columns: minmax(180px, 1fr) auto;
+        width: 100%;
+        margin-left: 0;
+        align-items: center;
+        justify-content: stretch;
+      }
+      .header-search {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+        min-height: 42px;
+        height: 42px;
+        align-self: center;
+        margin-left: 0;
+      }
+      .controls {
+        padding: 12px;
+      }
+      .filter-row {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .filter-menu {
+        min-width: min(360px, calc(100vw - 48px));
+        max-width: calc(100vw - 48px);
+      }
+      .dashboard-card,
+      .dashboard-stack,
+      .dashboard-card.span-4,
+      .dashboard-card.span-5,
+      .dashboard-card.span-6,
+      .dashboard-card.span-7,
+      .dashboard-card.span-12 {
+        grid-column: span 12;
+      }
+      .dashboard-stack {
+        grid-template-rows: none;
+        height: auto;
+      }
+      .table-container {
+        padding: 12px;
+        border-radius: 20px;
+      }
+      .dataTables_wrapper .dataTables_scrollBody {
+        max-height: 58vh;
+      }
+    }
+    @media (max-width: 900px) {
+      .page-shell {
+        padding: 14px 14px 30px;
+      }
+      .filter-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .dashboard-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .dashboard-card {
+        padding: 16px;
+        border-radius: 20px;
+      }
+      .dashboard-card.compact {
+        padding: 14px;
+      }
+      .dashboard-card-header {
+        display: grid;
+      }
+      .chart-frame {
+        padding: 10px;
+        min-height: 210px;
+      }
+      .trend-chart-frame {
+        min-height: 260px;
+      }
+      .parent-chart-ladder {
+        max-height: 340px;
+      }
+      .pagination-bar {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+      .pagination-bar .dataTables_info {
+        flex: 1 1 100%;
+        order: 3;
+      }
+      .pagination-bar .dataTables_paginate {
+        flex: 1 1 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+      }
+    }
+    @media (max-width: 640px) {
+      body {
+        background: linear-gradient(180deg, #f9fcfa 0%, #eff7f2 100%);
+      }
+      .page-shell {
+        padding: 12px 10px 24px;
+      }
+      header {
+        padding: 0;
+      }
+      .brand-block {
+        gap: 10px;
+      }
+      .brand-logo {
+        width: min(170px, 78vw);
+      }
+      .brand-title,
+      .brand-subtitle {
+        white-space: normal;
+      }
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .walkthrough-trigger,
+      .view-switcher,
+      .header-search {
+        width: 100%;
+        min-width: 0;
+      }
+      .view-switcher {
+        justify-content: center;
+      }
+      .header-search {
+        flex-basis: auto;
+      }
+      .controls {
+        position: static;
+        margin-top: 14px;
+        padding: 10px;
+        border-radius: 16px;
+      }
+      .filter-row {
+        grid-template-columns: minmax(0, 1fr) 44px;
+        gap: 12px;
+      }
+      .filter-group {
+        grid-column: 1 / -1;
+      }
+      .filter-group.action-group > .filter-actions-label[aria-hidden="true"] {
+        display: none;
+      }
+      label,
+      .filter-actions-label {
+        font-size: 0.84rem;
+      }
+      select,
+      input[type="search"],
+      button,
+      .filter-trigger {
+        min-height: 46px;
+        font-size: 0.92rem;
+      }
+      .filter-action-buttons {
+        height: 46px;
+        min-height: 46px;
+        max-height: 46px;
+      }
+      .filter-action-buttons button {
+        height: 36px;
+        min-height: 36px;
+        max-height: 36px;
+      }
+      .filter-menu {
+        left: 0;
+        right: 0;
+        min-width: 100%;
+        max-width: 100%;
+        max-height: min(300px, 55vh);
+      }
+      #openTableFromDashboard {
+        min-height: 46px;
+      }
+      .filter-group.action-group:has(#openTableFromDashboard) {
+        grid-column: 1;
+      }
+      .filter-group.action-group:has(#downloadExcel) {
+        grid-column: 2;
+        width: 44px;
+        justify-self: end;
+        align-self: end;
+      }
+      #downloadExcel {
+        justify-self: end;
+      }
+      .dashboard-shell,
+      .table-container {
+        margin-top: 16px;
+      }
+      .dashboard-summary {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .summary-card {
+        min-height: 0;
+        padding: 14px;
+        border-radius: 18px;
+      }
+      .summary-value {
+        font-size: 1.65rem;
+      }
+      .dashboard-grid {
+        gap: 12px;
+      }
+      .dashboard-card {
+        padding: 14px;
+        border-radius: 18px;
+        gap: 12px;
+      }
+      .dashboard-card-title {
+        font-size: 0.98rem;
+      }
+      .dashboard-card-subtitle {
+        font-size: 0.84rem;
+      }
+      .chart-frame {
+        border-radius: 14px;
+        padding: 8px;
+        min-height: 190px;
+      }
+      .trend-chart-frame {
+        min-height: 240px;
+      }
+      .stacked-share-item,
+      .metric-row,
+      .program-rung {
+        border-radius: 14px;
+      }
+      .stacked-share-item {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .stacked-share-meta {
+        white-space: normal;
+      }
+      .parent-chart-ladder {
+        max-height: 300px;
+      }
+      .parent-chart-ladder .program-rung.compact-list {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: 10px;
+        row-gap: 0;
+        min-height: 0;
+      }
+      .parent-chart-ladder .program-rung.compact-list .program-count {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+        justify-self: end;
+        white-space: nowrap;
+      }
+      .table-container {
+        padding: 8px;
+        border-radius: 16px;
+      }
+      .table-shell {
+        border-radius: 14px;
+      }
+      .dataTables_wrapper {
+        gap: 12px;
+      }
+      .dataTables_wrapper .dataTables_scrollHead {
+        border-radius: 14px 14px 0 0;
+      }
+      .dataTables_wrapper .dataTables_scrollBody {
+        max-height: 56vh;
+        border-radius: 0 0 14px 14px;
+      }
+      table.dataTable th,
+      table.dataTable td {
+        min-width: 132px;
+        padding: 10px;
+        font-size: 0.84rem;
+      }
+      table.dataTable th.col-srno,
+      table.dataTable td.col-srno {
+        min-width: 58px;
+        width: 58px;
+      }
+      table.dataTable th.col-card-details,
+      table.dataTable td.col-card-details {
+        min-width: 116px;
+        width: 116px;
+      }
+      table.dataTable th.col-release-date,
+      table.dataTable td.col-release-date,
+      .dataTables_scrollHead th:last-child,
+      .dataTables_scrollBody td:last-child {
+        min-width: 140px !important;
+        width: 140px !important;
+      }
+      .pagination-bar {
+        display: grid;
+        gap: 10px;
+        padding: 10px 0 0;
+      }
+      .pagination-bar .dataTables_length,
+      .pagination-bar .dataTables_info,
+      .pagination-bar .dataTables_paginate {
+        width: 100%;
+      }
+      .pagination-bar .dataTables_paginate {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+      }
+      .dataTables_wrapper .dataTables_paginate .paginate_button,
+      .pagination-bar .dataTables_paginate .ellipsis {
+        min-width: 36px;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 12px;
+      }
+      .detail-modal {
+        align-items: stretch;
+        padding: 10px;
+      }
+      .detail-modal-panel {
+        width: 100%;
+        max-height: calc(100dvh - 20px);
+        padding: 16px;
+        border-radius: 18px;
+      }
+      .detail-card-head {
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .detail-card-title {
+        font-size: 1.35rem;
+        white-space: normal;
+      }
+      .detail-card-subtitle,
+      .detail-value {
+        font-size: 0.9rem;
+      }
+      .detail-item {
+        padding: 12px;
+        border-radius: 14px;
+      }
+      .detail-close {
+        min-width: 76px;
+        min-height: 40px;
+        padding: 8px 12px;
+      }
+      .walkthrough-card {
+        width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+        overflow: auto;
+        padding: 16px;
+        border-radius: 18px;
+      }
+    }
+    @media (max-width: 420px) {
+      .page-shell {
+        padding-inline: 8px;
+      }
+      .brand-logo {
+        width: min(150px, 74vw);
+      }
+      .view-switch-button {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        min-height: 38px;
+      }
+      .controls {
+        padding: 8px;
+      }
+      .filter-trigger,
+      select,
+      input[type="search"],
+      button {
+        font-size: 0.9rem;
+      }
+      .dashboard-card,
+      .summary-card,
+      .table-container {
+        border-radius: 14px;
+      }
+      .pagination-length-dropdown {
+        width: 100%;
+      }
+      .detail-card-head {
+        flex-direction: column;
+      }
+      .detail-close {
+        width: 100%;
+        margin-left: 0;
       }
     }
   </style>
@@ -2608,16 +3018,19 @@
               <select id="filterReleaseDate" class="filter-native" multiple></select>
             </div>
           </div>
-          <div class="filter-group action-group">
-            <label>&nbsp;</label>
-            <button id="resetFilters" type="button">Reset Filters</button>
+          <div class="filter-group action-group filter-reset-group">
+            <span id="filterActionsLabel" class="filter-actions-label">Set Filters</span>
+            <div class="filter-action-buttons" role="group" aria-labelledby="filterActionsLabel">
+              <button id="resetFilters" type="button" title="Restore the default release-month filter">Default</button>
+              <button id="clearFilters" type="button" title="Clear all filters and search text">Clear All</button>
+            </div>
           </div>
           <div class="filter-group action-group">
-            <label>&nbsp;</label>
+            <span class="filter-actions-label" aria-hidden="true">&nbsp;</span>
             <button id="openTableFromDashboard" type="button">Open Matching Rows</button>
           </div>
           <div class="filter-group action-group">
-            <label>&nbsp;</label>
+            <span class="filter-actions-label" aria-hidden="true">&nbsp;</span>
             <button id="downloadExcel" type="button" aria-label="Download filtered rows as Excel" title="Download filtered rows as Excel">
               <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29a1 1 0 1 1 1.4 1.41l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.41L11 12.59V4a1 1 0 0 1 1-1Zm-7 14a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z"></path>
@@ -2859,7 +3272,6 @@
     let walkthroughPreviewBypass = false;
     let walkthroughStartView = 'table';
     let walkthroughIndex = -1;
-    let dashboardMonthWindow = 'all';
     let activeView = 'dashboard';
     let dashboardDrilldownFilters = {};
     const impactLevels = ['High', 'Medium', 'Low'];
@@ -2887,8 +3299,8 @@
       },
       {
         selector: '#resetFilters',
-        title: 'Reset Filters',
-        body: 'Reset clears your current selections and search text, then reapplies the default release-month filter if that month exists in the data.'
+        title: 'Filter Defaults',
+        body: 'Default returns the page to its release-month default. Clear All removes every filter, drill-down selection, and search term.'
       },
       {
         selector: '#downloadExcel',
@@ -2935,8 +3347,8 @@
       },
       {
         selector: '#resetFilters',
-        title: 'Reset Filters',
-        body: 'Reset clears the active dashboard filters, drill-down selections, and search text, then reapplies the default release-month filter if it exists.'
+        title: 'Filter Defaults',
+        body: 'Default returns the dashboard to its release-month default. Clear All removes every filter, drill-down selection, and search term.'
       },
       {
         selector: '#openTableFromDashboard',
@@ -3006,6 +3418,7 @@
       filterReleaseDate: document.getElementById('filterReleaseDate'),
       globalSearch: document.getElementById('globalSearch'),
       resetFilters: document.getElementById('resetFilters'),
+      clearFilters: document.getElementById('clearFilters'),
       downloadExcel: document.getElementById('downloadExcel'),
       showDashboardView: document.getElementById('showDashboardView'),
       showTableView: document.getElementById('showTableView'),
@@ -3013,7 +3426,6 @@
       tableView: document.getElementById('tableView'),
       dashboardScope: document.getElementById('dashboardScope'),
       dashboardSummary: document.getElementById('dashboardSummary'),
-      dashboardRangeControls: document.getElementById('dashboardRangeControls'),
       openTableFromDashboard: document.getElementById('openTableFromDashboard'),
       trendChart: document.getElementById('trendChart'),
       impactSummary: document.getElementById('impactSummary'),
@@ -3022,7 +3434,6 @@
       parentChart: document.getElementById('parentChart'),
       universityChart: document.getElementById('universityChart'),
       programChart: document.getElementById('programChart'),
-      businessUnitHeatmap: document.getElementById('businessUnitHeatmap'),
       detailModal: document.getElementById('detailModal'),
       detailCardTitle: document.getElementById('detailCardTitle'),
       detailCardSubtitle: document.getElementById('detailCardSubtitle'),
@@ -3044,12 +3455,24 @@
     const filterDropdownElements = Object.fromEntries(
       Object.entries(filterFields).map(([field, id]) => {
         const container = document.querySelector(`[data-filter-id="${id}"]`);
+        const trigger = container?.querySelector('.filter-trigger');
+        const menu = container?.querySelector('.filter-menu');
+        if (trigger && menu) {
+          if (!menu.id) {
+            menu.id = `${id}Menu`;
+          }
+          trigger.setAttribute('aria-controls', menu.id);
+          trigger.setAttribute('aria-haspopup', 'true');
+          menu.setAttribute('role', 'group');
+          menu.setAttribute('aria-label', `${field} options`);
+          menu.setAttribute('aria-hidden', 'true');
+        }
         return [field, {
           field,
           container,
-          trigger: container?.querySelector('.filter-trigger'),
+          trigger,
           triggerText: container?.querySelector('.filter-trigger-text'),
-          menu: container?.querySelector('.filter-menu')
+          menu
         }];
       })
     );
@@ -3163,6 +3586,18 @@
         return 'Portal';
       }
       return normalized;
+    }
+
+    function normalizeIssueType(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function isSubtaskIssueType(value) {
+      return normalizeIssueType(value) === 'sub-task';
+    }
+
+    function isStoryIssueType(value) {
+      return normalizeIssueType(value) === 'story';
     }
 
     function escapeHtml(value) {
@@ -3701,7 +4136,7 @@
         renderEmptyState(domElements.trendChart, 'No releases match the current filters, so there is no monthly trend to display.');
         return;
       }
-      const months = dashboardMonthWindow === 'all' ? allMonths : allMonths.slice(-Number(dashboardMonthWindow));
+      const months = allMonths;
       const width = Math.max(820, months.length * 96);
       const height = 300;
       const margin = { top: 24, right: 18, bottom: 66, left: 46 };
@@ -3798,69 +4233,6 @@
       `;
     }
 
-    function renderHeatmap(rows) {
-      const topUnits = aggregateCounts(rows, 'Business Unit').slice(0, 6).map(item => item.label);
-      const monthSeries = getMonthSeries(rows);
-      const visibleMonths = dashboardMonthWindow === 'all' ? monthSeries : monthSeries.slice(-Number(dashboardMonthWindow));
-      const monthLabels = visibleMonths.map(item => item.label);
-
-      if (!topUnits.length || !monthLabels.length) {
-        renderEmptyState(domElements.businessUnitHeatmap, 'The heatmap needs at least one visible business unit and one release month.');
-        return;
-      }
-
-      const matrix = new Map();
-      let maxCount = 0;
-      rows.forEach(row => {
-        if (!row.__monthYear || !monthLabels.includes(row.__monthYear)) {
-          return;
-        }
-        splitMultiValue(row['Business Unit']).forEach(unit => {
-          if (!topUnits.includes(unit)) {
-            return;
-          }
-          const key = `${unit}__${row.__monthYear}`;
-          const nextValue = (matrix.get(key) || 0) + 1;
-          matrix.set(key, nextValue);
-          maxCount = Math.max(maxCount, nextValue);
-        });
-      });
-
-      const header = `
-        <div class="heatmap-header" style="--heatmap-columns:${monthLabels.length}">
-          <div class="heatmap-corner">Business Unit</div>
-          ${monthLabels.map(month => `<div class="heatmap-month">${escapeHtml(month)}</div>`).join('')}
-        </div>
-      `;
-      const rowsMarkup = topUnits.map(unit => `
-        <div class="heatmap-row" style="--heatmap-columns:${monthLabels.length}">
-          <div class="heatmap-label">${escapeHtml(unit)}</div>
-          ${monthLabels.map(month => {
-            const count = matrix.get(`${unit}__${month}`) || 0;
-            const intensity = maxCount ? count / maxCount : 0;
-            const background = count
-              ? `rgba(11, 143, 77, ${Math.max(0.12, intensity * 0.92).toFixed(2)})`
-              : 'rgba(11, 143, 77, 0.04)';
-            const color = intensity > 0.58 ? '#ffffff' : '#173127';
-            return `
-              <button
-                class="heatmap-button"
-                type="button"
-                style="background:${background}; color:${color}"
-                data-dashboard-filter-field="Business Unit"
-                data-dashboard-filter-value="${escapeHtml(unit)}"
-                data-dashboard-secondary-field="Release Date"
-                data-dashboard-secondary-value="${escapeHtml(month)}"
-                title="${escapeHtml(`Filter by ${unit} in ${month}`)}"
-              >${count || '-'}</button>
-            `;
-          }).join('')}
-        </div>
-      `).join('');
-
-      domElements.businessUnitHeatmap.innerHTML = `<div class="heatmap">${header}${rowsMarkup}</div>`;
-    }
-
     function renderDashboard(rows) {
       const selectedMonths = getSelectedValues(domElements.filterReleaseDate);
       const drilldownLabel = Object.entries(dashboardDrilldownFilters)
@@ -3919,18 +4291,6 @@
     }
 
     function initializeDashboardControls() {
-      domElements.dashboardRangeControls?.addEventListener('click', event => {
-        const button = event.target.closest('[data-range]');
-        if (!button) {
-          return;
-        }
-        dashboardMonthWindow = button.dataset.range === 'all' ? 'all' : Number(button.dataset.range);
-        Array.from(domElements.dashboardRangeControls.querySelectorAll('[data-range]')).forEach(item => {
-          item.classList.toggle('active', item === button);
-        });
-        updateDashboard();
-      });
-
       domElements.showDashboardView?.addEventListener('click', () => setActiveView('dashboard'));
       domElements.showTableView?.addEventListener('click', () => setActiveView('table'));
       domElements.openTableFromDashboard?.addEventListener('click', () => setActiveView('table'));
@@ -4072,6 +4432,47 @@
       return `${values.length} selected`;
     }
 
+    function getFilterCheckboxes(dropdown) {
+      return Array.from(dropdown?.menu?.querySelectorAll('input[type="checkbox"]') || []);
+    }
+
+    function focusFilterCheckbox(dropdown, targetIndex = 0) {
+      const checkboxes = getFilterCheckboxes(dropdown);
+      if (!checkboxes.length) {
+        return;
+      }
+      const normalizedIndex = targetIndex < 0
+        ? checkboxes.length - 1
+        : Math.min(targetIndex, checkboxes.length - 1);
+      checkboxes[Math.max(0, normalizedIndex)].focus();
+    }
+
+    function moveFilterCheckboxFocus(dropdown, direction) {
+      const checkboxes = getFilterCheckboxes(dropdown);
+      if (!checkboxes.length) {
+        return;
+      }
+      const currentIndex = checkboxes.indexOf(document.activeElement);
+      const nextIndex = currentIndex === -1
+        ? (direction > 0 ? 0 : checkboxes.length - 1)
+        : (currentIndex + direction + checkboxes.length) % checkboxes.length;
+      checkboxes[nextIndex].focus();
+    }
+
+    function openFilterDropdown(dropdown, options = {}) {
+      if (!dropdown?.container || !dropdown.trigger || !dropdown.menu) {
+        return;
+      }
+      closeFilterDropdowns();
+      dropdown.container.classList.add('open');
+      dropdown.menu.classList.remove('hidden');
+      dropdown.menu.setAttribute('aria-hidden', 'false');
+      dropdown.trigger.setAttribute('aria-expanded', 'true');
+      if (Number.isInteger(options.focusIndex)) {
+        window.requestAnimationFrame(() => focusFilterCheckbox(dropdown, options.focusIndex));
+      }
+    }
+
     function syncFilterDropdown(selectElement) {
       const dropdown = getDropdownParts(selectElement);
       if (!dropdown?.menu || !dropdown.triggerText) {
@@ -4079,6 +4480,7 @@
       }
       const optionValues = Array.from(selectElement.options).map(option => option.value);
       const selectedValues = new Set(getSelectedValues(selectElement));
+      const allSelected = optionValues.length > 0 && optionValues.every(value => selectedValues.has(value));
       dropdown.triggerText.textContent = getFilterTriggerLabel(Array.from(selectedValues), dropdown.field);
       dropdown.menu.innerHTML = '';
 
@@ -4088,7 +4490,10 @@
       const selectAllCheckbox = document.createElement('input');
       selectAllCheckbox.type = 'checkbox';
       selectAllCheckbox.value = '__all__';
-      selectAllCheckbox.checked = optionValues.length > 0 && optionValues.every(value => selectedValues.has(value));
+      selectAllCheckbox.checked = allSelected;
+      selectAllCheckbox.indeterminate = selectedValues.size > 0 && !allSelected;
+      selectAllCheckbox.disabled = optionValues.length === 0;
+      selectAllCheckbox.setAttribute('aria-label', `Select all ${dropdown.field} options`);
 
       const selectAllText = document.createElement('span');
       selectAllText.textContent = 'Select All';
@@ -4119,6 +4524,7 @@
       Object.values(filterDropdownElements).forEach(dropdown => {
         dropdown?.container?.classList.remove('open');
         dropdown?.menu?.classList.add('hidden');
+        dropdown?.menu?.setAttribute('aria-hidden', 'true');
         if (dropdown?.trigger) {
           dropdown.trigger.setAttribute('aria-expanded', 'false');
         }
@@ -4134,9 +4540,37 @@
           const isOpen = dropdown.container.classList.contains('open');
           closeFilterDropdowns();
           if (!isOpen) {
-            dropdown.container.classList.add('open');
-            dropdown.menu.classList.remove('hidden');
-            dropdown.trigger.setAttribute('aria-expanded', 'true');
+            openFilterDropdown(dropdown);
+          }
+        });
+        dropdown.trigger.addEventListener('keydown', event => {
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            openFilterDropdown(dropdown, { focusIndex: 0 });
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            openFilterDropdown(dropdown, { focusIndex: -1 });
+          } else if (event.key === 'Escape') {
+            closeFilterDropdowns();
+          }
+        });
+        dropdown.menu.addEventListener('keydown', event => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            closeFilterDropdowns();
+            dropdown.trigger.focus();
+          } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            moveFilterCheckboxFocus(dropdown, 1);
+          } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            moveFilterCheckboxFocus(dropdown, -1);
+          } else if (event.key === 'Home') {
+            event.preventDefault();
+            focusFilterCheckbox(dropdown, 0);
+          } else if (event.key === 'End') {
+            event.preventDefault();
+            focusFilterCheckbox(dropdown, -1);
           }
         });
       });
@@ -4161,6 +4595,7 @@
         domElements.filterUniversity,
         domElements.filterProgram,
         domElements.filterBusinessUnit,
+        domElements.filterParent,
         domElements.filterTechTeam,
         domElements.filterReleaseDate,
         domElements.globalSearch
@@ -4205,6 +4640,21 @@
       domElements.globalSearch.value = '';
       if (dataTable) {
         applyDefaultReleaseDateFilter();
+        dataTable.search('').draw();
+      }
+      updateFilterHighlights();
+    }
+
+    function clearFilters() {
+      dashboardDrilldownFilters = {};
+      Object.values(filterSelectElements).forEach(select => {
+        if (select) {
+          setSelectedValues(select, []);
+        }
+      });
+      closeFilterDropdowns();
+      domElements.globalSearch.value = '';
+      if (dataTable) {
         dataTable.search('').draw();
       }
       updateFilterHighlights();
@@ -4386,7 +4836,6 @@
             color: #086c3a;
           }
           .pdf-export-dashboard #dashboardScope,
-          .pdf-export-dashboard #dashboardRangeControls,
           .pdf-export-dashboard #openTableFromDashboard,
           .pdf-export-dashboard .dashboard-note {
             display: none !important;
@@ -4669,6 +5118,7 @@
         ? []
         : [
             '#resetFilters',
+            '#clearFilters',
             '#downloadExcel',
             '#openTableFromDashboard',
             '#showTableView',
@@ -4744,6 +5194,12 @@
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const cardRect = card.getBoundingClientRect();
+
+      if (viewportWidth <= 640) {
+        card.style.top = `${Math.max(10, viewportHeight - cardRect.height - 10)}px`;
+        card.style.left = `${Math.max(10, (viewportWidth - cardRect.width) / 2)}px`;
+        return;
+      }
 
       if (!target) {
         card.style.top = `${Math.max(margin, (viewportHeight - cardRect.height) / 2)}px`;
@@ -5159,6 +5615,7 @@
         }
       });
       domElements.resetFilters.addEventListener('click', resetFilters);
+      domElements.clearFilters.addEventListener('click', clearFilters);
       domElements.downloadExcel.addEventListener('click', handlePrimaryDownload);
       applyCustomFilters();
     }
@@ -5253,6 +5710,7 @@
           throw new Error(`CSV is missing required columns for: ${missingFields.join(', ')}`);
         }
 
+        const parentKeyIndex = headerIndex['Parent key']?.[0];
         const records = rows.slice(1).map(row => {
           const item = {};
           exactHeaders.forEach(header => {
@@ -5279,7 +5737,28 @@
           item['Release Date'] = parsedRelease.display;
           item.__monthYear = parsedRelease.monthYear;
           item.__releaseSort = parsedRelease.sortValue;
+          item.__parentKey = parentKeyIndex !== undefined
+            ? normalizeDisplayText(row[parentKeyIndex] || '').trim()
+            : '';
           return item;
+        });
+
+        const recordByKey = new Map(
+          records.map(record => [String(record.Key || '').trim(), record]).filter(([key]) => Boolean(key))
+        );
+
+        records.forEach(record => {
+          if (!isSubtaskIssueType(record['Issue Type']) || !record.__parentKey) {
+            return;
+          }
+          const parentRecord = recordByKey.get(record.__parentKey);
+          if (!parentRecord || !isStoryIssueType(parentRecord['Issue Type'])) {
+            return;
+          }
+          const storyParent = String(parentRecord.Parent || '').trim();
+          if (storyParent) {
+            record.Parent = storyParent;
+          }
         });
 
         records.sort(compareRecords);
@@ -5365,6 +5844,7 @@
             return;
           }
           const allOptionValues = Array.from(selectElement.options).map(option => option.value);
+          const changedValue = checkbox.value;
           let nextValues;
           if (checkbox.value === '__all__') {
             nextValues = checkbox.checked ? allOptionValues : [];
@@ -5378,6 +5858,14 @@
             nextValues = Array.from(selectedValues);
           }
           setSelectedValues(selectElement, nextValues);
+          window.requestAnimationFrame(() => {
+            if (dropdown.menu?.classList.contains('hidden')) {
+              return;
+            }
+            const nextFocusTarget = getFilterCheckboxes(dropdown)
+              .find(input => input.value === changedValue);
+            nextFocusTarget?.focus();
+          });
           applyCustomFilters();
         });
       });
