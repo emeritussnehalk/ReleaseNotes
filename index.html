@@ -4140,7 +4140,7 @@
       }
       const { maxItems = 10, compactList = false, countLabel = '', scaleToTotal = false } = options;
       const topItems = maxItems === 'all' ? items : items.slice(0, maxItems);
-      const maxCount = Math.max(...topItems.map(item => item.count), 1);
+      const maxCount = topItems[0]?.count || 1;
       const totalCount = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
       container.innerHTML = topItems.map((item, index) => {
         const basis = scaleToTotal ? totalCount : maxCount;
