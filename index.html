@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YPVF4NR0BM"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-YPVF4NR0BM');
-</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Release Notes Data Explorer</title>
@@ -1617,6 +1608,41 @@
       border-bottom: 1px solid rgba(11, 143, 77, 0.1);
       padding-bottom: 10px;
       margin-bottom: 2px;
+    }
+    .filter-search-wrap {
+      position: sticky;
+      top: -10px;
+      z-index: 1;
+      display: grid;
+      padding-bottom: 6px;
+      background: rgba(255, 255, 255, 0.98);
+    }
+    .filter-menu-search {
+      min-height: 42px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(11, 143, 77, 0.16);
+      background: #fbfdfb;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .filter-menu-search:focus {
+      border-color: rgba(11, 143, 77, 0.64);
+      box-shadow: 0 0 0 3px rgba(11, 143, 77, 0.12);
+    }
+    .filter-option.search-hidden {
+      display: none;
+    }
+    .filter-no-results {
+      margin: 0;
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+    .filter-no-results.hidden {
+      display: none;
     }
     .filter-option input {
       width: 16px;
@@ -3778,7 +3804,19 @@
       return selectedValues.some(value => rowValues.includes(value));
     }
 
-    function aggregateCounts(rows, field) {
+    function getUniqueValues(values) {
+      return Array.from(new Set(
+        values
+          .map(value => String(value || '').trim())
+          .filter(Boolean)
+      ));
+    }
+
+    function compareLabelsAscending(a, b) {
+      return String(a || '').localeCompare(String(b || ''), undefined, { numeric: true, sensitivity: 'base' });
+    }
+
+    function aggregateCounts(rows, field, options = {}) {
       const counts = new Map();
       const activeFieldFilters = getAllActiveFilters()[field] || [];
       rows.forEach(row => {
@@ -3794,7 +3832,12 @@
       });
       return Array.from(counts.entries())
         .map(([label, count]) => ({ label, count }))
-        .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+        .sort((a, b) => {
+          if (options.sortBy === 'label') {
+            return compareLabelsAscending(a.label, b.label);
+          }
+          return b.count - a.count || compareLabelsAscending(a.label, b.label);
+        });
     }
 
     function aggregateSkillSetCountsForProject(rows, projectName) {
@@ -4097,7 +4140,7 @@
       }
       const { maxItems = 10, compactList = false, countLabel = '', scaleToTotal = false } = options;
       const topItems = maxItems === 'all' ? items : items.slice(0, maxItems);
-      const maxCount = topItems[0]?.count || 1;
+      const maxCount = Math.max(...topItems.map(item => item.count), 1);
       const totalCount = topItems.reduce((sum, item) => sum + item.count, 0) || 1;
       container.innerHTML = topItems.map((item, index) => {
         const basis = scaleToTotal ? totalCount : maxCount;
@@ -4288,7 +4331,7 @@
       );
       renderProgramLadder(
         domElements.parentChart,
-        aggregateCounts(rows, 'Parent'),
+        aggregateCounts(rows, 'Parent', { sortBy: 'label' }),
         'No parent data is available for the current selection.',
         'Parent',
         { maxItems: 'all', compactList: true }
@@ -4378,6 +4421,10 @@
             const monthYear = row.__monthYear || '';
             if (monthYear) uniqueSets[field].add(monthYear);
           } else {
+            if (field === 'Parent' && Array.isArray(row.__parentOptionValues)) {
+              row.__parentOptionValues.forEach(parentValue => uniqueSets[field].add(parentValue));
+              return;
+            }
             const value = row[field] || '';
             if (!value.trim()) {
               return;
@@ -4396,7 +4443,7 @@
           if (field === 'Release Date') {
             return parseMonthYearLabel(b) - parseMonthYearLabel(a);
           }
-          return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+          return compareLabelsAscending(a, b);
         });
         createSelectOptions(targetSelect, sorted);
       });
@@ -4445,8 +4492,13 @@
       return Array.from(dropdown?.menu?.querySelectorAll('input[type="checkbox"]') || []);
     }
 
+    function getVisibleFilterCheckboxes(dropdown) {
+      return getFilterCheckboxes(dropdown)
+        .filter(checkbox => !checkbox.closest('.filter-option')?.classList.contains('search-hidden'));
+    }
+
     function focusFilterCheckbox(dropdown, targetIndex = 0) {
-      const checkboxes = getFilterCheckboxes(dropdown);
+      const checkboxes = getVisibleFilterCheckboxes(dropdown);
       if (!checkboxes.length) {
         return;
       }
@@ -4457,7 +4509,7 @@
     }
 
     function moveFilterCheckboxFocus(dropdown, direction) {
-      const checkboxes = getFilterCheckboxes(dropdown);
+      const checkboxes = getVisibleFilterCheckboxes(dropdown);
       if (!checkboxes.length) {
         return;
       }
@@ -4466,6 +4518,28 @@
         ? (direction > 0 ? 0 : checkboxes.length - 1)
         : (currentIndex + direction + checkboxes.length) % checkboxes.length;
       checkboxes[nextIndex].focus();
+    }
+
+    function isFilterMenuSearchEnabled(dropdown) {
+      return dropdown?.field === 'Parent';
+    }
+
+    function applyFilterMenuSearch(dropdown) {
+      if (!dropdown?.menu || !isFilterMenuSearchEnabled(dropdown)) {
+        return;
+      }
+      const searchInput = dropdown.menu.querySelector('.filter-menu-search');
+      const query = String(searchInput?.value || '').trim().toLowerCase();
+      let visibleCount = 0;
+      dropdown.menu.querySelectorAll('.filter-option:not(.select-all)').forEach(optionLabel => {
+        const optionText = String(optionLabel.dataset.searchText || optionLabel.textContent || '').toLowerCase();
+        const isVisible = !query || optionText.includes(query);
+        optionLabel.classList.toggle('search-hidden', !isVisible);
+        if (isVisible) {
+          visibleCount += 1;
+        }
+      });
+      dropdown.menu.querySelector('.filter-no-results')?.classList.toggle('hidden', visibleCount > 0);
     }
 
     function openFilterDropdown(dropdown, options = {}) {
@@ -4479,6 +4553,8 @@
       dropdown.trigger.setAttribute('aria-expanded', 'true');
       if (Number.isInteger(options.focusIndex)) {
         window.requestAnimationFrame(() => focusFilterCheckbox(dropdown, options.focusIndex));
+      } else if (isFilterMenuSearchEnabled(dropdown)) {
+        window.requestAnimationFrame(() => dropdown.menu.querySelector('.filter-menu-search')?.focus());
       }
     }
 
@@ -4490,8 +4566,28 @@
       const optionValues = Array.from(selectElement.options).map(option => option.value);
       const selectedValues = new Set(getSelectedValues(selectElement));
       const allSelected = optionValues.length > 0 && optionValues.every(value => selectedValues.has(value));
+      const previousSearchValue = dropdown.menu.querySelector('.filter-menu-search')?.value || dropdown.searchValue || '';
       dropdown.triggerText.textContent = getFilterTriggerLabel(Array.from(selectedValues), dropdown.field);
       dropdown.menu.innerHTML = '';
+
+      if (isFilterMenuSearchEnabled(dropdown)) {
+        const searchWrap = document.createElement('div');
+        searchWrap.className = 'filter-search-wrap';
+
+        const searchInput = document.createElement('input');
+        searchInput.type = 'search';
+        searchInput.className = 'filter-menu-search';
+        searchInput.placeholder = 'Search project names';
+        searchInput.value = previousSearchValue;
+        searchInput.setAttribute('aria-label', 'Search project names');
+        searchInput.addEventListener('input', () => {
+          dropdown.searchValue = searchInput.value;
+          applyFilterMenuSearch(dropdown);
+        });
+
+        searchWrap.appendChild(searchInput);
+        dropdown.menu.appendChild(searchWrap);
+      }
 
       const selectAllLabel = document.createElement('label');
       selectAllLabel.className = 'filter-option select-all';
@@ -4522,11 +4618,20 @@
 
         const text = document.createElement('span');
         text.textContent = option.textContent;
+        optionLabel.dataset.searchText = option.textContent;
 
         optionLabel.appendChild(checkbox);
         optionLabel.appendChild(text);
         dropdown.menu.appendChild(optionLabel);
       });
+
+      if (isFilterMenuSearchEnabled(dropdown)) {
+        const noResults = document.createElement('p');
+        noResults.className = 'filter-no-results hidden';
+        noResults.textContent = 'No project names found.';
+        dropdown.menu.appendChild(noResults);
+        applyFilterMenuSearch(dropdown);
+      }
     }
 
     function closeFilterDropdowns() {
@@ -4563,11 +4668,17 @@
             closeFilterDropdowns();
           }
         });
-        dropdown.menu.addEventListener('keydown', event => {
+      dropdown.menu.addEventListener('keydown', event => {
+          const isSearchInput = event.target?.matches?.('.filter-menu-search');
           if (event.key === 'Escape') {
             event.preventDefault();
             closeFilterDropdowns();
             dropdown.trigger.focus();
+          } else if (isSearchInput) {
+            if (event.key === 'ArrowDown') {
+              event.preventDefault();
+              focusFilterCheckbox(dropdown, 0);
+            }
           } else if (event.key === 'ArrowDown') {
             event.preventDefault();
             moveFilterCheckboxFocus(dropdown, 1);
@@ -4588,6 +4699,9 @@
     function getRowFieldValues(rowData, field) {
       if (field === 'Release Date') {
         return rowData.__monthYear ? [rowData.__monthYear] : [];
+      }
+      if (field === 'Parent' && Array.isArray(rowData.__parentFilterValues)) {
+        return rowData.__parentFilterValues;
       }
       const rawValue = String(rowData[field] || '').trim();
       if (!rawValue) {
@@ -5720,6 +5834,7 @@
         }
 
         const parentKeyIndex = headerIndex['Parent key']?.[0];
+        const parentSummaryIndex = headerIndex['Parent summary']?.[0];
         const records = rows.slice(1).map(row => {
           const item = {};
           exactHeaders.forEach(header => {
@@ -5749,6 +5864,18 @@
           item.__parentKey = parentKeyIndex !== undefined
             ? normalizeDisplayText(row[parentKeyIndex] || '').trim()
             : '';
+          item.__directParentSummary = parentSummaryIndex !== undefined
+            ? normalizeDisplayText(row[parentSummaryIndex] || '').trim()
+            : String(item.Parent || '').trim();
+          item.__parentFilterValues = getUniqueValues([
+            item.Parent,
+            item.__directParentSummary,
+            item.__parentKey
+          ]);
+          item.__parentOptionValues = getUniqueValues([
+            item.Parent,
+            item.__directParentSummary
+          ]);
           return item;
         });
 
@@ -5767,6 +5894,15 @@
           const storyParent = String(parentRecord.Parent || '').trim();
           if (storyParent) {
             record.Parent = storyParent;
+            record.__parentFilterValues = getUniqueValues([
+              storyParent,
+              record.__directParentSummary,
+              record.__parentKey
+            ]);
+            record.__parentOptionValues = getUniqueValues([
+              storyParent,
+              record.__directParentSummary
+            ]);
           }
         });
 
